@@ -34,9 +34,6 @@ class GetUser
     public function execute(GetUserRequest $request) {
 
         $user = $this->userGateway->find($request->getUserId());
-        if( !$user )
-            throw new NotFound('User not found.');
-
         return $this->responseTransformer->transform($user);
     }
 

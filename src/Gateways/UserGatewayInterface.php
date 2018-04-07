@@ -9,6 +9,7 @@ namespace Tidy\Gateways;
 
 
 use Tidy\Entities\User;
+use Tidy\Exceptions\NotFound;
 
 interface UserGatewayInterface
 {
@@ -17,6 +18,7 @@ interface UserGatewayInterface
      * @param $getUserId
      *
      * @return User
+     * @throws NotFound
      */
     public function find($getUserId);
 }
