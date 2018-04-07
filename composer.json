@@ -1,0 +1,25 @@
+{
+    "name": "avanzu/tidy",
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "^7.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marc Bach",
+            "email": "mail@avanzu.de"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Tidy\\" : "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4" : {
+            "Tidy\\Tests\\" : "tests/"
+        }
+    }
+}
