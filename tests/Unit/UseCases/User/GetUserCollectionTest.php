@@ -13,7 +13,7 @@ use Tidy\Requestors\User\IGetUserCollectionRequestBuilder;
 use Tidy\Responders\User\IUserResponse;
 use Tidy\Tests\Unit\Entities\UserStub1;
 use Tidy\Tests\Unit\Entities\UserStub2;
-use Tidy\Tests\Unit\Gateways\InMemoryIUserGateway;
+use Tidy\Tests\Unit\Gateways\InMemoryUserGateway;
 use Tidy\UseCases\User\DTO\GetUserCollectionRequestBuilder;
 use Tidy\UseCases\User\DTO\UserCollectionResponseDTO;
 use Tidy\UseCases\User\DTO\UserCollectionResponseTransformer;
@@ -49,7 +49,7 @@ class GetUserCollectionTest extends TestCase
     {
 
 
-        InMemoryIUserGateway::$users = [
+        InMemoryUserGateway::$users = [
             UserStub1::ID => new UserStub1(),
             UserStub2::ID => new UserStub2(),
         ];
@@ -89,7 +89,7 @@ class GetUserCollectionTest extends TestCase
         $this->useCase = new GetUserCollection();
         $this->builder = new GetUserCollectionRequestBuilder();
 
-        $this->useCase->setUserGateway(new InMemoryIUserGateway());
+        $this->useCase->setUserGateway(new InMemoryUserGateway());
         $this->useCase->setCollectionResponseTransformer(
             new UserCollectionResponseTransformer()
         );

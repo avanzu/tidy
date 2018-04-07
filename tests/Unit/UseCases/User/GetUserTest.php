@@ -13,7 +13,7 @@ use Tidy\Exceptions\NotFound;
 use Tidy\Requestors\User\IGetUserRequestBuilder;
 use Tidy\Tests\Unit\Entities\UserStub1;
 use Tidy\Tests\Unit\Entities\UserStub2;
-use Tidy\Tests\Unit\Gateways\InMemoryIUserGateway;
+use Tidy\Tests\Unit\Gateways\InMemoryUserGateway;
 use Tidy\UseCases\User\DTO\GetUserRequestBuilder;
 use Tidy\UseCases\User\DTO\UserResponseDTO;
 use Tidy\UseCases\User\DTO\UserResponseTransformer;
@@ -58,7 +58,7 @@ class GetUserTest extends TestCase
      */
     public function testGetExistingUser()
     {
-        InMemoryIUserGateway::$users = [UserStub1::ID => new UserStub1(), UserStub2::ID => new UserStub2()];
+        InMemoryUserGateway::$users = [UserStub1::ID => new UserStub1(), UserStub2::ID => new UserStub2()];
 
         $request = $this->requestBuilder->withUserId(123)->build();
 
@@ -83,7 +83,7 @@ class GetUserTest extends TestCase
         $this->useCase        = new GetUser();
         $this->requestBuilder = new GetUserRequestBuilder();
 
-        $this->useCase->setUserGateway(new InMemoryIUserGateway());
+        $this->useCase->setUserGateway(new InMemoryUserGateway());
         $this->useCase->setResponseTransformer(new UserResponseTransformer());
     }
 

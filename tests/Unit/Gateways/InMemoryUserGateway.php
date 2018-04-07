@@ -1,6 +1,6 @@
 <?php
 /**
- * InMemoryIUserGateway.php
+ * InMemoryUserGateway.php
  * tidy
  * Date: 07.04.18
  */
@@ -13,34 +13,49 @@ use Tidy\Exceptions\NotFound;
 use Tidy\Exceptions\OutOfBounds;
 use Tidy\Gateways\IUserGateway;
 
-class InMemoryIUserGateway implements IUserGateway
+/**
+ * Class InMemoryUserGateway
+ */
+class InMemoryUserGateway implements IUserGateway
 {
 
+    /**
+     * @var array
+     */
     public static $users = [];
 
     /**
-     * InMemoryIUserGateway constructor.
+     * InMemoryUserGateway constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         self::$users = [];
     }
 
-    public function getTotal()
-    {
-        return count(self::$users);
-    }
-
-
+    /**
+     * @param $page
+     * @param $pageSize
+     *
+     * @return array|User
+     */
     public function fetchCollection($page, $pageSize)
     {
-        $offset = max($page-1, 0) * $pageSize;
-        if( $offset > $this->getTotal())
+        $offset = max($page - 1, 0) * $pageSize;
+        if ($offset > $this->getTotal()) {
             throw new OutOfBounds('Offset exceeds total available items.');
+        }
 
 
         return array_slice(self::$users, $offset, $pageSize);
     }
 
+    /**
+     * @return int
+     */
+    public function getTotal()
+    {
+        return count(self::$users);
+    }
 
     /**
      * @param $getUserId
@@ -50,7 +65,7 @@ class InMemoryIUserGateway implements IUserGateway
      */
     public function find($getUserId)
     {
-        if(isset(self::$users[$getUserId])) {
+        if (isset(self::$users[$getUserId])) {
             return self::$users[$getUserId];
         }
 
