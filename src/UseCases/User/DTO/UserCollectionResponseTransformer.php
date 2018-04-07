@@ -9,7 +9,11 @@ namespace Tidy\UseCases\User\DTO;
 
 
 use Tidy\Responders\User\UserResponseTransformer;
+use Tidy\UseCases\User\DTO\UserResponseTransformer as ItemTransformer;
 
+/**
+ * Class UserCollectionResponseTransformer
+ */
 class UserCollectionResponseTransformer
 {
 
@@ -21,25 +25,43 @@ class UserCollectionResponseTransformer
     /**
      * UserCollectionResponseTransformer constructor.
      *
-     * @param UserResponseTransformer $itemTransformer
      */
-    public function __construct(UserResponseTransformer $itemTransformer) {
-        $this->itemTransformer = $itemTransformer;
+    public function __construct()
+    {
+        $this->itemTransformer = new ItemTransformer();
     }
 
-
-    public function setItemTransformer(UserResponseTransformer $itemTransformer) {
-        $this->itemTransformer = $itemTransformer;
-    }
-
-    public function transform($items, $page, $pageSize) {
+    /**
+     * @param $items
+     * @param $page
+     * @param $pageSize
+     *
+     * @return UserCollectionResponseDTO
+     */
+    public function transform($items, $page, $pageSize)
+    {
         $response           = new UserCollectionResponseDTO();
         $response->page     = $page;
         $response->pageSize = $pageSize;
         $response->items    = [];
-        while ($item = array_shift($items))
+        while ($item = array_shift($items)) {
             $response->items[] = $this->itemTransformer->transform($item);
+        }
 
         return $response;
+    }
+
+
+    /**
+     * @param UserResponseTransformer $itemTransformer
+     *
+     * @return UserResponseTransformer
+     */
+    public function replaceItemTransformer(UserResponseTransformer $itemTransformer)
+    {
+        $previous              = $this->itemTransformer;
+        $this->itemTransformer = $itemTransformer;
+
+        return $previous;
     }
 }

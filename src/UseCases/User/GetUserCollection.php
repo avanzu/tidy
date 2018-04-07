@@ -31,11 +31,7 @@ class GetUserCollection
     public function execute(GetUserCollectionRequestDTO $request)
     {
         $users    = $this->gateway->fetchCollection($request->getPage(), $request->getPageSize());
-        $response = $this->transformer->transform(
-            $users,
-            $request->getPage(),
-            $request->getPageSize()
-        );
+        $response = $this->transformer->transform($users,$request->getPage(),$request->getPageSize());
 
         return $response;
     }

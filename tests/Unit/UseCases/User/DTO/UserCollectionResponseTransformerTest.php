@@ -44,13 +44,18 @@ class UserCollectionResponseTransformerTest extends TestCase
 
     }
 
+    public function testItemTransformerAssignment()
+    {
+        $itemTransformer = new UserResponseTransformer();
+        $lastTransformer = $this->transformer->replaceItemTransformer($itemTransformer);
+        $this->assertSame($itemTransformer, $this->transformer->replaceItemTransformer($lastTransformer));
+
+    }
+
     protected function setUp()
     {
-        $this->transformer = new UserCollectionResponseTransformer(
-            new UserResponseTransformer()
-        );
+        $this->transformer = new UserCollectionResponseTransformer();
 
-        //$this->transformer->setItemTransformer(new UserResponseTransformer());
     }
 
 }
