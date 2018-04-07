@@ -21,4 +21,6 @@ interface UserGatewayInterface
      * @throws NotFound
      */
     public function find($getUserId);
+
+    public function fetchCollection($page, $pageSize);
 }

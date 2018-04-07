@@ -24,6 +24,11 @@ class InMemoryUserGateway implements UserGatewayInterface
         self::$users = [];
     }
 
+    public function fetchCollection($page, $pageSize)
+    {
+        $offset = max($page-1, 0) * $pageSize;
+        return array_slice(self::$users, $offset, $pageSize);
+    }
 
 
     /**
