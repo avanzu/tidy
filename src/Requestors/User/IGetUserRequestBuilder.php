@@ -8,7 +8,7 @@
 namespace Tidy\Requestors\User;
 
 
-interface GetUserRequestBuilder
+interface IGetUserRequestBuilder
 {
     /**
      * @return $this
@@ -23,7 +23,7 @@ interface GetUserRequestBuilder
     public function withUserId($userId);
 
     /**
-     * @return GetUserRequest
+     * @return IGetUserRequest
      */
     public function build();
 

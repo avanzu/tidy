@@ -10,12 +10,12 @@ namespace Tidy\Responders\User;
 
 use Tidy\Entities\User;
 
-interface UserResponseTransformer
+interface IUserResponseTransformer
 {
     /**
      * @param User $user
      *
-     * @return UserResponse
+     * @return IUserResponse
      */
     public function transform(User $user);
 }

@@ -8,13 +8,15 @@
 namespace Tidy\UseCases\User\DTO;
 
 
-use Tidy\Responders\User\UserResponseTransformer;
+use Tidy\Responders\User\IUserCollectionResponse;
+use Tidy\Responders\User\IUserCollectionResponseTransformer;
+use Tidy\Responders\User\IUserResponseTransformer;
 use Tidy\UseCases\User\DTO\UserResponseTransformer as ItemTransformer;
 
 /**
  * Class UserCollectionResponseTransformer
  */
-class UserCollectionResponseTransformer
+class UserCollectionResponseTransformer implements IUserCollectionResponseTransformer
 {
 
     /**
@@ -32,12 +34,25 @@ class UserCollectionResponseTransformer
     }
 
     /**
+     * @param IUserResponseTransformer $itemTransformer
+     *
+     * @return IUserResponseTransformer
+     */
+    public function replaceItemTransformer(IUserResponseTransformer $itemTransformer)
+    {
+        $previous              = $this->itemTransformer;
+        $this->itemTransformer = $itemTransformer;
+
+        return $previous;
+    }
+
+    /**
      * @param $items
      * @param $page
      * @param $pageSize
      * @param $itemsTotal
      *
-     * @return UserCollectionResponseDTO
+     * @return IUserCollectionResponse
      */
     public function transform($items, $page, $pageSize, $itemsTotal)
     {
@@ -45,27 +60,13 @@ class UserCollectionResponseTransformer
         $response->page       = $page;
         $response->pageSize   = $pageSize;
         $response->itemsTotal = $itemsTotal;
-        $response->pagesTotal = ceil($itemsTotal/$pageSize);
+        $response->pagesTotal = ceil($itemsTotal / $pageSize);
 
-        $response->items    = [];
+        $response->items = [];
         while ($item = array_shift($items)) {
             $response->items[] = $this->itemTransformer->transform($item);
         }
 
         return $response;
-    }
-
-
-    /**
-     * @param UserResponseTransformer $itemTransformer
-     *
-     * @return UserResponseTransformer
-     */
-    public function replaceItemTransformer(UserResponseTransformer $itemTransformer)
-    {
-        $previous              = $this->itemTransformer;
-        $this->itemTransformer = $itemTransformer;
-
-        return $previous;
     }
 }

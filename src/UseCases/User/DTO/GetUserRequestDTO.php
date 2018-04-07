@@ -8,14 +8,24 @@
 namespace Tidy\UseCases\User\DTO;
 
 
-use Tidy\Requestors\User\GetUserRequest;
+use Tidy\Requestors\User\IGetUserRequest;
 
-class GetUserRequestDTO implements GetUserRequest
+/**
+ * Class GetUserRequestDTO
+ */
+class GetUserRequestDTO implements IGetUserRequest
 {
 
-    public  $userId;
+    /**
+     * @var
+     */
+    public $userId;
 
-    public function getUserId() {
+    /**
+     * @return int
+     */
+    public function getUserId()
+    {
         return $this->userId;
     }
 }

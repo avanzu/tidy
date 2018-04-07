@@ -8,7 +8,7 @@
 namespace Tidy\Requestors\User;
 
 
-interface GetUserRequest
+interface IGetUserRequest
 {
     /**
      * @return int

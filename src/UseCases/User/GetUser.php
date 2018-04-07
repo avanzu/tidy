@@ -9,45 +9,50 @@ namespace Tidy\UseCases\User;
 
 
 use Tidy\Exceptions\NotFound;
-use Tidy\Gateways\UserGatewayInterface;
-use Tidy\Requestors\User\GetUserRequest;
-use Tidy\Responders\User\UserResponseTransformer;
+use Tidy\Gateways\IUserGateway;
+use Tidy\Requestors\User\IGetUserRequest;
+use Tidy\Responders\User\IUserResponse;
+use Tidy\Responders\User\IUserResponseTransformer;
 
 class GetUser
 {
     /**
-     * @var UserResponseTransformer
+     * @var IUserResponseTransformer
      */
     private $responseTransformer;
 
     /**
-     * @var UserGatewayInterface
+     * @var IUserGateway
      */
     private $userGateway;
 
     /**
-     * @param GetUserRequest $request
+     * @param IGetUserRequest $request
      *
-     * @return \Tidy\Responders\User\UserResponse
+     * @return IUserResponse
      * @throws NotFound
      */
-    public function execute(GetUserRequest $request) {
+    public function execute(IGetUserRequest $request)
+    {
 
         $user = $this->userGateway->find($request->getUserId());
+
         return $this->responseTransformer->transform($user);
     }
 
     /**
-     * @param UserGatewayInterface $userGateway
+     * @param IUserGateway $userGateway
      */
-    public function setUserGateway($userGateway) {
+    public function setUserGateway($userGateway)
+    {
         $this->userGateway = $userGateway;
     }
 
     /**
-     * @param UserResponseTransformer $transformer
+     * @param IUserResponseTransformer $transformer
      */
-    public function setResponseTransformer($transformer) {
+    public function setResponseTransformer(IUserResponseTransformer $transformer)
+    {
         $this->responseTransformer = $transformer;
     }
 

@@ -8,21 +8,23 @@
 namespace Tidy\UseCases\User\DTO;
 
 use Tidy\Entities\User;
-use Tidy\Responders\User\UserResponse;
-use Tidy\Responders\User\UserResponseTransformer as Transformer;
+use Tidy\Responders\User\IUserResponse;
+use Tidy\Responders\User\IUserResponseTransformer as Transformer;
 
+/**
+ * Class UserResponseTransformer
+ */
 class UserResponseTransformer implements Transformer
 {
 
     /**
      * @param User $user
      *
-     * @return UserResponse
+     * @return IUserResponse
      */
     public function transform(User $user)
     {
         $response           = new UserResponseDTO();
-
         $response->id       = $user->getId();
         $response->userName = $user->getUserName();
 

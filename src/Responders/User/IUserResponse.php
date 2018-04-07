@@ -1,6 +1,6 @@
 <?php
 /**
- * UserResponse.php
+ * IUserResponse.php
  * tidy
  * Date: 07.04.18
  */
@@ -8,7 +8,7 @@
 namespace Tidy\Responders\User;
 
 
-interface UserResponse
+interface IUserResponse
 {
     public function getUserName();
 

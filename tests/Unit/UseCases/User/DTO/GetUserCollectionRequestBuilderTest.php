@@ -8,22 +8,32 @@
 namespace Tidy\Tests\Unit\UseCases\User\DTO;
 
 use PHPUnit\Framework\TestCase;
+use Tidy\Requestors\User\IGetUserCollectionRequestBuilder;
 use Tidy\UseCases\User\DTO\GetUserCollectionRequestBuilder;
 use Tidy\UseCases\User\DTO\GetUserCollectionRequestDTO;
 
+/**
+ * Class GetUserCollectionRequestBuilderTest
+ */
 class GetUserCollectionRequestBuilderTest extends TestCase
 {
 
     /**
-     * @var GetUserCollectionRequestBuilder
+     * @var IGetUserCollectionRequestBuilder
      */
     private $builder;
 
+    /**
+     *
+     */
     public function testInstantiation()
     {
         $this->assertInstanceOf(GetUserCollectionRequestBuilder::class, $this->builder);
     }
 
+    /**
+     *
+     */
     public function testBuildReturnsCollectionRequest()
     {
         $result = $this->builder->build();
@@ -35,6 +45,9 @@ class GetUserCollectionRequestBuilderTest extends TestCase
         $this->assertSame($result2, $this->builder->build());
     }
 
+    /**
+     *
+     */
     public function testDefaultValuesAreDefined()
     {
         $result = $this->builder->build();
@@ -43,7 +56,9 @@ class GetUserCollectionRequestBuilderTest extends TestCase
     }
 
 
-
+    /**
+     *
+     */
     protected function setUp()
     {
         $this->builder = new GetUserCollectionRequestBuilder();

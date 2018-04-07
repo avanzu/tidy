@@ -8,9 +8,10 @@
 namespace Tidy\UseCases\User;
 
 
-use Tidy\Gateways\UserGatewayInterface;
-use Tidy\UseCases\User\DTO\GetUserCollectionRequestDTO;
-use Tidy\UseCases\User\DTO\UserCollectionResponseTransformer;
+use Tidy\Gateways\IUserGateway;
+use Tidy\Requestors\User\IGetUserCollectionRequest;
+use Tidy\Responders\User\IUserCollectionResponse;
+use Tidy\Responders\User\IUserCollectionResponseTransformer;
 
 /**
  * Class GetUserCollection
@@ -18,21 +19,21 @@ use Tidy\UseCases\User\DTO\UserCollectionResponseTransformer;
 class GetUserCollection
 {
     /**
-     * @var UserGatewayInterface
+     * @var IUserGateway
      */
     protected $gateway;
 
     /**
-     * @var UserCollectionResponseTransformer
+     * @var IUserCollectionResponseTransformer
      */
     private $transformer;
 
     /**
-     * @param GetUserCollectionRequestDTO $request
+     * @param IGetUserCollectionRequest $request
      *
-     * @return DTO\UserCollectionResponseDTO
+     * @return IUserCollectionResponse
      */
-    public function execute(GetUserCollectionRequestDTO $request)
+    public function execute(IGetUserCollectionRequest $request)
     {
         $users      = $this->gateway->fetchCollection($request->getPage(), $request->getPageSize());
         $totalItems = $this->gateway->getTotal();
@@ -42,17 +43,17 @@ class GetUserCollection
     }
 
     /**
-     * @param UserGatewayInterface $gateway
+     * @param IUserGateway $gateway
      */
-    public function setUserGateway(UserGatewayInterface $gateway)
+    public function setUserGateway(IUserGateway $gateway)
     {
         $this->gateway = $gateway;
     }
 
     /**
-     * @param UserCollectionResponseTransformer $transformer
+     * @param IUserCollectionResponseTransformer $transformer
      */
-    public function setCollectionResponseTransformer(UserCollectionResponseTransformer $transformer)
+    public function setCollectionResponseTransformer(IUserCollectionResponseTransformer $transformer)
     {
         $this->transformer = $transformer;
     }

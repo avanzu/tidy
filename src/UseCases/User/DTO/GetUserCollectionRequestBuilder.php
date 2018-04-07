@@ -7,31 +7,26 @@
 
 namespace Tidy\UseCases\User\DTO;
 
-use Tidy\Requestors\CollectionRequest;
+use Tidy\Requestors\ICollectionRequest;
+use Tidy\Requestors\User\IGetUserCollectionRequestBuilder;
 
 
 /**
  * Class GetUserCollectionRequestBuilder
  */
-class GetUserCollectionRequestBuilder
+class GetUserCollectionRequestBuilder implements IGetUserCollectionRequestBuilder
 {
     /**
      * @var GetUserCollectionRequestDTO
      */
     private $request;
 
-
     /**
-     * @return $this
+     * @return \Tidy\Requestors\User\IGetUserCollectionRequest|GetUserCollectionRequestDTO
      */
-    public function create()
+    public function build()
     {
-        $request           = new GetUserCollectionRequestDTO();
-        $request->page     = CollectionRequest::DEFAULT_PAGE;
-        $request->pageSize = CollectionRequest::DEFAULT_PAGE_SIZE;
-        $this->request     = $request;
-
-        return $this;
+        return $this->getRequest();
     }
 
     /**
@@ -47,11 +42,16 @@ class GetUserCollectionRequestBuilder
     }
 
     /**
-     * @return GetUserCollectionRequestDTO
+     * @return $this
      */
-    public function build()
+    public function create()
     {
-        return $this->getRequest();
+        $request           = new GetUserCollectionRequestDTO();
+        $request->page     = ICollectionRequest::DEFAULT_PAGE;
+        $request->pageSize = ICollectionRequest::DEFAULT_PAGE_SIZE;
+        $this->request     = $request;
+
+        return $this;
     }
 
     /**

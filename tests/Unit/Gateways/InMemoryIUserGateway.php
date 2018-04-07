@@ -1,6 +1,6 @@
 <?php
 /**
- * InMemoryUserGateway.php
+ * InMemoryIUserGateway.php
  * tidy
  * Date: 07.04.18
  */
@@ -11,15 +11,15 @@ namespace Tidy\Tests\Unit\Gateways;
 use Tidy\Entities\User;
 use Tidy\Exceptions\NotFound;
 use Tidy\Exceptions\OutOfBounds;
-use Tidy\Gateways\UserGatewayInterface;
+use Tidy\Gateways\IUserGateway;
 
-class InMemoryUserGateway implements UserGatewayInterface
+class InMemoryIUserGateway implements IUserGateway
 {
 
     public static $users = [];
 
     /**
-     * InMemoryUserGateway constructor.
+     * InMemoryIUserGateway constructor.
      */
     public function __construct() {
         self::$users = [];

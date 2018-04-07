@@ -8,12 +8,12 @@
 namespace Tidy\UseCases\User\DTO;
 
 
-use Tidy\Requestors\CollectionRequest;
+use Tidy\Requestors\User\IGetUserCollectionRequest;
 
 /**
  * Class GetUserCollectionRequestDTO
  */
-class GetUserCollectionRequestDTO implements CollectionRequest
+class GetUserCollectionRequestDTO implements IGetUserCollectionRequest
 {
     /**
      * @var int
@@ -25,7 +25,7 @@ class GetUserCollectionRequestDTO implements CollectionRequest
     public $pageSize;
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getPage()
     {

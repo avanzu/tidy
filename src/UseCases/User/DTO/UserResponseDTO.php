@@ -8,21 +8,35 @@
 namespace Tidy\UseCases\User\DTO;
 
 
-use Tidy\Responders\User\UserResponse;
+use Tidy\Responders\User\IUserResponse;
 
-class UserResponseDTO implements UserResponse
+/**
+ * Class UserResponseDTO
+ */
+class UserResponseDTO implements IUserResponse
 {
 
+    /**
+     * @var
+     */
     public $id;
+    /**
+     * @var
+     */
     public $userName;
 
 
-
+    /**
+     * @return mixed
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @return mixed
+     */
     public function getUserName()
     {
         return $this->userName;
