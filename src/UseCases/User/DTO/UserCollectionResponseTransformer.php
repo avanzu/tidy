@@ -35,14 +35,18 @@ class UserCollectionResponseTransformer
      * @param $items
      * @param $page
      * @param $pageSize
+     * @param $itemsTotal
      *
      * @return UserCollectionResponseDTO
      */
-    public function transform($items, $page, $pageSize)
+    public function transform($items, $page, $pageSize, $itemsTotal)
     {
-        $response           = new UserCollectionResponseDTO();
-        $response->page     = $page;
-        $response->pageSize = $pageSize;
+        $response             = new UserCollectionResponseDTO();
+        $response->page       = $page;
+        $response->pageSize   = $pageSize;
+        $response->itemsTotal = $itemsTotal;
+        $response->pagesTotal = ceil($itemsTotal/$pageSize);
+
         $response->items    = [];
         while ($item = array_shift($items)) {
             $response->items[] = $this->itemTransformer->transform($item);

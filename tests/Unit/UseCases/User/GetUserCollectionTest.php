@@ -8,17 +8,19 @@
 namespace Tidy\Tests\Unit\UseCases\User;
 
 use PHPUnit\Framework\TestCase;
+use Tidy\Exceptions\OutOfBounds;
 use Tidy\Responders\User\UserResponse;
 use Tidy\Tests\Unit\Entities\UserStub1;
 use Tidy\Tests\Unit\Entities\UserStub2;
 use Tidy\Tests\Unit\Gateways\InMemoryUserGateway;
 use Tidy\UseCases\User\DTO\GetUserCollectionRequestBuilder;
-use Tidy\UseCases\User\DTO\GetUserCollectionRequestDTO;
 use Tidy\UseCases\User\DTO\UserCollectionResponseDTO;
 use Tidy\UseCases\User\DTO\UserCollectionResponseTransformer;
-use Tidy\UseCases\User\DTO\UserResponseTransformer;
 use Tidy\UseCases\User\GetUserCollection;
 
+/**
+ * Class GetUserCollectionTest
+ */
 class GetUserCollectionTest extends TestCase
 {
     /**
@@ -30,18 +32,25 @@ class GetUserCollectionTest extends TestCase
      */
     private $useCase;
 
+    /**
+     *
+     */
     public function testInstantiation()
     {
         $this->assertInstanceOf(GetUserCollection::class, $this->useCase);
     }
 
 
-    public function testLoadCollection() {
+    /**
+     *
+     */
+    public function testLoadCollection()
+    {
 
 
         InMemoryUserGateway::$users = [
             UserStub1::ID => new UserStub1(),
-            UserStub2::ID => new UserStub2()
+            UserStub2::ID => new UserStub2(),
         ];
 
         $request = $this->builder->fromPage(1)->withPageSize(10)->build();
@@ -50,6 +59,8 @@ class GetUserCollectionTest extends TestCase
 
         $this->assertEquals($request->getPage(), $result->getPage());
         $this->assertEquals($request->getPageSize(), $result->getPageSize());
+        $this->assertEquals(2, $result->getTotal());
+        $this->assertEquals(1, $result->pagesTotal());
         $this->assertInternalType('array', $result->getItems());
         list($user1, $user2) = $result->getItems();
         $this->assertInstanceOf(UserResponse::class, $user1);
@@ -58,7 +69,18 @@ class GetUserCollectionTest extends TestCase
 
     }
 
+    public function testLoadCollectionOutOfBounds()
+    {
+        $request = $this->builder->fromPage(10)->withPageSize(20)->build();
+        $this->expectException(OutOfBounds::class);
+        $this->useCase->execute($request);
+    }
 
+
+
+    /**
+     *
+     */
     protected function setUp()
     {
         $this->useCase = new GetUserCollection();
@@ -66,13 +88,9 @@ class GetUserCollectionTest extends TestCase
 
         $this->useCase->setUserGateway(new InMemoryUserGateway());
         $this->useCase->setCollectionResponseTransformer(
-            new UserCollectionResponseTransformer(
-                new UserResponseTransformer()
-            )
+            new UserCollectionResponseTransformer()
         );
     }
-
-
 
 
 }

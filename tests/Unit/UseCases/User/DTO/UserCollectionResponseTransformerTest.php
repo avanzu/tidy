@@ -7,11 +7,11 @@
 
 namespace Tidy\Tests\Unit\UseCases\User\DTO;
 
+use PHPUnit\Framework\TestCase;
 use Tidy\Responders\User\UserResponse;
 use Tidy\Tests\Unit\Entities\UserStub1;
 use Tidy\UseCases\User\DTO\UserCollectionResponseDTO;
 use Tidy\UseCases\User\DTO\UserCollectionResponseTransformer;
-use PHPUnit\Framework\TestCase;
 use Tidy\UseCases\User\DTO\UserResponseTransformer;
 
 class UserCollectionResponseTransformerTest extends TestCase
@@ -29,10 +29,11 @@ class UserCollectionResponseTransformerTest extends TestCase
 
     public function testTransformation()
     {
-        $items = [new UserStub1()];
-        $page = 1;
+        $items    = [new UserStub1()];
+        $page     = 1;
         $pageSize = 20;
-        $result = $this->transformer->transform($items, $page, $pageSize);
+        $pagesTotal = 5;
+        $result   = $this->transformer->transform($items, $page, $pageSize, $pagesTotal);
         $this->assertInstanceOf(UserCollectionResponseDTO::class, $result);
         $this->assertEquals($page, $result->getPage());
         $this->assertEquals($pageSize, $result->getPageSize());

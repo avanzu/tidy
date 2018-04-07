@@ -10,6 +10,7 @@ namespace Tidy\Tests\Unit\Gateways;
 
 use Tidy\Entities\User;
 use Tidy\Exceptions\NotFound;
+use Tidy\Exceptions\OutOfBounds;
 use Tidy\Gateways\UserGatewayInterface;
 
 class InMemoryUserGateway implements UserGatewayInterface
@@ -24,9 +25,19 @@ class InMemoryUserGateway implements UserGatewayInterface
         self::$users = [];
     }
 
+    public function getTotal()
+    {
+        return count(self::$users);
+    }
+
+
     public function fetchCollection($page, $pageSize)
     {
         $offset = max($page-1, 0) * $pageSize;
+        if( $offset > $this->getTotal())
+            throw new OutOfBounds('Offset exceeds total available items.');
+
+
         return array_slice(self::$users, $offset, $pageSize);
     }
 

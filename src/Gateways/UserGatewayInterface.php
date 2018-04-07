@@ -22,5 +22,16 @@ interface UserGatewayInterface
      */
     public function find($getUserId);
 
+    /**
+     * @param $page
+     * @param $pageSize
+     *
+     * @return User
+     */
     public function fetchCollection($page, $pageSize);
+
+    /**
+     * @return int
+     */
+    public function getTotal();
 }

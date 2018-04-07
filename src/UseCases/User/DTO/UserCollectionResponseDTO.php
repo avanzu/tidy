@@ -27,7 +27,16 @@ class UserCollectionResponseDTO
     /**
      * @var
      */
-    public $items;
+    public    $items;
+
+    /**
+     * @var int
+     */
+    public    $pagesTotal;
+    /**
+     * @var int
+     */
+    public  $itemsTotal;
 
     /**
      * @return int
@@ -48,7 +57,22 @@ class UserCollectionResponseDTO
     /**
      * @return UserResponse
      */
-    public function getItems() {
+    public function getItems()
+    {
         return $this->items;
+    }
+
+    /**
+     * @return int
+     */
+    public function pagesTotal() {
+        return $this->pagesTotal;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotal() {
+        return $this->itemsTotal;
     }
 }
