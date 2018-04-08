@@ -24,5 +24,10 @@ abstract class User
         return $this->userName;
     }
 
+    public function setUserName($userName)
+    {
+        $this->userName = $userName;
+        return $this;
+    }
 
 }

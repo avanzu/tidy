@@ -10,7 +10,6 @@ namespace Tidy\Tests\Unit\UseCases\User;
 
 use PHPUnit\Framework\TestCase;
 use Tidy\Exceptions\NotFound;
-
 use Tidy\Tests\Unit\Entities\UserStub1;
 use Tidy\Tests\Unit\Entities\UserStub2;
 use Tidy\Tests\Unit\Gateways\InMemoryUserGateway;

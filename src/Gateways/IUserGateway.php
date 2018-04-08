@@ -34,4 +34,17 @@ interface IUserGateway
      * @return int
      */
     public function getTotal();
+
+    /**
+     * @param User $user
+     *
+     * @return mixed
+     */
+    public function save(User $user);
+
+    /**
+     * @return User
+     */
+    public function produce();
+
 }

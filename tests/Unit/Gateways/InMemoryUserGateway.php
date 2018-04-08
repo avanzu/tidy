@@ -11,7 +11,9 @@ namespace Tidy\Tests\Unit\Gateways;
 use Tidy\Entities\User;
 use Tidy\Exceptions\NotFound;
 use Tidy\Exceptions\OutOfBounds;
+use Tidy\Exceptions\PersistenceFailed;
 use Tidy\Gateways\IUserGateway;
+use Tidy\Tests\Unit\Entities\UserImpl;
 
 /**
  * Class InMemoryUserGateway
@@ -23,6 +25,8 @@ class InMemoryUserGateway implements IUserGateway
      * @var array
      */
     public static $users = [];
+
+    public static $userClass = UserImpl::class;
 
     /**
      * InMemoryUserGateway constructor.
@@ -70,5 +74,43 @@ class InMemoryUserGateway implements IUserGateway
         }
 
         throw new NotFound('User not found.');
+    }
+
+    public function save(User $user)
+    {
+        if (!$user->getId()) {
+            $this->assignUserId($user);
+        }
+
+        self::$users[$user->getId()] = $user;
+    }
+
+    /**
+     * @param User $user
+     */
+    private function assignUserId(User $user)
+    {
+        try {
+            $userId     = (int)(time().count(self::$users));
+            $reflection = new \ReflectionClass(self::$userClass);
+            $property   = $reflection->getProperty('id');
+            if (!$property->isPublic()) {
+                $property->setAccessible(true);
+            }
+
+            $property->setValue($user, $userId);
+
+        } catch(\Exception $reason) {
+            throw new PersistenceFailed();
+        }
+
+    }
+
+    /**
+     * @return User
+     */
+    public function produce()
+    {
+        return new self::$userClass;
     }
 }
