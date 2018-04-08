@@ -8,6 +8,7 @@
 namespace Tidy\Tests\Unit\UseCases\User\DTO;
 
 use PHPUnit\Framework\TestCase;
+use Tidy\Requestors\User\IGetUserCollectionRequest;
 use Tidy\Requestors\User\IGetUserCollectionRequestBuilder;
 use Tidy\UseCases\User\DTO\GetUserCollectionRequestBuilder;
 use Tidy\UseCases\User\DTO\GetUserCollectionRequestDTO;
@@ -36,8 +37,10 @@ class GetUserCollectionRequestBuilderTest extends TestCase
      */
     public function testBuildReturnsCollectionRequest()
     {
-        $result = $this->builder->build();
+        $result = $this->builder->withPageSize(20)->fromPage(5)->build();
         $this->assertInstanceOf(GetUserCollectionRequestDTO::class, $result);
+        $this->assertEquals(20, $result->getPageSize());
+        $this->assertEquals(5, $result->getPage());
 
         $result2 = $this->builder->create()->build();
         $this->assertNotSame($result, $result2);
@@ -54,6 +57,7 @@ class GetUserCollectionRequestBuilderTest extends TestCase
         $this->assertEquals(1, $result->getPage());
         $this->assertEquals(20, $result->getPageSize());
     }
+
 
 
     /**

@@ -90,7 +90,7 @@ class GetUserCollectionTest extends TestCase
         $this->builder = new GetUserCollectionRequestBuilder();
 
         $this->useCase->setUserGateway(new InMemoryUserGateway());
-        $this->useCase->setCollectionResponseTransformer(
+        $this->useCase->setResponseTransformer(
             new UserCollectionResponseTransformer()
         );
     }

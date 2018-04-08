@@ -12,6 +12,7 @@ use Tidy\Gateways\IUserGateway;
 use Tidy\Requestors\User\IGetUserCollectionRequest;
 use Tidy\Responders\User\IUserCollectionResponse;
 use Tidy\Responders\User\IUserCollectionResponseTransformer;
+use Tidy\Util\PagedCollection;
 
 /**
  * Class GetUserCollection
@@ -35,9 +36,15 @@ class GetUserCollection
      */
     public function execute(IGetUserCollectionRequest $request)
     {
-        $users      = $this->gateway->fetchCollection($request->getPage(), $request->getPageSize());
-        $totalItems = $this->gateway->getTotal();
-        $response   = $this->transformer->transform($users, $request->getPage(), $request->getPageSize(), $totalItems);
+
+        $collection = new PagedCollection(
+            $this->gateway->fetchCollection($request->getPage(), $request->getPageSize()),
+            $this->gateway->getTotal(),
+            $request->getPage(),
+            $request->getPageSize()
+        );
+
+        $response   = $this->transformer->transform($collection);
 
         return $response;
     }
@@ -53,7 +60,7 @@ class GetUserCollection
     /**
      * @param IUserCollectionResponseTransformer $transformer
      */
-    public function setCollectionResponseTransformer(IUserCollectionResponseTransformer $transformer)
+    public function setResponseTransformer(IUserCollectionResponseTransformer $transformer)
     {
         $this->transformer = $transformer;
     }

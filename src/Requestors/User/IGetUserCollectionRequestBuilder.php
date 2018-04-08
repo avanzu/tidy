@@ -7,7 +7,6 @@
 
 namespace Tidy\Requestors\User;
 
-use Tidy\UseCases\User\DTO\GetUserCollectionRequestDTO;
 
 
 /**

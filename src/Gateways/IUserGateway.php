@@ -26,7 +26,7 @@ interface IUserGateway
      * @param $page
      * @param $pageSize
      *
-     * @return User
+     * @return User[]
      */
     public function fetchCollection($page, $pageSize);
 

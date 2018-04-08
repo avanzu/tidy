@@ -14,6 +14,7 @@ use Tidy\Tests\Unit\Entities\UserStub1;
 use Tidy\UseCases\User\DTO\UserCollectionResponseDTO;
 use Tidy\UseCases\User\DTO\UserCollectionResponseTransformer;
 use Tidy\UseCases\User\DTO\UserResponseTransformer;
+use Tidy\Util\PagedCollection;
 
 /**
  * Class UserCollectionResponseTransformerTest
@@ -42,8 +43,7 @@ class UserCollectionResponseTransformerTest extends TestCase
         $items      = [new UserStub1()];
         $page       = 1;
         $pageSize   = 20;
-        $pagesTotal = 5;
-        $result     = $this->transformer->transform($items, $page, $pageSize, $pagesTotal);
+        $result     = $this->transformer->transform(new PagedCollection($items, 10, $page, $pageSize));
         $this->assertInstanceOf(UserCollectionResponseDTO::class, $result);
         $this->assertEquals($page, $result->getPage());
         $this->assertEquals($pageSize, $result->getPageSize());
@@ -61,8 +61,8 @@ class UserCollectionResponseTransformerTest extends TestCase
     public function testItemTransformerAssignment()
     {
         $itemTransformer = new UserResponseTransformer();
-        $lastTransformer = $this->transformer->replaceItemTransformer($itemTransformer);
-        $this->assertSame($itemTransformer, $this->transformer->replaceItemTransformer($lastTransformer));
+        $lastTransformer = $this->transformer->swapItemTransformer($itemTransformer);
+        $this->assertSame($itemTransformer, $this->transformer->swapItemTransformer($lastTransformer));
 
     }
 

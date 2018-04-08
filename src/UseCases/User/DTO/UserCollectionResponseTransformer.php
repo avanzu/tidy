@@ -12,6 +12,7 @@ use Tidy\Responders\User\IUserCollectionResponse;
 use Tidy\Responders\User\IUserCollectionResponseTransformer;
 use Tidy\Responders\User\IUserResponseTransformer;
 use Tidy\UseCases\User\DTO\UserResponseTransformer as ItemTransformer;
+use Tidy\Util\PagedCollection;
 
 /**
  * Class UserCollectionResponseTransformer
@@ -38,7 +39,7 @@ class UserCollectionResponseTransformer implements IUserCollectionResponseTransf
      *
      * @return IUserResponseTransformer
      */
-    public function replaceItemTransformer(IUserResponseTransformer $itemTransformer)
+    public function swapItemTransformer(IUserResponseTransformer $itemTransformer)
     {
         $previous              = $this->itemTransformer;
         $this->itemTransformer = $itemTransformer;
@@ -47,25 +48,19 @@ class UserCollectionResponseTransformer implements IUserCollectionResponseTransf
     }
 
     /**
-     * @param $items
-     * @param $page
-     * @param $pageSize
-     * @param $itemsTotal
      *
-     * @return IUserCollectionResponse
+     * @param PagedCollection $collection
+     *
+     * @return UserCollectionResponseDTO
      */
-    public function transform($items, $page, $pageSize, $itemsTotal)
+    public function transform(PagedCollection $collection)
     {
         $response             = new UserCollectionResponseDTO();
-        $response->page       = $page;
-        $response->pageSize   = $pageSize;
-        $response->itemsTotal = $itemsTotal;
-        $response->pagesTotal = ceil($itemsTotal / $pageSize);
-
-        $response->items = [];
-        while ($item = array_shift($items)) {
-            $response->items[] = $this->itemTransformer->transform($item);
-        }
+        $response->page       = $collection->getPage();
+        $response->pageSize   = $collection->getPageSize();
+        $response->itemsTotal = $collection->getTotal();
+        $response->pagesTotal = $collection->getPagesTotal();
+        $response->items      = $collection->map(function($item){ return $this->itemTransformer->transform($item); });
 
         return $response;
     }
