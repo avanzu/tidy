@@ -20,12 +20,12 @@ class UserCollectionResponseDTO extends CollectionResponse implements IUserColle
 
 
     /**
-     * @var
+     * @var IUserResponse[]
      */
     public $items;
 
     /**
-     * @return IUserResponse
+     * @return IUserResponse[]
      */
     public function getItems()
     {
