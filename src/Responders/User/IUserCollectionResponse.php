@@ -7,34 +7,17 @@
 
 namespace Tidy\Responders\User;
 
+use Tidy\Responders\ICollectionResponse;
+
 
 /**
  * Class UserCollectionResponseDTO
  */
-interface IUserCollectionResponse
+interface IUserCollectionResponse extends ICollectionResponse
 {
-    /**
-     * @return int
-     */
-    public function getPage();
-
-    /**
-     * @return int
-     */
-    public function getPageSize();
 
     /**
      * @return IUserResponse[]
      */
     public function getItems();
-
-    /**
-     * @return int
-     */
-    public function pagesTotal();
-
-    /**
-     * @return int
-     */
-    public function getTotal();
 }

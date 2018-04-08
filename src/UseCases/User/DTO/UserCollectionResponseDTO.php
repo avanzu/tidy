@@ -7,6 +7,7 @@
 
 namespace Tidy\UseCases\User\DTO;
 
+use Tidy\Responders\CollectionResponse;
 use Tidy\Responders\User\IUserCollectionResponse;
 use Tidy\Responders\User\IUserResponse;
 
@@ -14,30 +15,14 @@ use Tidy\Responders\User\IUserResponse;
 /**
  * Class UserCollectionResponseDTO
  */
-class UserCollectionResponseDTO implements IUserCollectionResponse
+class UserCollectionResponseDTO extends CollectionResponse implements IUserCollectionResponse
 {
 
-    /**
-     * @var
-     */
-    public $page;
-    /**
-     * @var
-     */
-    public $pageSize;
+
     /**
      * @var
      */
     public $items;
-
-    /**
-     * @var int
-     */
-    public $pagesTotal;
-    /**
-     * @var int
-     */
-    public $itemsTotal;
 
     /**
      * @return IUserResponse
@@ -47,35 +32,4 @@ class UserCollectionResponseDTO implements IUserCollectionResponse
         return $this->items;
     }
 
-    /**
-     * @return int
-     */
-    public function getPage()
-    {
-        return $this->page;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPageSize()
-    {
-        return $this->pageSize;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTotal()
-    {
-        return $this->itemsTotal;
-    }
-
-    /**
-     * @return int
-     */
-    public function pagesTotal()
-    {
-        return $this->pagesTotal;
-    }
 }

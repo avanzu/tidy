@@ -55,6 +55,7 @@ class GetUserCollectionTest extends TestCase
         ];
 
         $request = $this->builder->fromPage(1)->withPageSize(10)->build();
+
         $result  = $this->useCase->execute($request);
         $this->assertInstanceOf(UserCollectionResponseDTO::class, $result);
 
@@ -63,6 +64,7 @@ class GetUserCollectionTest extends TestCase
         $this->assertEquals(2, $result->getTotal());
         $this->assertEquals(1, $result->pagesTotal());
         $this->assertInternalType('array', $result->getItems());
+
         list($user1, $user2) = $result->getItems();
         $this->assertInstanceOf(IUserResponse::class, $user1);
         $this->assertEquals(UserStub1::ID, $user1->getId());
