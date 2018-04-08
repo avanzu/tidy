@@ -11,6 +11,9 @@ use PHPUnit\Framework\TestCase;
 use Tidy\Requestors\ICollectionRequest;
 use Tidy\Util\PagedCollection;
 
+/**
+ * Class PagedCollectionTest
+ */
 class PagedCollectionTest extends TestCase
 {
     /**
@@ -18,6 +21,9 @@ class PagedCollectionTest extends TestCase
      */
     private $collection;
 
+    /**
+     *
+     */
     public function testInstantiation()
     {
         $this->assertInstanceOf(PagedCollection::class, $this->collection);
@@ -25,6 +31,9 @@ class PagedCollectionTest extends TestCase
         $this->assertInstanceOf(\IteratorAggregate::class, $this->collection);
     }
 
+    /**
+     *
+     */
     public function testDefaultValues()
     {
         $this->assertEquals(ICollectionRequest::DEFAULT_PAGE, $this->collection->getPage());
@@ -35,6 +44,9 @@ class PagedCollectionTest extends TestCase
 
     }
 
+    /**
+     *
+     */
     public function testArrayLikeness()
     {
         $items       = [1, 2];
@@ -58,6 +70,9 @@ class PagedCollectionTest extends TestCase
         }
     }
 
+    /**
+     *
+     */
     public function testMapCallback()
     {
         $items            = array_fill(0, 5, uniqid());
@@ -68,6 +83,9 @@ class PagedCollectionTest extends TestCase
     }
 
 
+    /**
+     *
+     */
     public function testStateIsAlwaysValid()
     {
         $items      = array_fill(0, 30, uniqid());
@@ -80,6 +98,9 @@ class PagedCollectionTest extends TestCase
     }
 
 
+    /**
+     *
+     */
     protected function setUp()
     {
         $this->collection = new PagedCollection();
