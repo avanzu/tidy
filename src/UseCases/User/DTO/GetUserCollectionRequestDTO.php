@@ -18,4 +18,7 @@ class GetUserCollectionRequestDTO extends CollectionRequest implements IGetUserC
 {
 
 
+    public static function create() {
+        return new static;
+    }
 }

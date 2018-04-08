@@ -28,4 +28,21 @@ class GetUserRequestDTO implements IGetUserRequest
     {
         return $this->userId;
     }
+
+    /**
+     * @return GetUserRequestDTO
+     */
+    public static function create() {
+        return new static;
+    }
+
+    /**
+     * @param $userId
+     *
+     * @return $this
+     */
+    public function withUserId($userId) {
+        $this->userId = $userId;
+        return $this;
+    }
 }

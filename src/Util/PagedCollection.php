@@ -150,14 +150,6 @@ class PagedCollection implements \Countable, \IteratorAggregate
     }
 
     /**
-     * @param $items
-     */
-    public function setItems($items)
-    {
-        $this->items = $items;
-    }
-
-    /**
      * @inheritdoc
      */
     public function getIterator()

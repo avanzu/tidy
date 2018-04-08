@@ -9,12 +9,11 @@ namespace Tidy\Tests\Unit\UseCases\User;
 
 use PHPUnit\Framework\TestCase;
 use Tidy\Exceptions\OutOfBounds;
-use Tidy\Requestors\User\IGetUserCollectionRequestBuilder;
 use Tidy\Responders\User\IUserResponse;
 use Tidy\Tests\Unit\Entities\UserStub1;
 use Tidy\Tests\Unit\Entities\UserStub2;
 use Tidy\Tests\Unit\Gateways\InMemoryUserGateway;
-use Tidy\UseCases\User\DTO\GetUserCollectionRequestBuilder;
+use Tidy\UseCases\User\DTO\GetUserCollectionRequestDTO;
 use Tidy\UseCases\User\DTO\UserCollectionResponseDTO;
 use Tidy\UseCases\User\DTO\UserCollectionResponseTransformer;
 use Tidy\UseCases\User\GetUserCollection;
@@ -24,10 +23,6 @@ use Tidy\UseCases\User\GetUserCollection;
  */
 class GetUserCollectionTest extends TestCase
 {
-    /**
-     * @var IGetUserCollectionRequestBuilder
-     */
-    protected $builder;
     /**
      * @var GetUserCollection
      */
@@ -54,9 +49,10 @@ class GetUserCollectionTest extends TestCase
             UserStub2::ID => new UserStub2(),
         ];
 
-        $request = $this->builder->fromPage(1)->withPageSize(10)->build();
 
-        $result  = $this->useCase->execute($request);
+        $request = GetUserCollectionRequestDTO::create()->fromPage(1)->withPageSize(10);
+
+        $result = $this->useCase->execute($request);
         $this->assertInstanceOf(UserCollectionResponseDTO::class, $result);
 
         $this->assertEquals($request->getPage(), $result->getPage());
@@ -77,7 +73,7 @@ class GetUserCollectionTest extends TestCase
      */
     public function testLoadCollectionOutOfBounds()
     {
-        $request = $this->builder->fromPage(10)->withPageSize(20)->build();
+        $request = GetUserCollectionRequestDTO::create()->fromPage(10)->withPageSize(20);
         $this->expectException(OutOfBounds::class);
         $this->useCase->execute($request);
     }
@@ -89,7 +85,6 @@ class GetUserCollectionTest extends TestCase
     protected function setUp()
     {
         $this->useCase = new GetUserCollection();
-        $this->builder = new GetUserCollectionRequestBuilder();
 
         $this->useCase->setUserGateway(new InMemoryUserGateway());
         $this->useCase->setResponseTransformer(

@@ -10,11 +10,11 @@ namespace Tidy\Tests\Unit\UseCases\User;
 
 use PHPUnit\Framework\TestCase;
 use Tidy\Exceptions\NotFound;
-use Tidy\Requestors\User\IGetUserRequestBuilder;
+
 use Tidy\Tests\Unit\Entities\UserStub1;
 use Tidy\Tests\Unit\Entities\UserStub2;
 use Tidy\Tests\Unit\Gateways\InMemoryUserGateway;
-use Tidy\UseCases\User\DTO\GetUserRequestBuilder;
+use Tidy\UseCases\User\DTO\GetUserRequestDTO;
 use Tidy\UseCases\User\DTO\UserResponseDTO;
 use Tidy\UseCases\User\DTO\UserResponseTransformer;
 use Tidy\UseCases\User\GetUser;
@@ -24,10 +24,6 @@ use Tidy\UseCases\User\GetUser;
  */
 class GetUserTest extends TestCase
 {
-    /**
-     * @var IGetUserRequestBuilder
-     */
-    private $requestBuilder;
 
     /**
      * @var GetUser
@@ -47,7 +43,8 @@ class GetUserTest extends TestCase
      */
     public function testUserNotFound()
     {
-        $request = $this->requestBuilder->withUserId(444)->build();
+
+        $request = GetUserRequestDTO::create()->withUserId(444);
         $this->expectException(NotFound::class);
         $this->useCase->execute($request);
 
@@ -60,15 +57,14 @@ class GetUserTest extends TestCase
     {
         InMemoryUserGateway::$users = [UserStub1::ID => new UserStub1(), UserStub2::ID => new UserStub2()];
 
-        $request = $this->requestBuilder->withUserId(123)->build();
-
+        $request  = GetUserRequestDTO::create()->withUserId(123);
         $response = $this->useCase->execute($request);
         $this->assertInstanceOf(UserResponseDTO::class, $response);
         $this->assertEquals(UserStub1::ID, $response->getId());
         $this->assertEquals(UserStub1::USERNAME, $response->getUserName());
 
 
-        $request  = $this->requestBuilder->withUserId(999)->build();
+        $request  = GetUserRequestDTO::create()->withUserId(999);
         $response = $this->useCase->execute($request);
         $this->assertEquals(UserStub2::ID, $response->getId());
         $this->assertEquals(UserStub2::USERNAME, $response->getUserName());
@@ -80,8 +76,7 @@ class GetUserTest extends TestCase
      */
     protected function setUp()
     {
-        $this->useCase        = new GetUser();
-        $this->requestBuilder = new GetUserRequestBuilder();
+        $this->useCase = new GetUser();
 
         $this->useCase->setUserGateway(new InMemoryUserGateway());
         $this->useCase->setResponseTransformer(new UserResponseTransformer());
