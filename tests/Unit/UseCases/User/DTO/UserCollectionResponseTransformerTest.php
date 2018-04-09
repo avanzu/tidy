@@ -35,25 +35,48 @@ class UserCollectionResponseTransformerTest extends TestCase
         $this->assertInstanceOf(UserCollectionResponseTransformer::class, $this->transformer);
     }
 
+
+    public function test_transform_returnsUserCollectionResponse()
+    {
+        $items    = [];
+        $result   = $this->transformer->transform(new PagedCollection($items, 10, 1, 20));
+        $this->assertInstanceOf(UserCollectionResponseDTO::class, $result);
+    }
+
+    public function test_UserCollectionResponse_containsValidBoundaries()
+    {
+        $items    = [];
+        $page     = 1;
+        $pageSize = 20;
+        $total    = 10;
+        $result   = $this->transformer->transform(new PagedCollection($items, $total, $page, $pageSize));
+
+        $this->assertEquals($page, $result->getPage());
+        $this->assertEquals($pageSize, $result->getPageSize());
+        $this->assertEquals($total, $result->getTotal());
+        $this->assertInternalType('array', $result->getItems());
+    }
+
+
+
     /**
      *
      */
-    public function test_transformationPagedCollection_returnsUserCollectionResponse()
+    public function test_itemTransformation_createsUserResponse()
     {
         $items    = [new UserStub1()];
         $page     = 1;
         $pageSize = 20;
         $result   = $this->transformer->transform(new PagedCollection($items, 10, $page, $pageSize));
-        $this->assertInstanceOf(UserCollectionResponseDTO::class, $result);
-        $this->assertEquals($page, $result->getPage());
-        $this->assertEquals($pageSize, $result->getPageSize());
-        $this->assertInternalType('array', $result->getItems());
+
         /** @var $item IUserResponse */
         list($item) = $result->getItems();
         $this->assertInstanceOf(IUserResponse::class, $item);
         $this->assertEquals(UserStub1::ID, $item->getId());
 
     }
+
+
 
     /**
      *

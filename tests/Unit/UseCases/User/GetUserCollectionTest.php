@@ -37,10 +37,37 @@ class GetUserCollectionTest extends TestCase
     }
 
 
+    public function test_GetUserCollectionRequest_returnsUserCollectionResponse()
+    {
+        $request = GetUserCollectionRequestDTO::create()->fromPage(1)->withPageSize(10);
+
+        $result = $this->useCase->execute($request);
+        $this->assertInstanceOf(UserCollectionResponseDTO::class, $result);
+
+    }
+    /**
+     */
+    public function test_UserCollectionResponse_containsValidBoundaries()
+    {
+
+        InMemoryUserGateway::$users = [
+            UserStub1::ID => new UserStub1(),
+        ];
+
+        $request = GetUserCollectionRequestDTO::create()->fromPage(1)->withPageSize(10);
+        $result  = $this->useCase->execute($request);
+
+        $this->assertEquals($request->getPage(), $result->getPage());
+        $this->assertEquals($request->getPageSize(), $result->getPageSize());
+        $this->assertEquals(1, $result->getTotal());
+        $this->assertEquals(1, $result->pagesTotal());
+
+    }
+
     /**
      *
      */
-    public function test_GetUserCollectionRequest_ReturnsUserCollectionResponse()
+    public function test_UserCollectionResponse_ContainsUserResponseItems()
     {
 
 
@@ -49,16 +76,10 @@ class GetUserCollectionTest extends TestCase
             UserStub2::ID => new UserStub2(),
         ];
 
-
         $request = GetUserCollectionRequestDTO::create()->fromPage(1)->withPageSize(10);
 
         $result = $this->useCase->execute($request);
-        $this->assertInstanceOf(UserCollectionResponseDTO::class, $result);
 
-        $this->assertEquals($request->getPage(), $result->getPage());
-        $this->assertEquals($request->getPageSize(), $result->getPageSize());
-        $this->assertEquals(2, $result->getTotal());
-        $this->assertEquals(1, $result->pagesTotal());
         $this->assertInternalType('array', $result->getItems());
 
         list($user1, $user2) = $result->getItems();
@@ -79,6 +100,8 @@ class GetUserCollectionTest extends TestCase
     }
 
 
+
+
     /**
      *
      */
@@ -91,6 +114,9 @@ class GetUserCollectionTest extends TestCase
             new UserCollectionResponseTransformer()
         );
     }
+
+
+
 
 
 }

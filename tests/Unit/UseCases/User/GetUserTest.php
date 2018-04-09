@@ -62,11 +62,6 @@ class GetUserTest extends TestCase
         $this->assertEquals(UserStub1::ID, $response->getId());
         $this->assertEquals(UserStub1::USERNAME, $response->getUserName());
 
-
-        $request  = GetUserRequestDTO::create()->withUserId(999);
-        $response = $this->useCase->execute($request);
-        $this->assertEquals(UserStub2::ID, $response->getId());
-        $this->assertEquals(UserStub2::USERNAME, $response->getUserName());
     }
 
 
