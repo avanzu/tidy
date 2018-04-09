@@ -40,7 +40,7 @@ class GetUserCollectionTest extends TestCase
     /**
      *
      */
-    public function testLoadCollection()
+    public function test_GetUserCollectionRequest_ReturnsUserCollectionResponse()
     {
 
 
@@ -71,7 +71,7 @@ class GetUserCollectionTest extends TestCase
     /**
      *
      */
-    public function testLoadCollectionOutOfBounds()
+    public function test_GetUserCollectionRequest_WithExceedingPage_throwsOutOfBounds()
     {
         $request = GetUserCollectionRequestDTO::create()->fromPage(10)->withPageSize(20);
         $this->expectException(OutOfBounds::class);

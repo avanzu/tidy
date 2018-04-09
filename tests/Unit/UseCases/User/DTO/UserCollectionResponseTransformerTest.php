@@ -38,12 +38,12 @@ class UserCollectionResponseTransformerTest extends TestCase
     /**
      *
      */
-    public function testTransformation()
+    public function test_transformationPagedCollection_returnsUserCollectionResponse()
     {
-        $items      = [new UserStub1()];
-        $page       = 1;
-        $pageSize   = 20;
-        $result     = $this->transformer->transform(new PagedCollection($items, 10, $page, $pageSize));
+        $items    = [new UserStub1()];
+        $page     = 1;
+        $pageSize = 20;
+        $result   = $this->transformer->transform(new PagedCollection($items, 10, $page, $pageSize));
         $this->assertInstanceOf(UserCollectionResponseDTO::class, $result);
         $this->assertEquals($page, $result->getPage());
         $this->assertEquals($pageSize, $result->getPageSize());
@@ -58,7 +58,7 @@ class UserCollectionResponseTransformerTest extends TestCase
     /**
      *
      */
-    public function testItemTransformerAssignment()
+    public function test_swapItemTransformer_AcceptsNewTransformer_ReturnsCurrentTransformer()
     {
         $itemTransformer = new UserResponseTransformer();
         $lastTransformer = $this->transformer->swapItemTransformer($itemTransformer);

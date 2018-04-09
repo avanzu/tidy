@@ -40,7 +40,7 @@ class GetUserTest extends TestCase
     /**
      *
      */
-    public function testUserNotFound()
+    public function test_GetExistingUser_InvalidUserId_throws_UserNotFound()
     {
 
         $request = GetUserRequestDTO::create()->withUserId(444);
@@ -52,7 +52,7 @@ class GetUserTest extends TestCase
     /**
      *
      */
-    public function testGetExistingUser()
+    public function test_GetExistingUser_ValidUserId_ReturnsUserResponse()
     {
         InMemoryUserGateway::$users = [UserStub1::ID => new UserStub1(), UserStub2::ID => new UserStub2()];
 

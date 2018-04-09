@@ -28,18 +28,18 @@ class CreateUserTest extends TestCase
 
     }
 
-    public function testCreatingUser_Success()
+    public function test_CreateUserRequest_returnsUserResponse()
     {
         $username = 'Timmy';
-        $request = CreateUserRequestDTO::create()->withUserName($username);
-        $result  = $this->useCase->execute($request);
+        $request  = CreateUserRequestDTO::create()->withUserName($username);
+        $result   = $this->useCase->execute($request);
         $this->assertInstanceOf(UserResponseDTO::class, $result);
         $this->assertEquals($username, $result->getUserName());
         $this->assertNotNull($result->getId());
     }
 
 
-    public function testCreatingUser_Failure()
+    public function test_CreateUserRequest_persistenceFailure_throwsPersistenceFailed()
     {
         $gateway = $this->createPartialMock(InMemoryUserGateway::class, ['save']);
         $gateway->method('save')->willThrowException(new PersistenceFailed());
@@ -58,8 +58,6 @@ class CreateUserTest extends TestCase
         $this->useCase->setResponseTransformer(new UserResponseTransformer());
 
     }
-
-
 
 
 }
