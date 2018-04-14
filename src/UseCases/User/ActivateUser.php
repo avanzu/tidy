@@ -8,6 +8,7 @@
 namespace Tidy\UseCases\User;
 
 
+use Tidy\Exceptions\NotFound;
 use Tidy\Requestors\User\IActivateUserRequest;
 
 class ActivateUser extends GenericUseCase
@@ -16,10 +17,15 @@ class ActivateUser extends GenericUseCase
     public function execute(IActivateUserRequest $request)
     {
 
-        $user = $this->userGateway->find($request->getToken());
+        $user = $this->userGateway->findByToken($request->getToken());
+
+        if (!$user) {
+            throw new NotFound(sprintf('Unable to find user ty token "%s".', $request->getToken()));
+        }
 
         $user->setEnabled(true)
-             ->setToken(null);
+             ->setToken(null)
+        ;
 
         $this->userGateway->save($user);
 

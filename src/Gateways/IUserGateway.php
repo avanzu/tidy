@@ -47,4 +47,11 @@ interface IUserGateway
      */
     public function produce();
 
+    /**
+     * @param $token
+     *
+     * @return User|null
+     */
+    public function findByToken($token);
+
 }

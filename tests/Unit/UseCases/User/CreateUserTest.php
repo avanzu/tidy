@@ -59,9 +59,11 @@ class CreateUserTest extends TestCase
         $result = $this->useCase->execute($request);
 
         $this->assertInstanceOf(UserResponseDTO::class, $result);
-        $this->assertEquals($username, $result->getUserName());
-        $this->assertEquals($eMail, $result->getEMail());
-        $this->assertNotEquals($plainPassword, $result->getPassword());
+
+        $this->assertEquals($username, $result->getUserName(), 'username should be assigned');
+        $this->assertEquals($eMail, $result->getEMail(), 'email should be assigned');
+        $this->assertNotEmpty($result->getPassword(), 'password should be assigned');
+        $this->assertNotEquals($plainPassword, $result->getPassword(),'plain password should be encoded');
 
         $this->assertEquals(999, $result->getId());
     }
@@ -79,8 +81,10 @@ class CreateUserTest extends TestCase
         /** @var UserResponseDTO $result */
         $result = $this->useCase->execute($request);
 
-        $this->assertFalse($result->isEnabled());
-        $this->assertNotEmpty($result->getToken());
+        $this->assertFalse($result->isEnabled(), 'user should not be enabled by default');
+
+        // user should have a token
+        $this->assertNotEmpty($result->getToken(), 'user should have a token ');
     }
 
     public function test_CreateUserRequest_grantsImmediateAccess()
@@ -98,8 +102,8 @@ class CreateUserTest extends TestCase
 
         $result = $this->useCase->execute($request);
 
-        $this->assertTrue($result->isEnabled());
-        $this->assertEmpty($result->getToken());
+        $this->assertTrue($result->isEnabled(), 'user should be enabled');
+        $this->assertEmpty($result->getToken(), 'user should not have a token');
 
     }
 

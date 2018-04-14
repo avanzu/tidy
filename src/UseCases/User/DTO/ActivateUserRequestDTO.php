@@ -23,6 +23,7 @@ class ActivateUserRequestDTO implements IActivateUserRequest
     public function withToken($token)
     {
         $this->token = $token;
+        return $this;
     }
 
     public function getToken()

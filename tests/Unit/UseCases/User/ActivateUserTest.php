@@ -10,6 +10,7 @@ namespace Tidy\Tests\Unit\UseCases\User;
 
 use Mockery\MockInterface;
 use Tidy\Entities\User;
+use Tidy\Exceptions\NotFound;
 use Tidy\Gateways\IUserGateway;
 use Tidy\Responders\User\IUserResponse;
 use Tidy\Responders\User\IUserResponseTransformer;
@@ -35,9 +36,8 @@ class ActivateUserTest extends MockeryTestCase
         $this->assertInstanceOf(ActivateUser::class, $this->useCase);
     }
 
-    public function test_activation()
+    public function test_activation_with_matching_token()
     {
-        $userId       = UserStub1::ID;
         $stub1        = new UserStub1();
         $token        = uniqid();
         $stub1->setToken($token);
@@ -57,8 +57,18 @@ class ActivateUserTest extends MockeryTestCase
 
         $this->assertInstanceOf(IUserResponse::class, $result);
 
-        $this->assertTrue($result->isEnabled());
-        $this->assertEmpty($result->getToken());
+        $this->assertTrue($result->isEnabled(), 'user should be enabled.');
+        $this->assertEmpty($result->getToken(), 'token should be removed.');
+    }
+
+    public function test_activation_with_undefined_token()
+    {
+        $token = uniqid();
+        $this->expectFindReturning($token, null);
+
+        $this->expectException(NotFound::class);
+        $this->useCase->execute(ActivateUserRequestDTO::make()->withToken($token));
+
     }
 
 
@@ -75,14 +85,23 @@ class ActivateUserTest extends MockeryTestCase
     }
 
     /**
-     * @param $userId
+     * @param $token
      * @param $stub1
      * @param $argumentThat
      */
-    private function expectFindAndSaveWith($userId, $stub1, $argumentThat): void
+    private function expectFindAndSaveWith($token, $stub1, $argumentThat)
     {
-        $this->gateway->expects('find')->with($userId)->andReturn($stub1);
+        $this->expectFindReturning($token, $stub1);
         $this->gateway->expects('save')->with($argumentThat);
+    }
+
+    /**
+     * @param $token
+     * @param $stub1
+     */
+    private function expectFindReturning($token, $stub1)
+    {
+        $this->gateway->expects('findByToken')->with($token)->andReturn($stub1);
     }
 
 
