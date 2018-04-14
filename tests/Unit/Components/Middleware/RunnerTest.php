@@ -10,6 +10,7 @@ namespace Tidy\Tests\Unit\Components\Middleware;
 
 use Tidy\Components\Middleware\IProcessor;
 use Tidy\Components\Middleware\Runner;
+use Tidy\Exceptions\InvalidArgument;
 use Tidy\Tests\MockeryTestCase;
 
 class RunnerTest extends MockeryTestCase
@@ -27,7 +28,14 @@ class RunnerTest extends MockeryTestCase
         $this->assertInstanceOf(IProcessor::class, $runner);
     }
 
-    public function test_foo()
+    public function test_enqueue_throws_InvalidArgument()
+    {
+        $this->expectException(InvalidArgument::class);
+        $this->runner->enqueue('blah');
+
+    }
+
+    public function test_process_is_executed_in_order()
     {
         $preprocessor = new Preprocessor();
         $this->assertInstanceOf(IProcessor::class, $preprocessor);

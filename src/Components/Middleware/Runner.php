@@ -8,19 +8,24 @@
 namespace Tidy\Components\Middleware;
 
 
+use Tidy\Exceptions\InvalidArgument;
+
 class Runner implements IProcessor
 {
     protected $queue = [];
 
     public function enqueue(...$queue) {
 
-        $this->queue = [];
+        $this->clear();
+
         foreach ($queue as $item) {
-            $this->queue[] = $item;
+            $this->addToQueue($item);
         }
 
         return $this;
     }
+
+
 
     public function process($input, callable $next = null) {
 
@@ -42,6 +47,21 @@ class Runner implements IProcessor
             return $carry->process($object, $next);
         };
 
+    }
+
+    /**
+     * @param $item
+     */
+    private function addToQueue($item)
+    {
+        if( ! $item instanceof IProcessor)
+            throw new InvalidArgument(sprintf('Middleware processors must implement [%s].', IProcessor::class));
+        $this->queue[] = $item;
+    }
+
+    private function clear()
+    {
+        $this->queue = [];
     }
 
 }
