@@ -10,11 +10,23 @@ namespace Tidy\Components\Middleware;
 
 use Tidy\Exceptions\InvalidArgument;
 
+/**
+ * Class Runner
+ */
 class Runner implements IProcessor
 {
+    /**
+     * @var array
+     */
     protected $queue = [];
 
-    public function enqueue(...$queue) {
+    /**
+     * @param mixed ...$queue
+     *
+     * @return $this
+     */
+    public function enqueue(...$queue)
+    {
 
         $this->clear();
 
@@ -26,24 +38,47 @@ class Runner implements IProcessor
     }
 
 
+    /**
+     * @param               $input
+     * @param callable|null $next
+     *
+     * @return mixed
+     */
+    public function process($input, callable $next = null)
+    {
 
-    public function process($input, callable $next = null) {
-
-        $queue      = array_reverse($this->queue);
-        $middleware = array_reduce($queue, function($next, $current){ return $this->make($current, $next); }, $this->makeResolver( $next ));
+        $middleware = array_reduce(
+            array_reverse($this->queue),
+            function ($next, $current) { return $this->make($next, $current); },
+            $this->makeResolver($next)
+        );
 
         return $middleware($input);
     }
 
+    /**
+     * @param callable|null $next
+     *
+     * @return \Closure
+     */
     private function makeResolver(callable $next = null)
     {
-        if( ! is_callable($next)) $next = function($input){ return $input; };
-        return function($input) use ($next) { return $next($input); };
+        if (!is_callable($next)) {
+            $next = function ($input) { return $input; };
+        }
+
+        return function ($input) use ($next) { return $next($input); };
     }
 
-    private function make(IProcessor $carry, $next)
+    /**
+     * @param IProcessor $carry
+     * @param            $next
+     *
+     * @return \Closure
+     */
+    private function make(callable $next, IProcessor $carry)
     {
-        return function($object) use ($carry, $next) {
+        return function ($object) use ($carry, $next) {
             return $carry->process($object, $next);
         };
 
@@ -54,11 +89,15 @@ class Runner implements IProcessor
      */
     private function addToQueue($item)
     {
-        if( ! $item instanceof IProcessor)
+        if (!$item instanceof IProcessor) {
             throw new InvalidArgument(sprintf('Middleware processors must implement [%s].', IProcessor::class));
+        }
         $this->queue[] = $item;
     }
 
+    /**
+     *
+     */
     private function clear()
     {
         $this->queue = [];
