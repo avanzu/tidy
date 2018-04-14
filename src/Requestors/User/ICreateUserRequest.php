@@ -5,7 +5,7 @@
  * Date: 14.04.18
  */
 
-namespace Tidy\UseCases\User\DTO;
+namespace Tidy\Requestors\User;
 
 interface ICreateUserRequest
 {

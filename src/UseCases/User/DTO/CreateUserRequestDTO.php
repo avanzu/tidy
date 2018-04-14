@@ -7,6 +7,7 @@
 
 namespace Tidy\UseCases\User\DTO;
 
+use Tidy\Requestors\User\ICreateUserRequest;
 
 class CreateUserRequestDTO implements ICreateUserRequest
 {
