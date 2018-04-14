@@ -8,7 +8,9 @@
 namespace Tidy\UseCases\User\DTO;
 
 
-class ActivateUserRequestDTO
+use Tidy\Requestors\User\IActivateUserRequest;
+
+class ActivateUserRequestDTO implements IActivateUserRequest
 {
     public $userId;
 
@@ -17,19 +19,11 @@ class ActivateUserRequestDTO
         return new self;
     }
 
-    /**
-     * @param $id
-     *
-     * @return ActivateUserRequestDTO
-     */
     public function withUserId($id) {
         $this->userId = $id;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getUserId()
     {
         return $this->userId;

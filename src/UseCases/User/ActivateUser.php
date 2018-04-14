@@ -9,8 +9,8 @@ namespace Tidy\UseCases\User;
 
 
 use Tidy\Gateways\IUserGateway;
+use Tidy\Requestors\User\IActivateUserRequest;
 use Tidy\Responders\User\IUserResponseTransformer;
-use Tidy\UseCases\User\DTO\ActivateUserRequestDTO;
 
 class ActivateUser
 {
@@ -24,7 +24,7 @@ class ActivateUser
      */
     protected $transformer;
 
-    public function execute(ActivateUserRequestDTO $request)
+    public function execute(IActivateUserRequest $request)
     {
 
         $user = $this->gateway->find($request->getUserId());
