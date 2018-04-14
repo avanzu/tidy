@@ -9,7 +9,9 @@ namespace Tidy\UseCases\User;
 
 
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
+use Tidy\Gateways\IUserGateway;
 use Tidy\Requestors\User\ICreateUserRequest;
+use Tidy\Responders\User\IUserResponseTransformer;
 
 
 class CreateUser extends GenericUseCase
@@ -19,14 +21,14 @@ class CreateUser extends GenericUseCase
      */
     private $passwordEncoder;
 
-    /**
-     * CreateUser constructor.
-     *
-     * @param IPasswordEncoder $passwordEncoder
-     */
-    public function __construct(IPasswordEncoder $passwordEncoder)
+    public function __construct(
+        IUserGateway $userGateway,
+        IUserResponseTransformer $responseTransformer,
+        IPasswordEncoder $encoder
+    )
     {
-        $this->passwordEncoder = $passwordEncoder;
+        parent::__construct($userGateway, $responseTransformer);
+        $this->passwordEncoder = $encoder;
     }
 
 

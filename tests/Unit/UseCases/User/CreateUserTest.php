@@ -13,6 +13,7 @@ use Tidy\Components\Security\Encoder\IPasswordEncoder;
 use Tidy\Entities\User;
 use Tidy\Exceptions\PersistenceFailed;
 use Tidy\Gateways\IUserGateway;
+use Tidy\Responders\User\IUserResponseTransformer;
 use Tidy\Tests\Unit\Entities\UserImpl;
 use Tidy\UseCases\User\CreateUser;
 use Tidy\UseCases\User\DTO\CreateUserRequestDTO;
@@ -114,9 +115,9 @@ class CreateUserTest extends TestCase
     protected function setUp()
     {
         $this->encoder = mock(IPasswordEncoder::class);
-        $this->useCase = new CreateUser($this->encoder);
-
         $this->gateway = mock(IUserGateway::class);
+        $this->useCase = new CreateUser($this->gateway, mock(IUserResponseTransformer::class), $this->encoder);
+
         $this->gateway->allows('produce')->andReturn(new UserImpl());
 
         $this->useCase->setUserGateway($this->gateway);
