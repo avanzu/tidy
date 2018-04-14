@@ -46,7 +46,7 @@ class GetUserCollectionTest extends MockeryTestCase
     {
         $this->setupFetchCollection(new UserStub1());
 
-        $request = GetUserCollectionRequestDTO::create()->fromPage(1)->withPageSize(10);
+        $request = GetUserCollectionRequestDTO::make()->fromPage(1)->withPageSize(10);
 
         $result = $this->useCase->execute($request);
         $this->assertInstanceOf(UserCollectionResponseDTO::class, $result);
@@ -66,7 +66,7 @@ class GetUserCollectionTest extends MockeryTestCase
     {
         $this->setupFetchCollection(new UserStub1());
 
-        $request = GetUserCollectionRequestDTO::create()->fromPage(1)->withPageSize(10);
+        $request = GetUserCollectionRequestDTO::make()->fromPage(1)->withPageSize(10);
 
         $result = $this->useCase->execute($request);
 
@@ -86,7 +86,7 @@ class GetUserCollectionTest extends MockeryTestCase
 
         $this->setupFetchCollection(new UserStub1(), new UserStub2());
 
-        $request = GetUserCollectionRequestDTO::create()->fromPage(1)->withPageSize(10);
+        $request = GetUserCollectionRequestDTO::make()->fromPage(1)->withPageSize(10);
 
         $result = $this->useCase->execute($request);
 
@@ -106,7 +106,7 @@ class GetUserCollectionTest extends MockeryTestCase
     {
         $this->gateway->shouldReceive('fetchCollection')->andThrow(new OutOfBounds());
 
-        $request = GetUserCollectionRequestDTO::create()->fromPage(10)->withPageSize(20);
+        $request = GetUserCollectionRequestDTO::make()->fromPage(10)->withPageSize(20);
         $this->expectException(OutOfBounds::class);
         $this->useCase->execute($request);
     }

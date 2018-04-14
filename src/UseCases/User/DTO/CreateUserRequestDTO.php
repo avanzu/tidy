@@ -18,7 +18,7 @@ class CreateUserRequestDTO implements ICreateUserRequest
     /**
      * @return ICreateUserRequest
      */
-    public static function create()
+    public static function make()
     {
         return new static;
     }

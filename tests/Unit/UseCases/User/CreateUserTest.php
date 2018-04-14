@@ -106,7 +106,7 @@ class CreateUserTest extends TestCase
         $this->gateway->expects('save')->andThrows(new PersistenceFailed());
 
         $this->expectException(PersistenceFailed::class);
-        $this->useCase->execute(CreateUserRequestDTO::create());
+        $this->useCase->execute(CreateUserRequestDTO::make());
 
 
     }
@@ -179,7 +179,7 @@ class CreateUserTest extends TestCase
      */
     private function makeRequestDTO($username, $plainPass, $eMail)
     {
-        $request = CreateUserRequestDTO::create();
+        $request = CreateUserRequestDTO::make();
         $request->withUserName($username)
                 ->withPlainPassword($plainPass)
                 ->withEMail($eMail)

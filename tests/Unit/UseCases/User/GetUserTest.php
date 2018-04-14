@@ -47,7 +47,7 @@ class GetUserTest extends MockeryTestCase
     public function test_GetExistingUser_InvalidUserId_throws_UserNotFound()
     {
         $this->gateway->expects('find')->with(444)->andThrow(new NotFound());
-        $request = GetUserRequestDTO::create()->withUserId(444);
+        $request = GetUserRequestDTO::make()->withUserId(444);
 
         $this->expectException(NotFound::class);
         $this->useCase->execute($request);
@@ -61,7 +61,7 @@ class GetUserTest extends MockeryTestCase
     {
 
         $this->gateway->expects('find')->with(UserStub1::ID)->andReturn(new UserStub1());
-        $request = GetUserRequestDTO::create()->withUserId(UserStub1::ID);
+        $request = GetUserRequestDTO::make()->withUserId(UserStub1::ID);
 
         $response = $this->useCase->execute($request);
         $this->assertInstanceOf(UserResponseDTO::class, $response);
