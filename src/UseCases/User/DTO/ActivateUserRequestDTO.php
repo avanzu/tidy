@@ -12,21 +12,21 @@ use Tidy\Requestors\User\IActivateUserRequest;
 
 class ActivateUserRequestDTO implements IActivateUserRequest
 {
-    public $userId;
+
+    public $token;
 
     public static function make()
     {
         return new self;
     }
 
-    public function withUserId($id) {
-        $this->userId = $id;
-        return $this;
-    }
-
-    public function getUserId()
+    public function withToken($token)
     {
-        return $this->userId;
+        $this->token = $token;
     }
 
+    public function getToken()
+    {
+        return $this->token;
+    }
 }

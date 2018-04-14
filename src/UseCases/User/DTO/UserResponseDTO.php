@@ -25,7 +25,7 @@ class UserResponseDTO implements IUserResponse
      */
     public $userName;
 
-    public    $eMail;
+    public $eMail;
     /**
      * @var string
      */
@@ -35,6 +35,8 @@ class UserResponseDTO implements IUserResponse
      * @var bool
      */
     public $enabled = false;
+    
+    public $token;
 
 
     /**
@@ -75,6 +77,11 @@ class UserResponseDTO implements IUserResponse
     public function isEnabled()
     {
         return $this->enabled;
+    }
+
+    public function getToken()
+    {
+        return $this->token;
     }
 
 

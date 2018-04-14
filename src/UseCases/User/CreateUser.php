@@ -25,8 +25,7 @@ class CreateUser extends GenericUseCase
         IUserGateway $userGateway,
         IUserResponseTransformer $responseTransformer,
         IPasswordEncoder $encoder
-    )
-    {
+    ) {
         parent::__construct($userGateway, $responseTransformer);
         $this->passwordEncoder = $encoder;
     }
@@ -43,6 +42,10 @@ class CreateUser extends GenericUseCase
              ->setPassword($password)
              ->setEnabled($request->isAccessGranted())
         ;
+
+        if (!$request->isAccessGranted()) {
+            $user->setToken(uniqid());
+        }
 
         $this->userGateway->save($user);
 

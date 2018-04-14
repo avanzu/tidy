@@ -39,22 +39,26 @@ class ActivateUserTest extends MockeryTestCase
     {
         $userId       = UserStub1::ID;
         $stub1        = new UserStub1();
+        $token        = uniqid();
+        $stub1->setToken($token);
+
         $argumentThat = argumentThat(
             function (User $user) {
                 return ($user->isEnabled() === true);
             }
         );
 
-        $this->expectFindAndSaveWith($userId, $stub1, $argumentThat);
+        $this->expectFindAndSaveWith($token, $stub1, $argumentThat);
 
         $request = ActivateUserRequestDTO::make();
-        $request->withUserId(UserStub1::ID);
+        $request->withToken($token);
 
         $result = $this->useCase->execute($request);
 
         $this->assertInstanceOf(IUserResponse::class, $result);
 
         $this->assertTrue($result->isEnabled());
+        $this->assertEmpty($result->getToken());
     }
 
 

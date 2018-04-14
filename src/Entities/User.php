@@ -8,24 +8,57 @@
 namespace Tidy\Entities;
 
 
+/**
+ * Class User
+ */
 abstract class User
 {
+    /**
+     * @var
+     */
     protected $userName;
+    /**
+     * @var
+     */
     protected $id;
+    /**
+     * @var
+     */
     protected $eMail;
+    /**
+     * @var
+     */
     protected $password;
+    /**
+     * @var bool
+     */
     protected $enabled = false;
+    /**
+     * @var
+     */
+    protected $token;
 
+    /**
+     * @return mixed
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @return mixed
+     */
     public function getUserName()
     {
         return $this->userName;
     }
 
+    /**
+     * @param $userName
+     *
+     * @return $this
+     */
     public function setUserName($userName)
     {
         $this->userName = $userName;
@@ -90,6 +123,23 @@ abstract class User
         $this->enabled = $enabled;
 
         return $this;
+    }
+
+    /**
+     * @param $token
+     *
+     * @return $this
+     */
+    public function setToken($token) {
+        $this->token = $token;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getToken() {
+        return $this->token;
     }
 
 

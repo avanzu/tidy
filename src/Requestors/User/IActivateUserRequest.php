@@ -9,15 +9,7 @@ namespace Tidy\Requestors\User;
 
 interface IActivateUserRequest
 {
-    /**
-     * @param $id
-     *
-     * @return IActivateUserRequest
-     */
-    public function withUserId($id);
+    public function withToken($token);
 
-    /**
-     * @return mixed
-     */
-    public function getUserId();
+    public function getToken();
 }

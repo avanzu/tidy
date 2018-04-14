@@ -30,6 +30,7 @@ class UserResponseTransformer implements Transformer
         $response->eMail    = $user->getEMail();
         $response->password = $user->getPassword();
         $response->enabled  = $user->isEnabled();
+        $response->token    = $user->getToken();
 
         return $response;
     }

@@ -16,8 +16,11 @@ class ActivateUser extends GenericUseCase
     public function execute(IActivateUserRequest $request)
     {
 
-        $user = $this->userGateway->find($request->getUserId());
-        $user->setEnabled(true);
+        $user = $this->userGateway->find($request->getToken());
+
+        $user->setEnabled(true)
+             ->setToken(null);
+
         $this->userGateway->save($user);
 
         return $this->responseTransformer->transform($user);

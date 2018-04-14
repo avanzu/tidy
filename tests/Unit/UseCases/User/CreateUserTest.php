@@ -76,10 +76,11 @@ class CreateUserTest extends TestCase
         $this->expectPasswordEncoderCall($plainPass);
 
         $request = $this->makeRequestDTO($username, $plainPass, $eMail);
-
+        /** @var UserResponseDTO $result */
         $result = $this->useCase->execute($request);
 
         $this->assertFalse($result->isEnabled());
+        $this->assertNotEmpty($result->getToken());
     }
 
     public function test_CreateUserRequest_grantsImmediateAccess()
@@ -98,6 +99,7 @@ class CreateUserTest extends TestCase
         $result = $this->useCase->execute($request);
 
         $this->assertTrue($result->isEnabled());
+        $this->assertEmpty($result->getToken());
 
     }
 
@@ -108,8 +110,6 @@ class CreateUserTest extends TestCase
 
         $this->expectException(PersistenceFailed::class);
         $this->useCase->execute(CreateUserRequestDTO::make());
-
-
     }
 
     protected function setUp()

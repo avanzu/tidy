@@ -19,4 +19,6 @@ interface IUserResponse
     public function getPassword();
 
     public function isEnabled();
+
+    public function getToken();
 }
