@@ -7,12 +7,13 @@
 
 namespace Tidy\Tests\Unit\UseCases\User;
 
-use PHPUnit\Framework\TestCase;
+use Mockery\MockInterface;
 use Tidy\Exceptions\OutOfBounds;
+use Tidy\Gateways\IUserGateway;
 use Tidy\Responders\User\IUserResponse;
+use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Entities\UserStub1;
 use Tidy\Tests\Unit\Entities\UserStub2;
-use Tidy\Tests\Unit\Gateways\InMemoryUserGateway;
 use Tidy\UseCases\User\DTO\GetUserCollectionRequestDTO;
 use Tidy\UseCases\User\DTO\UserCollectionResponseDTO;
 use Tidy\UseCases\User\DTO\UserCollectionResponseTransformer;
@@ -21,8 +22,12 @@ use Tidy\UseCases\User\GetUserCollection;
 /**
  * Class GetUserCollectionTest
  */
-class GetUserCollectionTest extends TestCase
+class GetUserCollectionTest extends MockeryTestCase
 {
+    /**
+     * @var IUserGateway|MockInterface
+     */
+    protected $gateway;
     /**
      * @var GetUserCollection
      */
@@ -39,23 +44,31 @@ class GetUserCollectionTest extends TestCase
 
     public function test_GetUserCollectionRequest_returnsUserCollectionResponse()
     {
+        $this->setupFetchCollection(new UserStub1());
+
         $request = GetUserCollectionRequestDTO::create()->fromPage(1)->withPageSize(10);
 
         $result = $this->useCase->execute($request);
         $this->assertInstanceOf(UserCollectionResponseDTO::class, $result);
 
     }
+
+    private function setupFetchCollection(...$elements)
+    {
+        $this->gateway->expects('fetchCollection')->andReturn($elements);
+        $this->gateway->expects('getTotal')->andReturn(count($elements));
+
+    }
+
     /**
      */
     public function test_UserCollectionResponse_containsValidBoundaries()
     {
-
-        InMemoryUserGateway::$users = [
-            UserStub1::ID => new UserStub1(),
-        ];
+        $this->setupFetchCollection(new UserStub1());
 
         $request = GetUserCollectionRequestDTO::create()->fromPage(1)->withPageSize(10);
-        $result  = $this->useCase->execute($request);
+
+        $result = $this->useCase->execute($request);
 
         $this->assertEquals($request->getPage(), $result->getPage());
         $this->assertEquals($request->getPageSize(), $result->getPageSize());
@@ -71,10 +84,7 @@ class GetUserCollectionTest extends TestCase
     {
 
 
-        InMemoryUserGateway::$users = [
-            UserStub1::ID => new UserStub1(),
-            UserStub2::ID => new UserStub2(),
-        ];
+        $this->setupFetchCollection(new UserStub1(), new UserStub2());
 
         $request = GetUserCollectionRequestDTO::create()->fromPage(1)->withPageSize(10);
 
@@ -94,13 +104,12 @@ class GetUserCollectionTest extends TestCase
      */
     public function test_GetUserCollectionRequest_WithExceedingPage_throwsOutOfBounds()
     {
+        $this->gateway->shouldReceive('fetchCollection')->andThrow(new OutOfBounds());
+
         $request = GetUserCollectionRequestDTO::create()->fromPage(10)->withPageSize(20);
         $this->expectException(OutOfBounds::class);
         $this->useCase->execute($request);
     }
-
-
-
 
     /**
      *
@@ -108,15 +117,13 @@ class GetUserCollectionTest extends TestCase
     protected function setUp()
     {
         $this->useCase = new GetUserCollection();
+        $this->gateway = mock(IUserGateway::class);
 
-        $this->useCase->setUserGateway(new InMemoryUserGateway());
+        $this->useCase->setUserGateway($this->gateway);
         $this->useCase->setResponseTransformer(
             new UserCollectionResponseTransformer()
         );
     }
-
-
-
 
 
 }

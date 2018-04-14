@@ -36,6 +36,9 @@ class UserCollectionResponseTransformerTest extends TestCase
     }
 
 
+    /**
+     *
+     */
     public function test_transform_returnsUserCollectionResponse()
     {
         $items    = [];
@@ -43,6 +46,9 @@ class UserCollectionResponseTransformerTest extends TestCase
         $this->assertInstanceOf(UserCollectionResponseDTO::class, $result);
     }
 
+    /**
+     *
+     */
     public function test_UserCollectionResponse_containsValidBoundaries()
     {
         $items    = [];
