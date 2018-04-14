@@ -9,26 +9,15 @@ namespace Tidy\UseCases\User;
 
 
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
-use Tidy\Gateways\IUserGateway;
 use Tidy\Requestors\User\ICreateUserRequest;
-use Tidy\Responders\User\IUserResponseTransformer;
 
 
-class CreateUser
+class CreateUser extends GenericUseCase
 {
     /**
      * @var IPasswordEncoder
      */
     private $passwordEncoder;
-
-    /**
-     * @var IUserResponseTransformer
-     */
-    private $responseTransformer;
-    /**
-     * @var IUserGateway
-     */
-    private $userGateway;
 
     /**
      * CreateUser constructor.
@@ -56,17 +45,6 @@ class CreateUser
         $this->userGateway->save($user);
 
         return $this->responseTransformer->transform($user);
-
-    }
-
-    public function setUserGateway($userGateway)
-    {
-        $this->userGateway = $userGateway;
-    }
-
-    public function setResponseTransformer($responseTransformer)
-    {
-        $this->responseTransformer = $responseTransformer;
 
     }
 

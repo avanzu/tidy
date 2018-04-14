@@ -8,39 +8,20 @@
 namespace Tidy\UseCases\User;
 
 
-use Tidy\Gateways\IUserGateway;
 use Tidy\Requestors\User\IActivateUserRequest;
-use Tidy\Responders\User\IUserResponseTransformer;
 
-class ActivateUser
+class ActivateUser extends GenericUseCase
 {
-    /**
-     * @var IUserGateway
-     */
-    protected $gateway;
-
-    /**
-     * @var IUserResponseTransformer
-     */
-    protected $transformer;
 
     public function execute(IActivateUserRequest $request)
     {
 
-        $user = $this->gateway->find($request->getUserId());
+        $user = $this->userGateway->find($request->getUserId());
         $user->setEnabled(true);
-        $this->gateway->save($user);
+        $this->userGateway->save($user);
 
-        return $this->transformer->transform($user);
+        return $this->responseTransformer->transform($user);
     }
 
-    public function setUserGateway($gateway)
-    {
-        $this->gateway = $gateway;
-    }
 
-    public function setResponseTransformer($transformer)
-    {
-        $this->transformer = $transformer;
-    }
 }

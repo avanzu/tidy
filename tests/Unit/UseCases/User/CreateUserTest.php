@@ -16,7 +16,7 @@ use Tidy\Gateways\IUserGateway;
 use Tidy\Tests\Unit\Entities\UserImpl;
 use Tidy\UseCases\User\CreateUser;
 use Tidy\UseCases\User\DTO\CreateUserRequestDTO;
-use Tidy\UseCases\User\DTO\ICreateUserRequest;
+use Tidy\Requestors\User\ICreateUserRequest;
 use Tidy\UseCases\User\DTO\UserResponseDTO;
 use Tidy\UseCases\User\DTO\UserResponseTransformer;
 
