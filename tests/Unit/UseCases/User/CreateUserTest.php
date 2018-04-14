@@ -16,6 +16,7 @@ use Tidy\Gateways\IUserGateway;
 use Tidy\Tests\Unit\Entities\UserImpl;
 use Tidy\UseCases\User\CreateUser;
 use Tidy\UseCases\User\DTO\CreateUserRequestDTO;
+use Tidy\UseCases\User\DTO\ICreateUserRequest;
 use Tidy\UseCases\User\DTO\UserResponseDTO;
 use Tidy\UseCases\User\DTO\UserResponseTransformer;
 
@@ -52,13 +53,10 @@ class CreateUserTest extends TestCase
         $this->expectGatewaySaveCall($username);
         $this->expectPasswordEncoderCall($plainPassword);
 
-        $request = CreateUserRequestDTO::create();
-        $request->withUserName($username)
-                ->withPlainPassword($plainPassword)
-                ->withEMail($eMail)
-        ;
+        $request = $this->makeRequestDTO($username, $plainPassword, $eMail);
 
         $result = $this->useCase->execute($request);
+
         $this->assertInstanceOf(UserResponseDTO::class, $result);
         $this->assertEquals($username, $result->getUserName());
         $this->assertEquals($eMail, $result->getEMail());
@@ -76,10 +74,7 @@ class CreateUserTest extends TestCase
         $this->expectGatewaySaveCall($username);
         $this->expectPasswordEncoderCall($plainPass);
 
-        $request = CreateUserRequestDTO::create();
-        $request->withUserName($username)
-                ->withPlainPassword($plainPass)
-                ->withEMail($eMail);
+        $request = $this->makeRequestDTO($username, $plainPass, $eMail);
 
         $result = $this->useCase->execute($request);
 
@@ -95,11 +90,9 @@ class CreateUserTest extends TestCase
         $this->expectGatewaySaveCall($username);
         $this->expectPasswordEncoderCall($plainPass);
 
-        $request = CreateUserRequestDTO::create();
-        $request->withUserName($username)
-                ->withPlainPassword($plainPass)
-                ->withEMail($eMail)
-                ->grantImmediateAccess();
+        $request = $this->makeRequestDTO($username, $plainPass, $eMail);
+
+        $request->grantImmediateAccess();
 
         $result = $this->useCase->execute($request);
 
@@ -175,6 +168,24 @@ class CreateUserTest extends TestCase
         ;
 
         return $passwordHash;
+    }
+
+    /**
+     * @param $username
+     * @param $plainPass
+     * @param $eMail
+     *
+     * @return ICreateUserRequest
+     */
+    private function makeRequestDTO($username, $plainPass, $eMail)
+    {
+        $request = CreateUserRequestDTO::create();
+        $request->withUserName($username)
+                ->withPlainPassword($plainPass)
+                ->withEMail($eMail)
+        ;
+
+        return $request;
     }
 
 

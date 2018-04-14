@@ -12,6 +12,7 @@ use Tidy\Components\Security\Encoder\IPasswordEncoder;
 use Tidy\Gateways\IUserGateway;
 use Tidy\Responders\User\IUserResponseTransformer;
 use Tidy\UseCases\User\DTO\CreateUserRequestDTO;
+use Tidy\UseCases\User\DTO\ICreateUserRequest;
 
 class CreateUser
 {
@@ -39,7 +40,7 @@ class CreateUser
     }
 
 
-    public function execute(CreateUserRequestDTO $request)
+    public function execute(ICreateUserRequest $request)
     {
 
             $user     = $this->userGateway->produce();

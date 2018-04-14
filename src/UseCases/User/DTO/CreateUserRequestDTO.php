@@ -8,7 +8,7 @@
 namespace Tidy\UseCases\User\DTO;
 
 
-class CreateUserRequestDTO
+class CreateUserRequestDTO implements ICreateUserRequest
 {
     public    $userName;
     public    $plainPassword;
@@ -16,18 +16,13 @@ class CreateUserRequestDTO
     protected $enabled = false;
 
     /**
-     * @return CreateUserRequestDTO
+     * @return ICreateUserRequest
      */
     public static function create()
     {
         return new static;
     }
 
-    /**
-     * @param $username
-     *
-     * @return CreateUserRequestDTO
-     */
     public function withUserName($username)
     {
         $this->userName = $username;
@@ -40,11 +35,6 @@ class CreateUserRequestDTO
         return $this->userName;
     }
 
-    /**
-     * @param $plainPassword
-     *
-     * @return CreateUserRequestDTO
-     */
     public function withPlainPassword($plainPassword)
     {
         $this->plainPassword = $plainPassword;
@@ -52,11 +42,6 @@ class CreateUserRequestDTO
         return $this;
     }
 
-    /**
-     * @param $eMail
-     *
-     * @return CreateUserRequestDTO
-     */
     public function withEMail($eMail)
     {
         $this->eMail = $eMail;
@@ -72,9 +57,6 @@ class CreateUserRequestDTO
         return $this->plainPassword;
     }
 
-    /**
-     * @return CreateUserRequestDTO
-     */
     public function grantImmediateAccess() {
         $this->enabled = true;
         return $this;
