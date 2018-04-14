@@ -13,7 +13,6 @@ use Tidy\Entities\User;
 use Tidy\Exceptions\PersistenceFailed;
 use Tidy\Gateways\IUserGateway;
 use Tidy\Tests\Unit\Entities\UserImpl;
-use Tidy\Tests\Unit\Gateways\InMemoryUserGateway;
 use Tidy\UseCases\User\CreateUser;
 use Tidy\UseCases\User\DTO\CreateUserRequestDTO;
 use Tidy\UseCases\User\DTO\UserResponseDTO;
