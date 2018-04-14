@@ -27,6 +27,9 @@ class UserResponseTransformer implements Transformer
         $response           = new UserResponseDTO();
         $response->id       = $user->getId();
         $response->userName = $user->getUserName();
+        $response->eMail    = $user->getEMail();
+        $response->password = $user->getPassword();
+        $response->enabled  = $user->isEnabled();
 
         return $response;
     }

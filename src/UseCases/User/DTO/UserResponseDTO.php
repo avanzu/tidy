@@ -25,6 +25,17 @@ class UserResponseDTO implements IUserResponse
      */
     public $userName;
 
+    public    $eMail;
+    /**
+     * @var string
+     */
+    public $password;
+
+    /**
+     * @var bool
+     */
+    public $enabled = false;
+
 
     /**
      * @return mixed
@@ -41,4 +52,30 @@ class UserResponseDTO implements IUserResponse
     {
         return $this->userName;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEMail()
+    {
+        return $this->eMail;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+
 }

@@ -8,12 +8,18 @@
 namespace Tidy\UseCases\User;
 
 
+use Tidy\Components\Security\Encoder\IPasswordEncoder;
 use Tidy\Gateways\IUserGateway;
 use Tidy\Responders\User\IUserResponseTransformer;
 use Tidy\UseCases\User\DTO\CreateUserRequestDTO;
 
 class CreateUser
 {
+    /**
+     * @var IPasswordEncoder
+     */
+    private $passwordEncoder;
+
     /**
      * @var IUserResponseTransformer
      */
@@ -23,13 +29,27 @@ class CreateUser
      */
     private $userGateway;
 
+    /**
+     * CreateUser constructor.
+     *
+     * @param IPasswordEncoder $passwordEncoder
+     */
+    public function __construct(IPasswordEncoder $passwordEncoder) {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
 
     public function execute(CreateUserRequestDTO $request)
     {
 
-            $user = $this->userGateway->produce();
+            $user     = $this->userGateway->produce();
+            $password = $this->passwordEncoder->encode($request->getPlainPassword(), null);
 
-            $user->setUserName($request->getUserName());
+            $user->setUserName($request->getUserName())
+                 ->setEMail($request->getEMail())
+                ->setPassword($password)
+                ->setEnabled($request->isAccessGranted())
+            ;
 
             $this->userGateway->save($user);
 
@@ -47,4 +67,6 @@ class CreateUser
         $this->responseTransformer = $responseTransformer;
 
     }
+
+
 }

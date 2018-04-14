@@ -13,4 +13,10 @@ interface IUserResponse
     public function getUserName();
 
     public function getId();
+
+    public function getEMail();
+
+    public function getPassword();
+
+    public function isEnabled();
 }
