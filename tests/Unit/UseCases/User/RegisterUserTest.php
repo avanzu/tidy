@@ -11,6 +11,7 @@ namespace Tidy\Tests\Unit\UseCases\User;
 use Mockery\MockInterface;
 use Tidy\Gateways\IUserGateway;
 use Tidy\Responders\User\IUserResponse;
+use Tidy\Responders\User\IUserResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\UseCases\User\DTO\RegisterUserRequestDTO;
 use Tidy\UseCases\User\DTO\UserResponseTransformer;
@@ -31,7 +32,7 @@ class RegisterUserTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $useCase = new RegisterUser();
+        $useCase = new RegisterUser($this->gateway, mock(IUserResponseTransformer::class));
         $this->assertInstanceOf(RegisterUser::class, $useCase);
     }
 
@@ -47,10 +48,11 @@ class RegisterUserTest extends MockeryTestCase
         $this->assertInstanceOf(IUserResponse::class, $result);
     }
 
+
     protected function setUp()
     {
-        $this->useCase = new RegisterUser();
-        $this->gateway    = mock(IUserGateway::class);
+        $this->gateway = mock(IUserGateway::class);
+        $this->useCase = new RegisterUser($this->gateway, mock(IUserResponseTransformer::class));
         $this->useCase->setUserGateway($this->gateway);
         $this->useCase->setResponseTransformer(new UserResponseTransformer());
     }

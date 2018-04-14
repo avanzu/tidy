@@ -11,6 +11,7 @@ namespace Tidy\Tests\Unit\UseCases\User;
 use Mockery\MockInterface;
 use Tidy\Exceptions\NotFound;
 use Tidy\Gateways\IUserGateway;
+use Tidy\Responders\User\IUserResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Entities\UserStub1;
 use Tidy\UseCases\User\DTO\GetUserRequestDTO;
@@ -76,8 +77,8 @@ class GetUserTest extends MockeryTestCase
      */
     protected function setUp()
     {
-        $this->useCase = new GetUser();
         $this->gateway = mock(IUserGateway::class);
+        $this->useCase = new GetUser($this->gateway, mock(IUserResponseTransformer::class));
         $this->useCase->setUserGateway($this->gateway);
         $this->useCase->setResponseTransformer(new UserResponseTransformer());
     }

@@ -23,6 +23,19 @@ abstract class GenericUseCase
      */
     protected $userGateway;
 
+    /**
+     * GenericUseCase constructor.
+     *
+     * @param IUserGateway             $userGateway
+     * @param IUserResponseTransformer $responseTransformer
+     */
+    public function __construct( IUserGateway $userGateway, IUserResponseTransformer $responseTransformer )
+    {
+        $this->responseTransformer = $responseTransformer;
+        $this->userGateway         = $userGateway;
+    }
+
+
     public function setUserGateway($userGateway)
     {
         $this->userGateway = $userGateway;

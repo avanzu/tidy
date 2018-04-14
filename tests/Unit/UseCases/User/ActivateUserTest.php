@@ -12,6 +12,7 @@ use Mockery\MockInterface;
 use Tidy\Entities\User;
 use Tidy\Gateways\IUserGateway;
 use Tidy\Responders\User\IUserResponse;
+use Tidy\Responders\User\IUserResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Entities\UserStub1;
 use Tidy\UseCases\User\ActivateUser;
@@ -59,8 +60,9 @@ class ActivateUserTest extends MockeryTestCase
 
     protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */
     {
-        $this->useCase = new ActivateUser();
         $this->gateway = mock(IUserGateway::class);
+
+        $this->useCase = new ActivateUser($this->gateway, mock(IUserResponseTransformer::class));
 
         $this->useCase->setUserGateway($this->gateway);
         $this->useCase->setResponseTransformer(new UserResponseTransformer());

@@ -14,7 +14,6 @@ use Tidy\UseCases\User\DTO\UserResponseDTO;
 class RegisterUser extends GenericUseCase
 {
 
-
     public function execute(RegisterUserRequestDTO $request) {
 
         return new UserResponseDTO();
