@@ -16,12 +16,12 @@ interface IUserGateway
 {
 
     /**
-     * @param $getUserId
+     * @param $userId
      *
      * @return User
      * @throws NotFound
      */
-    public function find($getUserId);
+    public function find($userId);
 
     /**
      * @param $page
