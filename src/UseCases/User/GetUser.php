@@ -8,6 +8,7 @@
 namespace Tidy\UseCases\User;
 
 
+use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Requestors\User\IGetUserRequest;
 use Tidy\Domain\Responders\User\IUserResponse;
 
@@ -25,6 +26,9 @@ class GetUser extends GenericUseCase
     {
 
         $user = $this->userGateway->find($request->getUserId());
+        if (!$user) {
+            throw new NotFound(sprintf('Unable to find user by identifier %s', $request->getUserId()));
+        }
 
         return $this->responseTransformer->transform($user);
     }

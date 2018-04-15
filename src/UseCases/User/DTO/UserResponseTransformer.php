@@ -46,6 +46,7 @@ class UserResponseTransformer implements Transformer
         }
         $response->firstName = $profile->getFirstName();
         $response->lastName  = $profile->getLastName();
+        return $this;
     }
 
     /**

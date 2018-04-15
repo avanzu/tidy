@@ -24,6 +24,9 @@ use Tidy\UseCases\User\ResetPassword;
 class ResetPasswordTest extends MockeryTestCase
 {
 
+    const RESET_TOKEN = 'reset-token';
+    const PLAIN_PASS = '123123';
+    const INVALID_TOKEN = 'invalid-token';
     /**
      * @var \Tidy\Domain\Gateways\IUserGateway|MockInterface
      */
@@ -36,12 +39,6 @@ class ResetPasswordTest extends MockeryTestCase
      * @var IPasswordEncoder|MockInterface
      */
     protected $encoder;
-
-    const RESET_TOKEN = 'reset-token';
-
-    const PLAIN_PASS = '123123';
-
-    const INVALID_TOKEN = 'invalid-token';
 
     public function test_instantiation()
     {
@@ -60,7 +57,7 @@ class ResetPasswordTest extends MockeryTestCase
         $this->expectEncode($hash);
         $this->expectSaveWithEncodedPassword($hash);
 
-        $result  = $this->useCase->execute($request);
+        $result = $this->useCase->execute($request);
 
         $this->assertInstanceOf(IUserResponse::class, $result);
         $this->assertEquals(UserStub2::ID, $result->getId(), 'User should match.');
@@ -90,7 +87,7 @@ class ResetPasswordTest extends MockeryTestCase
 
     }
 
-    private function expectFindByToken($str, $returnValue): void
+    private function expectFindByToken($str, $returnValue)
     {
         $this->gateway->expects('findByToken')->with($str)->andReturn($returnValue);
     }
@@ -98,7 +95,7 @@ class ResetPasswordTest extends MockeryTestCase
     /**
      * @param $hash
      */
-    private function expectEncode($hash): void
+    private function expectEncode($hash)
     {
         $this->encoder->expects('encode')->with(self::PLAIN_PASS, null)->andReturn($hash);
     }
@@ -106,7 +103,7 @@ class ResetPasswordTest extends MockeryTestCase
     /**
      * @param $hash
      */
-    private function expectSaveWithEncodedPassword($hash): void
+    private function expectSaveWithEncodedPassword($hash)
     {
         $this->gateway->expects('save')->with(
             argumentThat(

@@ -38,8 +38,8 @@ class ActivateUserTest extends MockeryTestCase
 
     public function test_activation_with_matching_token()
     {
-        $stub1        = new UserStub1();
-        $token        = uniqid();
+        $stub1 = new UserStub1();
+        $token = uniqid();
         $stub1->assignToken($token);
 
         $argumentThat = argumentThat(

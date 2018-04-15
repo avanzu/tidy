@@ -21,5 +21,4 @@ class TimmyUser extends User
     protected $eMail    = self::EMAIL;
 
 
-
 }

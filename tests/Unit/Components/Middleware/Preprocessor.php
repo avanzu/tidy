@@ -15,6 +15,7 @@ class Preprocessor implements IProcessor
     public function process($input, callable $next)
     {
         $input->stack[] = 'before';
+
         return $next($input);
     }
 }

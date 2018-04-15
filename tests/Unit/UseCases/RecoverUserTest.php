@@ -44,9 +44,14 @@ class RecoverUserTest extends MockeryTestCase
         $request->withUserName(TimmyUser::USERNAME);
 
         $this->gateway->expects('findByUserName')->with(TimmyUser::USERNAME)->andReturn(new TimmyUser());
-        $this->gateway->expects('save')->with(argumentThat(function(TimmyUser $user){
-            return ! empty($user->getToken());
-        }));
+        $this->gateway->expects('save')->with(
+            argumentThat(
+                function (TimmyUser $user) {
+                    return !empty($user->getToken());
+                }
+            )
+        )
+        ;
 
 
         $result = $this->useCase->execute($request);

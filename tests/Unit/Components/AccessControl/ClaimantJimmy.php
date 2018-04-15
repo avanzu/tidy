@@ -18,17 +18,17 @@ class ClaimantJimmy implements IClaimant
     protected $id   = self::ID;
     protected $name = self::NAME;
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
     /**
      * @return int
      */
     public function identify()
     {
         return $this->id;
-    }
-
-    public function getName()
-    {
-        return $this->name;
     }
 
 

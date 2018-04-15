@@ -73,7 +73,7 @@ class CreateProjectTest extends MockeryTestCase
                 ->withOwnerId($owner->getId())
         ;
 
-        $project  = new ProjectImpl();
+        $project = new ProjectImpl();
 
         $this->expectMakeForOwner($owner->getId(), $project, $owner);
         $this->expectNameTransformation($name, $canonical);
@@ -106,7 +106,7 @@ class CreateProjectTest extends MockeryTestCase
     protected function setUp()
     {
 
-        $this->useCase    = new CreateProject(
+        $this->useCase = new CreateProject(
             mock(IProjectGateway::class),
             mock(IProjectResponseTransformer::class),
             mock(ITextNormaliser::class)
@@ -124,8 +124,9 @@ class CreateProjectTest extends MockeryTestCase
 
     private function expectMakeForOwner($ownerId, IClaimable $returnValue, IClaimant $ownerValue)
     {
-        $assignment = function() use ($returnValue, $ownerValue){
+        $assignment = function () use ($returnValue, $ownerValue) {
             $returnValue->grantOwnershipTo($ownerValue);
+
             return $returnValue;
         };
         $this->gateway->expects('makeForOwner')->with($ownerId)->andReturnUsing($assignment);

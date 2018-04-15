@@ -28,6 +28,8 @@ class CreateUserTest extends MockeryTestCase
     const TIMMY      = self::TIMMY_FIRSTNAME;
     const PLAIN_PASS = '123999';
     const TIMMY_MAIL = 'timmy@example.com';
+    const TIMMY_FIRSTNAME = 'Timmy';
+    const TIMMY_LASTNAME = 'Tungsten';
     /**
      * @var \Tidy\Domain\Gateways\IUserGateway|MockInterface
      */
@@ -40,10 +42,6 @@ class CreateUserTest extends MockeryTestCase
      * @var CreateUser
      */
     private $useCase;
-
-    const TIMMY_FIRSTNAME = 'Timmy';
-
-    const TIMMY_LASTNAME = 'Tungsten';
 
     public function testInstantiation()
     {
@@ -63,7 +61,7 @@ class CreateUserTest extends MockeryTestCase
         $this->expectPasswordEncoderCall($plainPassword);
 
 
-        $request   = $this->makeRequestDTO($username, $plainPassword, $eMail, $firstName, $lastName);
+        $request = $this->makeRequestDTO($username, $plainPassword, $eMail, $firstName, $lastName);
 
         $result = $this->useCase->execute($request);
 
@@ -72,7 +70,7 @@ class CreateUserTest extends MockeryTestCase
         $this->assertEquals($username, $result->getUserName(), 'username should be assigned');
         $this->assertEquals($eMail, $result->getEMail(), 'email should be assigned');
         $this->assertNotEmpty($result->getPassword(), 'password should be assigned');
-        $this->assertNotEquals($plainPassword, $result->getPassword(),'plain password should be encoded');
+        $this->assertNotEquals($plainPassword, $result->getPassword(), 'plain password should be encoded');
         $this->assertEquals($firstName, $result->getFirstName(), 'FirstName should be assigned.');
         $this->assertEquals($lastName, $result->getLastName(), 'LastName should be assigned.');
 
@@ -157,7 +155,10 @@ class CreateUserTest extends MockeryTestCase
             ->with(
                 argumentThat(
                     function (User $user) use ($username) {
-                        if(!($user->getProfile() instanceof UserProfile)) return false;
+                        if (!($user->getProfile() instanceof UserProfile)) {
+                            return false;
+                        }
+
                         return $user->getUserName() === $username;
                     }
                 )
@@ -184,7 +185,7 @@ class CreateUserTest extends MockeryTestCase
             ->expects('encode')
             ->with($plainPassword, null)
             ->andReturnUsing(
-                function ($plainPassword, $salt) use ($passwordHash) {
+                function () use ($passwordHash) {
                     return $passwordHash;
                 }
             )

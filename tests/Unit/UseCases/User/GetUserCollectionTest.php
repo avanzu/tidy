@@ -53,13 +53,6 @@ class GetUserCollectionTest extends MockeryTestCase
 
     }
 
-    private function setupFetchCollection(...$elements)
-    {
-        $this->gateway->expects('fetchCollection')->andReturn($elements);
-        $this->gateway->expects('getTotal')->andReturn(count($elements));
-
-    }
-
     /**
      */
     public function test_UserCollectionResponse_containsValidBoundaries()
@@ -123,6 +116,13 @@ class GetUserCollectionTest extends MockeryTestCase
         $this->useCase->setResponseTransformer(
             new UserCollectionResponseTransformer()
         );
+    }
+
+    private function setupFetchCollection(...$elements)
+    {
+        $this->gateway->expects('fetchCollection')->andReturn($elements);
+        $this->gateway->expects('getTotal')->andReturn(count($elements));
+
     }
 
 

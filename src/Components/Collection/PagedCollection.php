@@ -95,7 +95,7 @@ class PagedCollection implements ICollection, IPagedCollection
     /**
      * @param $page
      *
-     * @return IPagedCollection
+     * @return $this
      */
     private function calculatePage($page)
     {
@@ -105,7 +105,7 @@ class PagedCollection implements ICollection, IPagedCollection
     }
 
     /**
-     * @return IPagedCollection
+     * @return $this
      */
     private function calculatePagesTotal()
     {
@@ -119,7 +119,7 @@ class PagedCollection implements ICollection, IPagedCollection
      * @param array $items
      * @param       $pageSize
      *
-     * @return IPagedCollection
+     * @return $this
      */
     private function evaluatePageSize(array $items, $pageSize)
     {
@@ -132,7 +132,7 @@ class PagedCollection implements ICollection, IPagedCollection
      * @param array $items
      * @param       $total
      *
-     * @return IPagedCollection
+     * @return $this
      */
     private function evaluateTotal(array $items, $total)
     {

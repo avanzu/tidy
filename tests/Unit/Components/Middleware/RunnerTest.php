@@ -45,9 +45,15 @@ class RunnerTest extends MockeryTestCase
         $result = $this
             ->runner
             ->enqueue($preprocessor, $postprocessor, $preprocessor, $postprocessor)
-            ->process((object)[ 'stack' => [] ], function($object){
-                $object->stack[] = 'core'; return $object;
-            });
+            ->process(
+                (object)['stack' => []],
+                function ($object) {
+                    $object->stack[] = 'core';
+
+                    return $object;
+                }
+            )
+        ;
 
         $this->assertCount(5, $result->stack);
         $this->assertEquals(['before', 'before', 'core', 'after', 'after'], $result->stack);
@@ -58,7 +64,6 @@ class RunnerTest extends MockeryTestCase
         $this->assertCount(5, $result->stack);
         $this->assertEquals('core', reset($result->stack));
     }
-
 
 
     protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */

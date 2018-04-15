@@ -41,8 +41,8 @@ class UserCollectionResponseTransformerTest extends TestCase
      */
     public function test_transform_returnsUserCollectionResponse()
     {
-        $items    = [];
-        $result   = $this->transformer->transform(new PagedCollection($items, 10, 1, 20));
+        $items  = [];
+        $result = $this->transformer->transform(new PagedCollection($items, 10, 1, 20));
         $this->assertInstanceOf(UserCollectionResponseDTO::class, $result);
     }
 
@@ -64,7 +64,6 @@ class UserCollectionResponseTransformerTest extends TestCase
     }
 
 
-
     /**
      *
      */
@@ -81,7 +80,6 @@ class UserCollectionResponseTransformerTest extends TestCase
         $this->assertEquals(UserStub1::ID, $item->getId());
 
     }
-
 
 
     /**

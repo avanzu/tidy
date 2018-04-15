@@ -53,16 +53,15 @@ abstract class User implements IClaimant
         return $this->id;
     }
 
-    public function identify()
-    {
-        return $this->getId();
-    }
-
     public function getName()
     {
         return $this->getUserName();
     }
 
+    public function identify()
+    {
+        return $this->getId();
+    }
 
     /**
      * @return mixed

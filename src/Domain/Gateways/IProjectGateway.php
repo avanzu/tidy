@@ -30,4 +30,11 @@ interface IProjectGateway
      * @return Project
      */
     public function makeForOwner($ownerId);
+
+    /**
+     * @param $projectId
+     *
+     * @return Project|null
+     */
+    public function find($projectId);
 }

@@ -12,12 +12,11 @@ use Tidy\Domain\Entities\User;
 
 class UserStub1 extends User
 {
-    const ID = 123;
+    const ID       = 123;
     const USERNAME = 'Bob';
 
-    protected $id = self::ID;
+    protected $id       = self::ID;
     protected $userName = self::USERNAME;
-
 
 
 }

@@ -22,15 +22,18 @@ class AccessControlBroker
      *
      * @param IClaimantProvider $provider
      */
-    public function __construct(IClaimantProvider $provider) {
+    public function __construct(IClaimantProvider $provider)
+    {
         $this->provider = $provider;
     }
 
-    public function transferOwnership(IClaimable $claimable, $claimant) {
+    public function transferOwnership(IClaimable $claimable, $claimant)
+    {
 
-        if( ! $claimant instanceof IClaimant ) {
+        if (!$claimant instanceof IClaimant) {
             $claimant = $this->lookUpClaimant($claimant);
         }
+
         return $claimable->grantOwnershipTo($claimant);
     }
 
@@ -38,7 +41,10 @@ class AccessControlBroker
     protected function lookUpClaimant($claimantID)
     {
         $claimant = $this->provider->lookUp($claimantID);
-        if( ! $claimant  ) throw new NotFound(sprintf('Unable to find claimant identified by %s', $claimantID));
+        if (!$claimant) {
+            throw new NotFound(sprintf('Unable to find claimant identified by %s', $claimantID));
+        }
+
         return $claimant;
     }
 

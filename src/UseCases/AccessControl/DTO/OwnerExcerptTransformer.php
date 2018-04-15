@@ -20,9 +20,22 @@ class OwnerExcerptTransformer implements IOwnerExcerptTransformer
      *
      * @return IOwnerExcerpt
      */
-    public function excerpt(IClaimant $claimant)
+    public function excerpt(IClaimant $claimant = null)
     {
-        $excerpt           = new OwnerExcerptDTO();
+        return $this->transformClaimant(new OwnerExcerptDTO(), $claimant);
+    }
+
+    /**
+     * @param IClaimant $claimant
+     * @param           $excerpt
+     *
+     * @return
+     */
+    private function transformClaimant($excerpt, IClaimant $claimant = null)
+    {
+        if (!$claimant) {
+            return $excerpt;
+        }
         $excerpt->name     = $claimant->getName();
         $excerpt->identity = $claimant->identify();
 

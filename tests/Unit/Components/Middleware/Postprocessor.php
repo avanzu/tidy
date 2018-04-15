@@ -14,8 +14,9 @@ class Postprocessor implements IProcessor
 {
     public function process($input, callable $next)
     {
-        $response = $next($input);
+        $response          = $next($input);
         $response->stack[] = 'after';
+
         return $response;
     }
 }

@@ -47,7 +47,7 @@ class GetUserTest extends MockeryTestCase
      */
     public function test_GetExistingUser_InvalidUserId_throws_UserNotFound()
     {
-        $this->gateway->expects('find')->with(444)->andThrow(new NotFound());
+        $this->gateway->expects('find')->with(444)->andReturn(null);
         $request = GetUserRequestDTO::make()->withUserId(444);
 
         $this->expectException(NotFound::class);
