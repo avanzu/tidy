@@ -11,13 +11,19 @@ namespace Tidy\Tests\Unit\UseCases\Project;
 use Mockery\MockInterface;
 use Tidy\Components\Normalisation\ITextNormaliser;
 use Tidy\Entities\Project;
+use Tidy\Entities\User;
 use Tidy\Gateways\IProjectGateway;
+use Tidy\Gateways\IUserGateway;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Entities\ProjectImpl;
+use Tidy\Tests\Unit\Entities\UserStub1;
+use Tidy\Tests\Unit\Entities\UserStub2;
 use Tidy\UseCases\Project\CreateProject;
 use Tidy\UseCases\Project\DTO\CreateProjectRequestDTO;
 use Tidy\UseCases\Project\DTO\ProjectResponseDTO;
 use Tidy\UseCases\Project\DTO\ProjectResponseTransformer;
+use Tidy\UseCases\User\DTO\UserExcerptDTO;
+use Tidy\UseCases\User\DTO\UserExcerptTransformer;
 
 class CreateProjectTest extends MockeryTestCase
 {
@@ -31,9 +37,13 @@ class CreateProjectTest extends MockeryTestCase
      */
     protected $useCase;
     /**
-     *  @var ITextNormaliser|MockInterface
+     * @var ITextNormaliser|MockInterface
      */
     protected $normaliser;
+    /**
+     * @var IUserGateway|MockInterface
+     */
+    protected $userGateway;
 
     public function test_instantiation()
     {
@@ -44,21 +54,25 @@ class CreateProjectTest extends MockeryTestCase
     /**
      * @dataProvider provideProjects
      *
-     * @param $name
-     * @param $description
-     * @param $id
-     * @param $canonical
+     * @param      $name
+     * @param      $description
+     * @param      $id
+     * @param      $canonical
+     * @param User $owner
      */
-    public function test_create_success($name, $description, $id, $canonical)
+    public function test_create_success($name, $description, $id, $canonical, User $owner)
     {
         $request = CreateProjectRequestDTO::make();
         $request->withName($name)
                 ->withDescription($description)
+                ->withOwnerId($owner->getId())
         ;
 
         $this->expectMake(new ProjectImpl());
         $this->expectNameTransformation($name, $canonical);
-        $this->expectIdentifyingSave($name, $description, $id, $canonical);
+        $this->userGateway->expects('find')->with($owner->getId())->andReturn($owner);
+
+        $this->expectIdentifyingSave($name, $description, $id, $canonical, $owner);
 
         $response = $this->useCase->execute($request);
 
@@ -67,26 +81,39 @@ class CreateProjectTest extends MockeryTestCase
         $this->assertEquals($description, $response->getDescription());
         $this->assertEquals($canonical, $response->getCanonical());
         $this->assertEquals($id, $response->getId());
+        $this->assertInstanceOf(UserExcerptDTO::class, $response->getOwner());
+        $this->assertEquals($owner->getId(), $response->getOwner()->getId());
+        $this->assertEquals($owner->getUserName(), $response->getOwner()->getUserName());
+
 
     }
+
+
 
     public function provideProjects()
     {
         return [
-            ['My fancy project', 'This describes the project.', 9999, 'my-fancy-project'],
-            ['My other project', 'This is another project.', 7777, 'my-other-project'],
+            ['My fancy project', 'This describes the project.', 9999, 'my-fancy-project', new UserStub1()],
+            ['My other project', 'This is another project.', 7777, 'my-other-project', new UserStub2()],
         ];
     }
 
 
     protected function setUp()
     {
-        $this->gateway   = mock(IProjectGateway::class);
-        $this->normaliser = mock(ITextNormaliser::class);
-        $this->useCase = new CreateProject();
-        $this->useCase->setResponseTransformer(new ProjectResponseTransformer());
+        $this->gateway     = mock(IProjectGateway::class);
+        $this->normaliser  = mock(ITextNormaliser::class);
+        $this->userGateway = mock(IUserGateway::class);
+        $this->useCase     = new CreateProject();
         $this->useCase->setProjectGateway($this->gateway);
+        $this->useCase->setUserGateway($this->userGateway);
         $this->useCase->setNormaliser($this->normaliser);
+
+        $this->useCase->setResponseTransformer(
+            new ProjectResponseTransformer(
+                new UserExcerptTransformer()
+            )
+        );
 
     }
 
@@ -100,18 +127,23 @@ class CreateProjectTest extends MockeryTestCase
      * @param $description
      * @param $id
      */
-    private function expectIdentifyingSave($name, $description, $id, $canonical)
+    private function expectIdentifyingSave($name, $description, $id, $canonical, $owner)
     {
-        $matchesAssertion = function (Project $project) use ($name, $description, $canonical) {
+        $matchesAssertion = function (Project $project) use ($name, $description, $canonical, $owner) {
             if (!$project->getName() === $name) {
                 return false;
             }
             if (!$project->getDescription() === $description) {
                 return false;
             }
-            if( ! $project->getCanonical() === $canonical) {
+            if (!$project->getCanonical() === $canonical) {
                 return false;
             }
+
+            if( ! $project->getOwner() === $owner) {
+                return false;
+            }
+
 
             return true;
         };

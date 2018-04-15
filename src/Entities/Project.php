@@ -28,6 +28,10 @@ abstract class Project
      * @var string
      */
     protected $canonical;
+    /**
+     * @var User
+     */
+    protected $owner;
 
     /**
      * @return string
@@ -87,6 +91,22 @@ abstract class Project
     public function setCanonical($canonical)
     {
         $this->canonical = $canonical;
+
+        return $this;
+    }
+
+    public function getOwner() {
+        return $this->owner;
+    }
+
+    /**
+     * @param User $owner
+     *
+     * @return $this
+     */
+    public function setOwner($owner)
+    {
+        $this->owner = $owner;
 
         return $this;
     }

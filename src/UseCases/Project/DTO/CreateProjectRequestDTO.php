@@ -12,6 +12,7 @@ class CreateProjectRequestDTO
 {
     public $name;
     public $description;
+    public $ownerId;
 
     /**
      * @return CreateProjectRequestDTO
@@ -45,7 +46,8 @@ class CreateProjectRequestDTO
         return $this;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
@@ -55,6 +57,21 @@ class CreateProjectRequestDTO
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @param $owner
+     *
+     * @return CreateProjectRequestDTO
+     */
+    public function withOwnerId($owner)
+    {
+        $this->ownerId = $owner;
+        return $this;
+    }
+
+    public function getOwnerId() {
+        return $this->ownerId;
     }
 
 }
