@@ -8,6 +8,7 @@
 namespace Tidy\Tests\Unit\Util;
 
 use PHPUnit\Framework\TestCase;
+use Tidy\Components\Collection\ICollection;
 use Tidy\Components\Collection\IPagedCollection;
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Requestors\ICollectionRequest;
@@ -27,9 +28,11 @@ class PagedCollectionTest extends TestCase
      */
     public function test_objectStructure_implements_arrayAlikeInterfaces()
     {
-        $this->assertInstanceOf(PagedCollection::class, $this->collection);
+        $this->assertInstanceOf(IPagedCollection::class, $this->collection);
         $this->assertInstanceOf(\Countable::class, $this->collection);
         $this->assertInstanceOf(\IteratorAggregate::class, $this->collection);
+        $this->assertInstanceOf(ICollection::class, $this->collection);
+
     }
 
     /**
