@@ -54,4 +54,11 @@ interface IUserGateway
      */
     public function findByToken($token);
 
+    /**
+     * @param $getUserName
+     *
+     * @return User|null
+     */
+    public function findByUserName($getUserName);
+
 }
