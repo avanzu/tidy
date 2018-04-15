@@ -12,9 +12,11 @@ use Tidy\Components\AccessControl\IClaimant;
 
 class ClaimantJimmy implements IClaimant
 {
-    const ID = 321;
+    const ID   = 321;
+    const NAME = 'Jimmy';
 
-    protected $id = self::ID;
+    protected $id   = self::ID;
+    protected $name = self::NAME;
 
     /**
      * @return int
@@ -23,4 +25,11 @@ class ClaimantJimmy implements IClaimant
     {
         return $this->id;
     }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+
 }

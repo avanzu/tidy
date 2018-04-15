@@ -34,9 +34,9 @@ class CreateProject
     /**
      * CreateProject constructor.
      *
-     * @param \Tidy\Components\Gateways\IProjectGateway $projectGateway
-     * @param IProjectResponseTransformer               $transformer
-     * @param ITextNormaliser                           $normaliser
+     * @param IProjectGateway             $projectGateway
+     * @param IProjectResponseTransformer $transformer
+     * @param ITextNormaliser             $normaliser
      */
     public function __construct(
         IProjectGateway $projectGateway,

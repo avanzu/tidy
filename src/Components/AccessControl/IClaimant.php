@@ -14,4 +14,6 @@ interface IClaimant
      * @return int
      */
     public function identify();
+
+    public function getName();
 }

@@ -58,6 +58,11 @@ abstract class User implements IClaimant
         return $this->getId();
     }
 
+    public function getName()
+    {
+        return $this->getUserName();
+    }
+
 
     /**
      * @return mixed

@@ -15,17 +15,17 @@ use Tidy\Components\Normalisation\ITextNormaliser;
 use Tidy\Domain\Entities\Project;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Gateways\IProjectGateway;
+use Tidy\Domain\Responders\AccessControl\IOwnerExcerpt;
 use Tidy\Domain\Responders\Project\IProjectResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\ProjectImpl;
 use Tidy\Tests\Unit\Domain\Entities\UserStub1;
 use Tidy\Tests\Unit\Domain\Entities\UserStub2;
+use Tidy\UseCases\AccessControl\DTO\OwnerExcerptTransformer;
 use Tidy\UseCases\Project\CreateProject;
 use Tidy\UseCases\Project\DTO\CreateProjectRequestDTO;
 use Tidy\UseCases\Project\DTO\ProjectResponseDTO;
 use Tidy\UseCases\Project\DTO\ProjectResponseTransformer;
-use Tidy\UseCases\User\DTO\UserExcerptDTO;
-use Tidy\UseCases\User\DTO\UserExcerptTransformer;
 
 class CreateProjectTest extends MockeryTestCase
 {
@@ -86,9 +86,9 @@ class CreateProjectTest extends MockeryTestCase
         $this->assertEquals($description, $response->getDescription());
         $this->assertEquals($canonical, $response->getCanonical());
         $this->assertEquals($id, $response->getId());
-        $this->assertInstanceOf(UserExcerptDTO::class, $response->getOwner());
-        $this->assertEquals($owner->getId(), $response->getOwner()->getId());
-        $this->assertEquals($owner->getUserName(), $response->getOwner()->getUserName());
+        $this->assertInstanceOf(IOwnerExcerpt::class, $response->getOwner());
+        $this->assertEquals($owner->getId(), $response->getOwner()->getIdentity());
+        $this->assertEquals($owner->getUserName(), $response->getOwner()->getName());
 
 
     }
@@ -114,7 +114,7 @@ class CreateProjectTest extends MockeryTestCase
 
         $this->gateway    = mock(IProjectGateway::class);
         $this->normaliser = mock(ITextNormaliser::class);
-        $transformer      = new ProjectResponseTransformer(new UserExcerptTransformer());
+        $transformer      = new ProjectResponseTransformer(new OwnerExcerptTransformer());
 
         $this->useCase->setProjectGateway($this->gateway);
         $this->useCase->setNormaliser($this->normaliser);
@@ -176,14 +176,6 @@ class CreateProjectTest extends MockeryTestCase
     private function expectNameTransformation($name, $canonical)
     {
         $this->normaliser->expects('transform')->with($name)->andReturn($canonical);
-    }
-
-    /**
-     * @param User $owner
-     */
-    private function expectOwnerLookup(User $owner)
-    {
-        $this->userGateway->expects('find')->with($owner->getId())->andReturn($owner);
     }
 
 

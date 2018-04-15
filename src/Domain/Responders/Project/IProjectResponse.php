@@ -7,7 +7,7 @@
 
 namespace Tidy\Domain\Responders\Project;
 
-use Tidy\Domain\Responders\User\IUserExcerpt;
+use Tidy\Domain\Responders\AccessControl\IOwnerExcerpt;
 
 
 /**
@@ -36,7 +36,7 @@ interface IProjectResponse
     public function getCanonical();
 
     /**
-     * @return IUserExcerpt
+     * @return IOwnerExcerpt
      */
     public function getOwner();
 }

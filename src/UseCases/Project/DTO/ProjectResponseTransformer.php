@@ -9,27 +9,27 @@ namespace Tidy\UseCases\Project\DTO;
 
 
 use Tidy\Domain\Entities\Project;
+use Tidy\Domain\Responders\AccessControl\IOwnerExcerpt;
 use Tidy\Domain\Responders\Project\IProjectResponseTransformer;
-use Tidy\Domain\Responders\User\IUserExcerpt;
-use Tidy\UseCases\User\DTO\UserExcerptTransformer;
+use Tidy\UseCases\AccessControl\DTO\OwnerExcerptTransformer;
 
 class ProjectResponseTransformer implements IProjectResponseTransformer
 {
     /**
-     * @var UserExcerptTransformer
+     * @var OwnerExcerptTransformer
      */
-    private $userExcerptTransformer;
+    private $ownerExcerptTransformer;
 
 
     /**
      * ProjectResponseTransformer constructor.
      *
-     * @param UserExcerptTransformer $userExcerptTransformer
+     * @param OwnerExcerptTransformer $ownerExcerptTransformer
      */
-    public function __construct(UserExcerptTransformer $userExcerptTransformer)
+    public function __construct(OwnerExcerptTransformer $ownerExcerptTransformer)
     {
 
-        $this->userExcerptTransformer = $userExcerptTransformer;
+        $this->ownerExcerptTransformer = $ownerExcerptTransformer;
     }
 
     public function transform(Project $project)
@@ -66,10 +66,10 @@ class ProjectResponseTransformer implements IProjectResponseTransformer
     /**
      * @param Project $project
      *
-     * @return IUserExcerpt
+     * @return IOwnerExcerpt
      */
     private function transformOwner(Project $project)
     {
-        return $this->userExcerptTransformer->excerpt($project->getOwner());
+        return $this->ownerExcerptTransformer->excerpt($project->getOwner());
     }
 }
