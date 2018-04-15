@@ -23,9 +23,7 @@ class ActivateUser extends GenericUseCase
             throw new NotFound(sprintf('Unable to find user ty token "%s".', $request->getToken()));
         }
 
-        $user->setEnabled(true)
-             ->setToken(null)
-        ;
+        $user->setEnabled(true)->clearToken();
 
         $this->userGateway->save($user);
 

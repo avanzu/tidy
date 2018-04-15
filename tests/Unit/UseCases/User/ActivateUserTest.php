@@ -40,7 +40,7 @@ class ActivateUserTest extends MockeryTestCase
     {
         $stub1        = new UserStub1();
         $token        = uniqid();
-        $stub1->setToken($token);
+        $stub1->assignToken($token);
 
         $argumentThat = argumentThat(
             function (User $user) {

@@ -44,7 +44,7 @@ class CreateUser extends GenericUseCase
         ;
 
         if (!$request->isAccessGranted()) {
-            $user->setToken(uniqid());
+            $user->assignToken(uniqid());
         }
 
         $this->userGateway->save($user);

@@ -130,7 +130,7 @@ abstract class User
      *
      * @return $this
      */
-    public function setToken($token) {
+    public function assignToken($token) {
         $this->token = $token;
         return $this;
     }
@@ -142,5 +142,13 @@ abstract class User
         return $this->token;
     }
 
+    /**
+     * @return $this
+     */
+    public function clearToken()
+    {
+        $this->token = null;
+        return $this;
+    }
 
 }
