@@ -8,11 +8,11 @@
 namespace Tidy\UseCases\User;
 
 
+use Tidy\Components\Collection\PagedCollection;
 use Tidy\Gateways\IUserGateway;
 use Tidy\Requestors\User\IGetUserCollectionRequest;
 use Tidy\Responders\User\IUserCollectionResponse;
 use Tidy\Responders\User\IUserCollectionResponseTransformer;
-use Tidy\Util\PagedCollection;
 
 /**
  * Class GetUserCollection

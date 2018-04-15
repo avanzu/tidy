@@ -8,8 +8,9 @@
 namespace Tidy\Tests\Unit\Util;
 
 use PHPUnit\Framework\TestCase;
+use Tidy\Components\Collection\IPagedCollection;
+use Tidy\Components\Collection\PagedCollection;
 use Tidy\Requestors\ICollectionRequest;
-use Tidy\Util\PagedCollection;
 
 /**
  * Class PagedCollectionTest
@@ -17,7 +18,7 @@ use Tidy\Util\PagedCollection;
 class PagedCollectionTest extends TestCase
 {
     /**
-     * @var PagedCollection
+     * @var IPagedCollection
      */
     private $collection;
 

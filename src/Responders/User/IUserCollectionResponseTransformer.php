@@ -7,8 +7,8 @@
 
 namespace Tidy\Responders\User;
 
-use Tidy\UseCases\User\DTO\UserCollectionResponseDTO;
-use Tidy\Util\PagedCollection;
+use Tidy\Components\Collection\IPagedCollection;
+use Tidy\Components\Collection\PagedCollection;
 
 
 /**
@@ -18,11 +18,11 @@ interface IUserCollectionResponseTransformer
 {
     /**
      *
-     * @param PagedCollection $collection
+     * @param IPagedCollection $collection
      *
      * @return IUserCollectionResponse
      */
-    public function transform(PagedCollection $collection);
+    public function transform(IPagedCollection $collection);
 
     /**
      * @param IUserResponseTransformer $itemTransformer
