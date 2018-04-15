@@ -9,15 +9,16 @@ namespace Tidy\UseCases\User;
 
 
 use Tidy\Exceptions\NotFound;
-use Tidy\UseCases\User\DTO\RecoverUserRequestDTO;
+use Tidy\Requestors\User\IRecoverUserRequest;
 
 class RecoverUser extends GenericUseCase
 {
-    public function execute(RecoverUserRequestDTO $request)
+    public function execute(IRecoverUserRequest $request)
     {
         $user = $this->userGateway->findByUserName($request->getUserName());
-        if( ! $user )
+        if (!$user) {
             throw new NotFound(sprintf('Unable to find user by username "%s".', $request->getUserName()));
+        }
 
         $user->assignToken(uniqid());
         $this->userGateway->save($user);

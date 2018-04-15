@@ -8,9 +8,11 @@
 namespace Tidy\UseCases\User\DTO;
 
 
-class ResetPasswordRequestDTO
+use Tidy\Requestors\User\IResetPasswordRequest;
+
+class ResetPasswordRequestDTO implements IResetPasswordRequest
 {
-    public    $token;
+    public $token;
     public $plainPassword;
 
     public static function make()
@@ -18,28 +20,28 @@ class ResetPasswordRequestDTO
         return new self;
     }
 
-    /**
-     * @param $token
-     *
-     * @return $this
-     */
-    public function withToken($token) {
-        $this->token = $token;
-        return $this;
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
     }
 
-    public function getToken() {
+    public function getToken()
+    {
         return $this->token;
     }
 
     public function withPlainPassword($password)
     {
         $this->plainPassword = $password;
+
         return $this;
     }
 
-    public function getPlainPassword() {
-        return $this->plainPassword;
+    public function withToken($token)
+    {
+        $this->token = $token;
+
+        return $this;
     }
 
 }

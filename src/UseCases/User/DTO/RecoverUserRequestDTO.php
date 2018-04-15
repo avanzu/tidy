@@ -8,7 +8,9 @@
 namespace Tidy\UseCases\User\DTO;
 
 
-class RecoverUserRequestDTO
+use Tidy\Requestors\User\IRecoverUserRequest;
+
+class RecoverUserRequestDTO implements IRecoverUserRequest
 {
     public $userName;
 
