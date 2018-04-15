@@ -14,6 +14,7 @@ class ProjectResponseDTO
     public $name;
     public $id;
     public $description;
+    public $canonical;
 
     public function getName()
     {
@@ -31,6 +32,11 @@ class ProjectResponseDTO
     public function getDescription()
     {
         return $this->description;
+    }
+
+    public function getCanonical()
+    {
+        return $this->canonical;
     }
 
 

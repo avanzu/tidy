@@ -8,6 +8,7 @@
 namespace Tidy\UseCases\Project;
 
 
+use Tidy\Components\Normalisation\ITextNormaliser;
 use Tidy\Gateways\IProjectGateway;
 use Tidy\UseCases\Project\DTO\CreateProjectRequestDTO;
 use Tidy\UseCases\Project\DTO\ProjectResponseDTO;
@@ -24,6 +25,10 @@ class CreateProject
      * @var ProjectResponseTransformer
      */
     protected $transformer;
+    /**
+     * @var ITextNormaliser
+     */
+    protected $normaliser;
 
     public function setResponseTransformer($transformer) {
         $this->transformer = $transformer;
@@ -31,10 +36,13 @@ class CreateProject
 
     public function execute(CreateProjectRequestDTO $request) {
 
-        $project = $this->projectGateway->make();
+        $project   = $this->projectGateway->make();
+        $canonical = $this->normaliser->transform($request->getName());
         $project
             ->setName($request->getName())
-            ->setDescription($request->getDescription());
+            ->setDescription($request->getDescription())
+            ->setCanonical($canonical)
+        ;
 
         $this->projectGateway->save($project);
 
@@ -43,5 +51,9 @@ class CreateProject
 
     public function setProjectGateway($gateway) {
         $this->projectGateway = $gateway;
+    }
+
+    public function setNormaliser($normaliser) {
+        $this->normaliser = $normaliser;
     }
 }

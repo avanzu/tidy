@@ -24,6 +24,10 @@ abstract class Project
      * @var string
      */
     protected $description;
+    /**
+     * @var string
+     */
+    protected $canonical;
 
     /**
      * @return string
@@ -65,7 +69,26 @@ abstract class Project
         return $this;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
+
+    public function getCanonical()
+    {
+        return $this->canonical;
+    }
+
+    /**
+     * @param string $canonical
+     *
+     * @return $this
+     */
+    public function setCanonical($canonical)
+    {
+        $this->canonical = $canonical;
+
+        return $this;
+    }
+
 }
