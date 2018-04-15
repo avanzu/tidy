@@ -10,5 +10,8 @@ namespace Tidy\Components\AccessControl;
 
 interface IClaimant
 {
-
+    /**
+     * @return int
+     */
+    public function identify();
 }

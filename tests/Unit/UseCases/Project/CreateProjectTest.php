@@ -9,6 +9,8 @@ namespace Tidy\Tests\Unit\UseCases\Project;
 
 
 use Mockery\MockInterface;
+use Tidy\Components\AccessControl\IClaimable;
+use Tidy\Components\AccessControl\IClaimant;
 use Tidy\Components\Normalisation\ITextNormaliser;
 use Tidy\Domain\Entities\Project;
 use Tidy\Domain\Entities\User;
@@ -72,9 +74,8 @@ class CreateProjectTest extends MockeryTestCase
         ;
 
         $project  = new ProjectImpl();
-        $project->grantOwnershipTo($owner);
 
-        $this->expectMakeForOwner($owner->getId(), $project);
+        $this->expectMakeForOwner($owner->getId(), $project, $owner);
         $this->expectNameTransformation($name, $canonical);
         $this->expectIdentifyingSave($name, $description, $id, $canonical, $owner);
 
@@ -121,9 +122,13 @@ class CreateProjectTest extends MockeryTestCase
 
     }
 
-    private function expectMakeForOwner($ownerId, $returnValue)
+    private function expectMakeForOwner($ownerId, IClaimable $returnValue, IClaimant $ownerValue)
     {
-        $this->gateway->expects('makeForOwner')->with($ownerId)->andReturn($returnValue);
+        $assignment = function() use ($returnValue, $ownerValue){
+            $returnValue->grantOwnershipTo($ownerValue);
+            return $returnValue;
+        };
+        $this->gateway->expects('makeForOwner')->with($ownerId)->andReturnUsing($assignment);
     }
 
     /**
