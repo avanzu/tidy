@@ -16,4 +16,5 @@ use Tidy\Domain\Requestors\ICollectionRequest;
 interface IGetUserCollectionRequest extends ICollectionRequest
 {
 
+
 }

@@ -8,6 +8,8 @@
 namespace Tidy\Domain\Requestors;
 
 
+use Tidy\Components\DataAccess\Comparison;
+
 interface ICollectionRequest
 {
     const DEFAULT_PAGE      = 1;
@@ -22,4 +24,9 @@ interface ICollectionRequest
      * @return int
      */
     public function getPageSize();
+
+    /**
+     * @return Comparison[]
+     */
+    public function getCriteria();
 }

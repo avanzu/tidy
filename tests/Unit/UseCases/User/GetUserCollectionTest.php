@@ -8,8 +8,12 @@
 namespace Tidy\Tests\Unit\UseCases\User;
 
 use Mockery\MockInterface;
+use Tidy\Components\Collection\IPagedCollection;
+use Tidy\Components\DataAccess\Comparison;
 use Tidy\Components\Exceptions\OutOfBounds;
 use Tidy\Domain\Gateways\IUserGateway;
+use Tidy\Domain\Requestors\CollectionRequest;
+use Tidy\Domain\Responders\User\IUserCollectionResponse;
 use Tidy\Domain\Responders\User\IUserResponse;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\UserStub1;
@@ -104,6 +108,41 @@ class GetUserCollectionTest extends MockeryTestCase
         $this->useCase->execute($request);
     }
 
+    public function test_GetUserCollection_WithComparison()
+    {
+
+        $page     = CollectionRequest::DEFAULT_PAGE;
+        $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE;
+
+        $request = GetUserCollectionRequestDTO::make($page, $pageSize);
+        $request
+            ->withUserName(Comparison::equalTo('some username'))
+            ->withEMail(Comparison::containing('example.com'))
+            ->withAccess(Comparison::isTrue())
+            ->withToken(Comparison::isEmpty())
+            ->withLastName(Comparison::startsWith('Tim'))
+            ->withFirstName(Comparison::endsWith('my'))
+        ;
+
+        $criteriaCheck = function ($argument) {
+            if (count($argument) != 6) {
+                return false;
+            }
+
+            return count(array_filter($argument, function ($item) { return !($item instanceof Comparison); })) === 0;
+        };
+
+        $this->gateway->expects('fetchCollection')
+                      ->with($page, $pageSize, argumentThat($criteriaCheck))
+                      ->andReturn([new UserStub1(), new UserStub2()])
+                      ->byDefault();
+
+        $this->gateway->expects('getTotal')->andReturn(2);
+        $result = $this->useCase->execute($request);
+        $this->assertInstanceOf(IUserCollectionResponse::class, $result);
+
+    }
+
     /**
      *
      */
@@ -124,6 +163,8 @@ class GetUserCollectionTest extends MockeryTestCase
         $this->gateway->expects('getTotal')->andReturn(count($elements));
 
     }
+
+
 
 
 }

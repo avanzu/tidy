@@ -20,6 +20,19 @@ abstract class CollectionRequest implements ICollectionRequest
     public $pageSize;
 
     /**
+     * CollectionRequest constructor.
+     *
+     * @param int $page
+     * @param int $pageSize
+     */
+    public function __construct($page = CollectionRequest::DEFAULT_PAGE, $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE)
+    {
+        $this->page     = $page;
+        $this->pageSize = $pageSize;
+    }
+
+
+    /**
      * @return int
      */
     public function getPage()
