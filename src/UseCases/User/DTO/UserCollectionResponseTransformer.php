@@ -59,7 +59,7 @@ class UserCollectionResponseTransformer implements IUserCollectionResponseTransf
         $response->pageSize   = $collection->getPageSize();
         $response->itemsTotal = $collection->getTotal();
         $response->pagesTotal = $collection->getPagesTotal();
-        $response->items      = $collection->map(function($item){ return $this->itemTransformer->transform($item); });
+        $response->items      = $collection->map(function ($item) { return $this->itemTransformer->transform($item); });
 
         return $response;
     }

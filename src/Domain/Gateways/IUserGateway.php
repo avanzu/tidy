@@ -8,7 +8,6 @@
 namespace Tidy\Domain\Gateways;
 
 
-use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Entities\UserProfile;
 

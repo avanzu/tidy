@@ -27,7 +27,8 @@ class UserResponseTransformer implements Transformer
         $response = new UserResponseDTO();
         $this
             ->mapUser($user, $response)
-            ->mapProfile($user, $response);
+            ->mapProfile($user, $response)
+        ;
 
         return $response;
     }

@@ -57,6 +57,41 @@ class PagedCollection implements ICollection, IPagedCollection
 
     }
 
+    public function getPage()
+    {
+        return $this->page;
+    }
+
+    public function getPageSize()
+    {
+        return $this->pageSize;
+    }
+
+    public function getPagesTotal()
+    {
+        return $this->pagesTotal;
+    }
+
+    public function getTotal()
+    {
+        return $this->total;
+    }
+
+    public function count()
+    {
+        return count($this->items);
+    }
+
+    public function getIterator()
+    {
+        return new ArrayIterator($this->items);
+    }
+
+    public function map($callback)
+    {
+        return array_map($callback, $this->items);
+    }
+
     /**
      * @param $page
      *
@@ -104,40 +139,5 @@ class PagedCollection implements ICollection, IPagedCollection
         $this->total = is_int($total) ? $total : count($items);
 
         return $this;
-    }
-
-    public function getPageSize()
-    {
-        return $this->pageSize;
-    }
-
-    public function getPage()
-    {
-        return $this->page;
-    }
-
-    public function getPagesTotal()
-    {
-        return $this->pagesTotal;
-    }
-
-    public function getTotal()
-    {
-        return $this->total;
-    }
-
-    public function count()
-    {
-        return count($this->items);
-    }
-
-    public function getIterator()
-    {
-        return new ArrayIterator($this->items);
-    }
-
-    public function map($callback)
-    {
-        return array_map($callback, $this->items);
     }
 }

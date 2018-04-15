@@ -41,9 +41,17 @@ class ProjectResponseDTO implements IProjectResponse
     /**
      * @return string
      */
-    public function getName()
+    public function getCanonical()
     {
-        return $this->name;
+        return $this->canonical;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**
@@ -57,17 +65,9 @@ class ProjectResponseDTO implements IProjectResponse
     /**
      * @return string
      */
-    public function getDescription()
+    public function getName()
     {
-        return $this->description;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCanonical()
-    {
-        return $this->canonical;
+        return $this->name;
     }
 
     /**

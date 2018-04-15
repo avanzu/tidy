@@ -67,6 +67,7 @@ abstract class User
     public function setUserName($userName)
     {
         $this->userName = $userName;
+
         return $this;
     }
 
@@ -135,15 +136,18 @@ abstract class User
      *
      * @return $this
      */
-    public function assignToken($token) {
+    public function assignToken($token)
+    {
         $this->token = $token;
+
         return $this;
     }
 
     /**
      * @return mixed
      */
-    public function getToken() {
+    public function getToken()
+    {
         return $this->token;
     }
 
@@ -153,16 +157,19 @@ abstract class User
     public function clearToken()
     {
         $this->token = null;
+
         return $this;
     }
 
-    public function getProfile() {
+    public function getProfile()
+    {
         return $this->profile;
     }
 
     public function assignProfile(UserProfile $profile)
     {
         $this->profile = $profile;
+
         return $this;
     }
 }

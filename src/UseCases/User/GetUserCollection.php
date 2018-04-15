@@ -44,7 +44,7 @@ class GetUserCollection
             $request->getPageSize()
         );
 
-        $response   = $this->transformer->transform($collection);
+        $response = $this->transformer->transform($collection);
 
         return $response;
     }

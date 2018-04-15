@@ -25,15 +25,21 @@ class CreateProjectRequestDTO implements ICreateProjectRequest
     }
 
     /**
-     * @param $name
-     *
-     * @return ICreateProjectRequest
+     * @return mixed
      */
-    public function withName($name)
+    public function getDescription()
     {
-        $this->name = $name;
+        return $this->description;
+    }
 
-        return $this;
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getOwnerId()
+    {
+        return $this->ownerId;
     }
 
     /**
@@ -48,17 +54,16 @@ class CreateProjectRequestDTO implements ICreateProjectRequest
         return $this;
     }
 
-    public function getName()
-    {
-        return $this->name;
-    }
-
     /**
-     * @return mixed
+     * @param $name
+     *
+     * @return ICreateProjectRequest
      */
-    public function getDescription()
+    public function withName($name)
     {
-        return $this->description;
+        $this->name = $name;
+
+        return $this;
     }
 
     /**
@@ -69,11 +74,8 @@ class CreateProjectRequestDTO implements ICreateProjectRequest
     public function withOwnerId($owner)
     {
         $this->ownerId = $owner;
-        return $this;
-    }
 
-    public function getOwnerId() {
-        return $this->ownerId;
+        return $this;
     }
 
 }

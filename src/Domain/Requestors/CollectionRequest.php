@@ -38,12 +38,14 @@ abstract class CollectionRequest implements ICollectionRequest
     public function fromPage($page)
     {
         $this->page = $page;
+
         return $this;
     }
 
     public function withPageSize($pageSize)
     {
         $this->pageSize = $pageSize;
+
         return $this;
     }
 }

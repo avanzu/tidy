@@ -95,7 +95,8 @@ abstract class Project
         return $this;
     }
 
-    public function getOwner() {
+    public function getOwner()
+    {
         return $this->owner;
     }
 

@@ -31,6 +31,16 @@ class CreateUserRequestDTO implements ICreateUserRequest
         return $this->eMail;
     }
 
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
     public function getPlainPassword()
     {
         return $this->plainPassword;
@@ -86,16 +96,6 @@ class CreateUserRequestDTO implements ICreateUserRequest
         $this->userName = $username;
 
         return $this;
-    }
-
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    public function getLastName()
-    {
-        return $this->lastName;
     }
 
 

@@ -8,7 +8,7 @@
 namespace Tidy\Domain\Responders;
 
 
-abstract  class CollectionResponse implements ICollectionResponse
+abstract class CollectionResponse implements ICollectionResponse
 {
     /**
      * @var

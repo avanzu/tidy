@@ -45,9 +45,40 @@ class UserResponseDTO implements IUserResponse
     /**
      * @return mixed
      */
+    public function getEMail()
+    {
+        return $this->eMail;
+    }
+
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    public function getToken()
+    {
+        return $this->token;
     }
 
     /**
@@ -59,42 +90,11 @@ class UserResponseDTO implements IUserResponse
     }
 
     /**
-     * @return mixed
-     */
-    public function getEMail()
-    {
-        return $this->eMail;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
      * @return bool
      */
     public function isEnabled()
     {
         return $this->enabled;
-    }
-
-    public function getToken()
-    {
-        return $this->token;
-    }
-
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    public function getLastName()
-    {
-        return $this->lastName;
     }
 
 
