@@ -35,9 +35,12 @@ class UserResponseDTO implements IUserResponse
      * @var bool
      */
     public $enabled = false;
-    
+
     public $token;
 
+    public $firstName;
+
+    public $lastName;
 
     /**
      * @return mixed
@@ -82,6 +85,16 @@ class UserResponseDTO implements IUserResponse
     public function getToken()
     {
         return $this->token;
+    }
+
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    public function getLastName()
+    {
+        return $this->lastName;
     }
 
 

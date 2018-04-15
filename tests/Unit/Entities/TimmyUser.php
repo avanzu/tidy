@@ -19,4 +19,7 @@ class TimmyUser extends User
     protected $id       = self::ID;
     protected $userName = self::USERNAME;
     protected $eMail    = self::EMAIL;
+
+
+
 }

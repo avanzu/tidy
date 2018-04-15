@@ -11,19 +11,22 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
 use Tidy\Entities\User;
+use Tidy\Entities\UserProfile;
 use Tidy\Exceptions\PersistenceFailed;
 use Tidy\Gateways\IUserGateway;
+use Tidy\Requestors\User\ICreateUserRequest;
 use Tidy\Responders\User\IUserResponseTransformer;
+use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Entities\UserImpl;
+use Tidy\Tests\Unit\Entities\UserProfileImpl;
 use Tidy\UseCases\User\CreateUser;
 use Tidy\UseCases\User\DTO\CreateUserRequestDTO;
-use Tidy\Requestors\User\ICreateUserRequest;
 use Tidy\UseCases\User\DTO\UserResponseDTO;
 use Tidy\UseCases\User\DTO\UserResponseTransformer;
 
-class CreateUserTest extends TestCase
+class CreateUserTest extends MockeryTestCase
 {
-    const TIMMY      = 'Timmy';
+    const TIMMY      = self::TIMMY_FIRSTNAME;
     const PLAIN_PASS = '123999';
     const TIMMY_MAIL = 'timmy@example.com';
     /**
@@ -39,6 +42,10 @@ class CreateUserTest extends TestCase
      */
     private $useCase;
 
+    const TIMMY_FIRSTNAME = 'Timmy';
+
+    const TIMMY_LASTNAME = 'Tungsten';
+
     public function testInstantiation()
     {
         $this->assertInstanceOf(CreateUser::class, $this->useCase);
@@ -50,11 +57,14 @@ class CreateUserTest extends TestCase
         $username      = self::TIMMY;
         $plainPassword = self::PLAIN_PASS;
         $eMail         = self::TIMMY_MAIL;
+        $firstName     = self::TIMMY_FIRSTNAME;
+        $lastName      = self::TIMMY_LASTNAME;
 
         $this->expectGatewaySaveCall($username);
         $this->expectPasswordEncoderCall($plainPassword);
 
-        $request = $this->makeRequestDTO($username, $plainPassword, $eMail);
+
+        $request   = $this->makeRequestDTO($username, $plainPassword, $eMail, $firstName, $lastName);
 
         $result = $this->useCase->execute($request);
 
@@ -64,6 +74,9 @@ class CreateUserTest extends TestCase
         $this->assertEquals($eMail, $result->getEMail(), 'email should be assigned');
         $this->assertNotEmpty($result->getPassword(), 'password should be assigned');
         $this->assertNotEquals($plainPassword, $result->getPassword(),'plain password should be encoded');
+        $this->assertEquals($firstName, $result->getFirstName(), 'FirstName should be assigned.');
+        $this->assertEquals($lastName, $result->getLastName(), 'LastName should be assigned.');
+
 
         $this->assertEquals(999, $result->getId());
     }
@@ -73,11 +86,13 @@ class CreateUserTest extends TestCase
         $username  = self::TIMMY;
         $plainPass = self::PLAIN_PASS;
         $eMail     = self::TIMMY_MAIL;
+        $firstName = self::TIMMY_FIRSTNAME;
+        $lastName  = self::TIMMY_LASTNAME;
 
         $this->expectGatewaySaveCall($username);
         $this->expectPasswordEncoderCall($plainPass);
 
-        $request = $this->makeRequestDTO($username, $plainPass, $eMail);
+        $request = $this->makeRequestDTO($username, $plainPass, $eMail, $firstName, $lastName);
         /** @var UserResponseDTO $result */
         $result = $this->useCase->execute($request);
 
@@ -92,11 +107,13 @@ class CreateUserTest extends TestCase
         $username  = self::TIMMY;
         $plainPass = self::PLAIN_PASS;
         $eMail     = self::TIMMY_MAIL;
+        $firstName = self::TIMMY_FIRSTNAME;
+        $lastName  = self::TIMMY_LASTNAME;
 
         $this->expectGatewaySaveCall($username);
         $this->expectPasswordEncoderCall($plainPass);
 
-        $request = $this->makeRequestDTO($username, $plainPass, $eMail);
+        $request = $this->makeRequestDTO($username, $plainPass, $eMail, $firstName, $lastName);
 
         $request->grantImmediateAccess();
 
@@ -122,7 +139,8 @@ class CreateUserTest extends TestCase
         $this->gateway = mock(IUserGateway::class);
         $this->useCase = new CreateUser($this->gateway, mock(IUserResponseTransformer::class), $this->encoder);
 
-        $this->gateway->allows('produce')->andReturn(new UserImpl());
+        $this->gateway->allows('makeUser')->andReturn(new UserImpl());
+        $this->gateway->allows('makeProfile')->andReturn(new UserProfileImpl());
 
         $this->useCase->setUserGateway($this->gateway);
         $this->useCase->setResponseTransformer(new UserResponseTransformer());
@@ -140,6 +158,7 @@ class CreateUserTest extends TestCase
             ->with(
                 argumentThat(
                     function (User $user) use ($username) {
+                        if(!($user->getProfile() instanceof UserProfile)) return false;
                         return $user->getUserName() === $username;
                     }
                 )
@@ -180,14 +199,19 @@ class CreateUserTest extends TestCase
      * @param $plainPass
      * @param $eMail
      *
+     * @param $firstName
+     * @param $lastName
+     *
      * @return ICreateUserRequest
      */
-    private function makeRequestDTO($username, $plainPass, $eMail)
+    private function makeRequestDTO($username, $plainPass, $eMail, $firstName, $lastName)
     {
         $request = CreateUserRequestDTO::make();
         $request->withUserName($username)
                 ->withPlainPassword($plainPass)
                 ->withEMail($eMail)
+                ->witFirstName($firstName)
+                ->withLastName($lastName)
         ;
 
         return $request;

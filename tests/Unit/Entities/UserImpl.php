@@ -13,4 +13,5 @@ use Tidy\Entities\User;
 class UserImpl extends User
 {
 
+
 }

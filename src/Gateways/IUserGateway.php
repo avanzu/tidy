@@ -9,6 +9,7 @@ namespace Tidy\Gateways;
 
 
 use Tidy\Entities\User;
+use Tidy\Entities\UserProfile;
 use Tidy\Exceptions\NotFound;
 
 interface IUserGateway
@@ -45,7 +46,12 @@ interface IUserGateway
     /**
      * @return User
      */
-    public function produce();
+    public function makeUser();
+
+    /**
+     * @return UserProfile
+     */
+    public function makeProfile();
 
     /**
      * @param $token

@@ -42,4 +42,28 @@ interface ICreateUserRequest
     public function grantImmediateAccess();
 
     public function isAccessGranted();
+
+    /**
+     * @param $firstName
+     *
+     * @return ICreateUserRequest
+     */
+    public function witFirstName($firstName);
+
+    /**
+     * @param $lastName
+     *
+     * @return ICreateUserRequest
+     */
+    public function withLastName($lastName);
+
+    /**
+     * @return string
+     */
+    public function getFirstName();
+
+    /**
+     * @return string
+     */
+    public function getLastName();
 }

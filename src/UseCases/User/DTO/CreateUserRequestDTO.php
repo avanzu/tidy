@@ -11,10 +11,12 @@ use Tidy\Requestors\User\ICreateUserRequest;
 
 class CreateUserRequestDTO implements ICreateUserRequest
 {
-    public    $userName;
-    public    $plainPassword;
-    public    $eMail;
-    protected $enabled = false;
+    public $userName;
+    public $plainPassword;
+    public $eMail;
+    public $enabled = false;
+    public $firstName;
+    public $lastName;
 
     /**
      * @return ICreateUserRequest
@@ -24,11 +26,14 @@ class CreateUserRequestDTO implements ICreateUserRequest
         return new static;
     }
 
-    public function withUserName($username)
+    public function getEMail()
     {
-        $this->userName = $username;
+        return $this->eMail;
+    }
 
-        return $this;
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
     }
 
     public function getUserName()
@@ -36,9 +41,21 @@ class CreateUserRequestDTO implements ICreateUserRequest
         return $this->userName;
     }
 
-    public function withPlainPassword($plainPassword)
+    public function grantImmediateAccess()
     {
-        $this->plainPassword = $plainPassword;
+        $this->enabled = true;
+
+        return $this;
+    }
+
+    public function isAccessGranted()
+    {
+        return (bool)$this->enabled;
+    }
+
+    public function witFirstName($firstName)
+    {
+        $this->firstName = $firstName;
 
         return $this;
     }
@@ -50,22 +67,36 @@ class CreateUserRequestDTO implements ICreateUserRequest
         return $this;
     }
 
-    public function getEMail() {
-        return $this->eMail;
-    }
+    public function withLastName($lastName)
+    {
+        $this->lastName = $lastName;
 
-    public function getPlainPassword() {
-        return $this->plainPassword;
-    }
-
-    public function grantImmediateAccess() {
-        $this->enabled = true;
         return $this;
     }
 
-    public function isAccessGranted()
+    public function withPlainPassword($plainPassword)
     {
-        return (bool)$this->enabled;
+        $this->plainPassword = $plainPassword;
+
+        return $this;
     }
+
+    public function withUserName($username)
+    {
+        $this->userName = $username;
+
+        return $this;
+    }
+
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
 
 }

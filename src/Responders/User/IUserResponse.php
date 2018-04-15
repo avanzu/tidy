@@ -21,4 +21,14 @@ interface IUserResponse
     public function isEnabled();
 
     public function getToken();
+
+    /**
+     * @return string
+     */
+    public function getFirstName();
+
+    /**
+     * @return string
+     */
+    public function getLastName();
 }

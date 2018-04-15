@@ -19,4 +19,5 @@ class UserStub1 extends User
     protected $userName = self::USERNAME;
 
 
+
 }

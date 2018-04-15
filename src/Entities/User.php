@@ -39,6 +39,11 @@ abstract class User
     protected $token;
 
     /**
+     * @var UserProfile
+     */
+    protected $profile;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -151,4 +156,13 @@ abstract class User
         return $this;
     }
 
+    public function getProfile() {
+        return $this->profile;
+    }
+
+    public function assignProfile(UserProfile $profile)
+    {
+        $this->profile = $profile;
+        return $this;
+    }
 }

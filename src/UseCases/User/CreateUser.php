@@ -34,7 +34,8 @@ class CreateUser extends GenericUseCase
     public function execute(ICreateUserRequest $request)
     {
 
-        $user     = $this->userGateway->produce();
+        $user     = $this->userGateway->makeUser();
+
         $password = $this->passwordEncoder->encode($request->getPlainPassword(), null);
 
         $user->setUserName($request->getUserName())
@@ -47,11 +48,18 @@ class CreateUser extends GenericUseCase
             $user->assignToken(uniqid());
         }
 
+        $profile = $this->userGateway->makeProfile();
+        $profile->setFirstName($request->getFirstName())->setLastName($request->getLastName());
+
+        $user->assignProfile($profile);
+
         $this->userGateway->save($user);
 
         return $this->responseTransformer->transform($user);
 
     }
+
+
 
 
 }

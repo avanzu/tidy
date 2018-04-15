@@ -24,7 +24,37 @@ class UserResponseTransformer implements Transformer
      */
     public function transform(User $user)
     {
-        $response           = new UserResponseDTO();
+        $response = new UserResponseDTO();
+        $this
+            ->mapUser($user, $response)
+            ->mapProfile($user, $response);
+
+        return $response;
+    }
+
+    /**
+     * @param User $user
+     * @param      $response
+     *
+     * @return UserResponseTransformer
+     */
+    private function mapProfile(User $user, $response)
+    {
+        if (!$profile = $user->getProfile()) {
+            return $this;
+        }
+        $response->firstName = $profile->getFirstName();
+        $response->lastName  = $profile->getLastName();
+    }
+
+    /**
+     * @param User $user
+     * @param      $response
+     *
+     * @return UserResponseTransformer
+     */
+    private function mapUser(User $user, $response)
+    {
         $response->id       = $user->getId();
         $response->userName = $user->getUserName();
         $response->eMail    = $user->getEMail();
@@ -32,6 +62,6 @@ class UserResponseTransformer implements Transformer
         $response->enabled  = $user->isEnabled();
         $response->token    = $user->getToken();
 
-        return $response;
+        return $this;
     }
 }
