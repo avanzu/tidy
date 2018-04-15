@@ -12,9 +12,8 @@ use Tidy\Components\Normalisation\ITextNormaliser;
 use Tidy\Gateways\IProjectGateway;
 use Tidy\Gateways\IUserGateway;
 use Tidy\Requestors\Project\ICreateProjectRequest;
+use Tidy\Responders\Project\IProjectResponse;
 use Tidy\Responders\Project\IProjectResponseTransformer;
-use Tidy\UseCases\Project\DTO\CreateProjectRequestDTO;
-use Tidy\UseCases\Project\DTO\ProjectResponseTransformer;
 
 class CreateProject
 {
@@ -31,27 +30,45 @@ class CreateProject
      * @var ITextNormaliser
      */
     protected $normaliser;
+
+
     /**
-     * @var IUserGateway
+     * CreateProject constructor.
+     *
+     * @param IProjectGateway $projectGateway
+     * @param IProjectResponseTransformer $transformer
+     * @param ITextNormaliser $normaliser
      */
-    protected $userGateway;
+    public function __construct(
+        IProjectGateway $projectGateway,
+        IProjectResponseTransformer $transformer,
+        ITextNormaliser $normaliser
+    ) {
+        $this->projectGateway = $projectGateway;
+        $this->transformer    = $transformer;
+        $this->normaliser     = $normaliser;
+    }
+
 
     public function setResponseTransformer($transformer)
     {
         $this->transformer = $transformer;
     }
 
+    /**
+     * @param ICreateProjectRequest $request
+     *
+     * @return IProjectResponse
+     */
     public function execute(ICreateProjectRequest $request)
     {
 
-        $project   = $this->projectGateway->make();
-        $owner     = $this->userGateway->find($request->getOwnerId());
+        $project   = $this->projectGateway->makeForOwner($request->getOwnerId());
         $canonical = $this->normaliser->transform($request->getName());
         $project
             ->setName($request->getName())
             ->setDescription($request->getDescription())
             ->setCanonical($canonical)
-            ->setOwner($owner)
         ;
 
         $this->projectGateway->save($project);

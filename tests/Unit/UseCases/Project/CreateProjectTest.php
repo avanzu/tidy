@@ -14,6 +14,7 @@ use Tidy\Entities\Project;
 use Tidy\Entities\User;
 use Tidy\Gateways\IProjectGateway;
 use Tidy\Gateways\IUserGateway;
+use Tidy\Responders\Project\IProjectResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Entities\ProjectImpl;
 use Tidy\Tests\Unit\Entities\UserStub1;
@@ -47,7 +48,12 @@ class CreateProjectTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $useCase = new CreateProject();
+        $useCase = new CreateProject(
+            mock(IProjectGateway::class),
+            mock(IProjectResponseTransformer::class),
+            mock(ITextNormaliser::class)
+        );
+
         $this->assertInstanceOf(CreateProject::class, $useCase);
     }
 
@@ -68,9 +74,8 @@ class CreateProjectTest extends MockeryTestCase
                 ->withOwnerId($owner->getId())
         ;
 
-        $this->expectMake(new ProjectImpl());
+        $this->expectMakeForOwner($owner->getId(), new ProjectImpl($owner));
         $this->expectNameTransformation($name, $canonical);
-        $this->expectOwnerLookup($owner);
         $this->expectIdentifyingSave($name, $description, $id, $canonical, $owner);
 
         $response = $this->useCase->execute($request);
@@ -88,7 +93,6 @@ class CreateProjectTest extends MockeryTestCase
     }
 
 
-
     public function provideProjects()
     {
         return [
@@ -100,25 +104,26 @@ class CreateProjectTest extends MockeryTestCase
 
     protected function setUp()
     {
-        $this->gateway     = mock(IProjectGateway::class);
-        $this->normaliser  = mock(ITextNormaliser::class);
-        $this->userGateway = mock(IUserGateway::class);
-        $this->useCase     = new CreateProject();
-        $this->useCase->setProjectGateway($this->gateway);
-        $this->useCase->setUserGateway($this->userGateway);
-        $this->useCase->setNormaliser($this->normaliser);
 
-        $this->useCase->setResponseTransformer(
-            new ProjectResponseTransformer(
-                new UserExcerptTransformer()
-            )
+        $this->useCase    = new CreateProject(
+            mock(IProjectGateway::class),
+            mock(IProjectResponseTransformer::class),
+            mock(ITextNormaliser::class)
         );
+
+        $this->gateway    = mock(IProjectGateway::class);
+        $this->normaliser = mock(ITextNormaliser::class);
+        $transformer      = new ProjectResponseTransformer(new UserExcerptTransformer());
+
+        $this->useCase->setProjectGateway($this->gateway);
+        $this->useCase->setNormaliser($this->normaliser);
+        $this->useCase->setResponseTransformer($transformer);
 
     }
 
-    private function expectMake($returnValue)
+    private function expectMakeForOwner($ownerId, $returnValue)
     {
-        $this->gateway->expects('make')->andReturn($returnValue);
+        $this->gateway->expects('makeForOwner')->with($ownerId)->andReturn($returnValue);
     }
 
     /**
@@ -139,7 +144,7 @@ class CreateProjectTest extends MockeryTestCase
                 return false;
             }
 
-            if( ! $project->getOwner() === $owner) {
+            if (!$project->getOwner() === $owner) {
                 return false;
             }
 

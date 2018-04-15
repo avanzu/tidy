@@ -13,4 +13,10 @@ use Tidy\Entities\Project;
 class ProjectImpl extends Project
 {
 
+    /**
+     * ProjectImpl constructor.
+     */
+    public function __construct($owner) {
+        $this->owner = $owner;
+    }
 }
