@@ -7,11 +7,13 @@
 
 namespace Tidy\Domain\Entities;
 
+use Tidy\Components\AccessControl\IClaimant;
+
 
 /**
  * Class User
  */
-abstract class User
+abstract class User implements IClaimant
 {
     /**
      * @var

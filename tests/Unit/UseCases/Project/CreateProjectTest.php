@@ -51,6 +51,7 @@ class CreateProjectTest extends MockeryTestCase
         );
 
         $this->assertInstanceOf(CreateProject::class, $useCase);
+
     }
 
     /**
@@ -70,7 +71,10 @@ class CreateProjectTest extends MockeryTestCase
                 ->withOwnerId($owner->getId())
         ;
 
-        $this->expectMakeForOwner($owner->getId(), new ProjectImpl($owner));
+        $project  = new ProjectImpl();
+        $project->grantOwnershipTo($owner);
+
+        $this->expectMakeForOwner($owner->getId(), $project);
         $this->expectNameTransformation($name, $canonical);
         $this->expectIdentifyingSave($name, $description, $id, $canonical, $owner);
 

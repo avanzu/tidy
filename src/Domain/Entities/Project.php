@@ -8,7 +8,10 @@
 namespace Tidy\Domain\Entities;
 
 
-abstract class Project
+use Tidy\Components\AccessControl\IClaimable;
+use Tidy\Components\AccessControl\IClaimant;
+
+abstract class Project implements IClaimable
 {
     /**
      * @var int
@@ -29,7 +32,7 @@ abstract class Project
      */
     protected $canonical;
     /**
-     * @var User
+     * @var IClaimant
      */
     protected $owner;
 
@@ -95,10 +98,20 @@ abstract class Project
         return $this;
     }
 
+    /**
+     * @param IClaimant $user
+     */
+    public function grantOwnershipTo(IClaimant $user)
+    {
+        $this->owner = $user;
+    }
+
+    /**
+     * @return IClaimant
+     */
     public function getOwner()
     {
         return $this->owner;
     }
-
 
 }
