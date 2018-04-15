@@ -1,5 +1,5 @@
 {
-    "name": "avanzu/tidy",
+    "name": "avanzu/silver-tongue",
     "type": "library",
     "require-dev": {
         "phpunit/phpunit": "^7.1",
