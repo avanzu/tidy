@@ -8,8 +8,8 @@
 namespace Tidy\UseCases\User;
 
 
-use Tidy\Exceptions\NotFound;
-use Tidy\Requestors\User\IActivateUserRequest;
+use Tidy\Components\Exceptions\NotFound;
+use Tidy\Domain\Requestors\User\IActivateUserRequest;
 
 class ActivateUser extends GenericUseCase
 {

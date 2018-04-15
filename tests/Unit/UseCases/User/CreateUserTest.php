@@ -8,17 +8,16 @@
 namespace Tidy\Tests\Unit\UseCases\User;
 
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
+use Tidy\Components\Exceptions\PersistenceFailed;
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
-use Tidy\Entities\User;
-use Tidy\Entities\UserProfile;
-use Tidy\Exceptions\PersistenceFailed;
-use Tidy\Gateways\IUserGateway;
-use Tidy\Requestors\User\ICreateUserRequest;
-use Tidy\Responders\User\IUserResponseTransformer;
+use Tidy\Domain\Entities\User;
+use Tidy\Domain\Entities\UserProfile;
+use Tidy\Domain\Gateways\IUserGateway;
+use Tidy\Domain\Requestors\User\ICreateUserRequest;
+use Tidy\Domain\Responders\User\IUserResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Entities\UserImpl;
-use Tidy\Tests\Unit\Entities\UserProfileImpl;
+use Tidy\Tests\Unit\Domain\Entities\UserImpl;
+use Tidy\Tests\Unit\Domain\Entities\UserProfileImpl;
 use Tidy\UseCases\User\CreateUser;
 use Tidy\UseCases\User\DTO\CreateUserRequestDTO;
 use Tidy\UseCases\User\DTO\UserResponseDTO;
@@ -30,7 +29,7 @@ class CreateUserTest extends MockeryTestCase
     const PLAIN_PASS = '123999';
     const TIMMY_MAIL = 'timmy@example.com';
     /**
-     * @var IUserGateway|MockInterface
+     * @var \Tidy\Domain\Gateways\IUserGateway|MockInterface
      */
     protected $gateway;
     /**

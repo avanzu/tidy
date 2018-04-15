@@ -8,7 +8,7 @@
 namespace Tidy\UseCases\User\DTO;
 
 
-use Tidy\Responders\User\IUserResponse;
+use Tidy\Domain\Responders\User\IUserResponse;
 
 /**
  * Class UserResponseDTO

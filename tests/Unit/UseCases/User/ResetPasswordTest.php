@@ -9,14 +9,14 @@ namespace Tidy\Tests\Unit\UseCases\User;
 
 
 use Mockery\MockInterface;
+use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
-use Tidy\Entities\User;
-use Tidy\Exceptions\NotFound;
-use Tidy\Gateways\IUserGateway;
-use Tidy\Responders\User\IUserResponse;
-use Tidy\Responders\User\IUserResponseTransformer;
+use Tidy\Domain\Entities\User;
+use Tidy\Domain\Gateways\IUserGateway;
+use Tidy\Domain\Responders\User\IUserResponse;
+use Tidy\Domain\Responders\User\IUserResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Entities\UserStub2;
+use Tidy\Tests\Unit\Domain\Entities\UserStub2;
 use Tidy\UseCases\User\DTO\ResetPasswordRequestDTO;
 use Tidy\UseCases\User\DTO\UserResponseTransformer;
 use Tidy\UseCases\User\ResetPassword;
@@ -25,7 +25,7 @@ class ResetPasswordTest extends MockeryTestCase
 {
 
     /**
-     * @var IUserGateway|MockInterface
+     * @var \Tidy\Domain\Gateways\IUserGateway|MockInterface
      */
     protected $gateway;
     /**

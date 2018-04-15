@@ -8,8 +8,8 @@
 namespace Tidy\UseCases\User;
 
 
-use Tidy\Exceptions\NotFound;
-use Tidy\Requestors\User\IRecoverUserRequest;
+use Tidy\Components\Exceptions\NotFound;
+use Tidy\Domain\Requestors\User\IRecoverUserRequest;
 
 class RecoverUser extends GenericUseCase
 {

@@ -9,10 +9,10 @@ namespace Tidy\UseCases\User;
 
 
 use Tidy\Components\Collection\PagedCollection;
-use Tidy\Gateways\IUserGateway;
-use Tidy\Requestors\User\IGetUserCollectionRequest;
-use Tidy\Responders\User\IUserCollectionResponse;
-use Tidy\Responders\User\IUserCollectionResponseTransformer;
+use Tidy\Domain\Gateways\IUserGateway;
+use Tidy\Domain\Requestors\User\IGetUserCollectionRequest;
+use Tidy\Domain\Responders\User\IUserCollectionResponse;
+use Tidy\Domain\Responders\User\IUserCollectionResponseTransformer;
 
 /**
  * Class GetUserCollection
@@ -20,7 +20,7 @@ use Tidy\Responders\User\IUserCollectionResponseTransformer;
 class GetUserCollection
 {
     /**
-     * @var IUserGateway
+     * @var \Tidy\Domain\Gateways\IUserGateway
      */
     protected $gateway;
 

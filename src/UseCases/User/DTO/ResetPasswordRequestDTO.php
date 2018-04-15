@@ -8,7 +8,7 @@
 namespace Tidy\UseCases\User\DTO;
 
 
-use Tidy\Requestors\User\IResetPasswordRequest;
+use Tidy\Domain\Requestors\User\IResetPasswordRequest;
 
 class ResetPasswordRequestDTO implements IResetPasswordRequest
 {

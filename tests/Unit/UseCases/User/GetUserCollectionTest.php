@@ -8,12 +8,12 @@
 namespace Tidy\Tests\Unit\UseCases\User;
 
 use Mockery\MockInterface;
-use Tidy\Exceptions\OutOfBounds;
-use Tidy\Gateways\IUserGateway;
-use Tidy\Responders\User\IUserResponse;
+use Tidy\Components\Exceptions\OutOfBounds;
+use Tidy\Domain\Gateways\IUserGateway;
+use Tidy\Domain\Responders\User\IUserResponse;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Entities\UserStub1;
-use Tidy\Tests\Unit\Entities\UserStub2;
+use Tidy\Tests\Unit\Domain\Entities\UserStub1;
+use Tidy\Tests\Unit\Domain\Entities\UserStub2;
 use Tidy\UseCases\User\DTO\GetUserCollectionRequestDTO;
 use Tidy\UseCases\User\DTO\UserCollectionResponseDTO;
 use Tidy\UseCases\User\DTO\UserCollectionResponseTransformer;
@@ -25,7 +25,7 @@ use Tidy\UseCases\User\GetUserCollection;
 class GetUserCollectionTest extends MockeryTestCase
 {
     /**
-     * @var IUserGateway|MockInterface
+     * @var \Tidy\Domain\Gateways\IUserGateway|MockInterface
      */
     protected $gateway;
     /**

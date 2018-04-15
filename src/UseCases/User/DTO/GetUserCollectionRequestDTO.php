@@ -8,8 +8,8 @@
 namespace Tidy\UseCases\User\DTO;
 
 
-use Tidy\Requestors\CollectionRequest;
-use Tidy\Requestors\User\IGetUserCollectionRequest;
+use Tidy\Domain\Requestors\CollectionRequest;
+use Tidy\Domain\Requestors\User\IGetUserCollectionRequest;
 
 /**
  * Class GetUserCollectionRequestDTO

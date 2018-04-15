@@ -8,8 +8,8 @@
 namespace Tidy\UseCases\User;
 
 
-use Tidy\Gateways\IUserGateway;
-use Tidy\Responders\User\IUserResponseTransformer;
+use Tidy\Domain\Gateways\IUserGateway;
+use Tidy\Domain\Responders\User\IUserResponseTransformer;
 
 abstract class GenericUseCase
 {
@@ -19,7 +19,7 @@ abstract class GenericUseCase
      */
     protected $responseTransformer;
     /**
-     * @var IUserGateway
+     * @var \Tidy\Domain\Gateways\IUserGateway
      */
     protected $userGateway;
 

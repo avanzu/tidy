@@ -8,9 +8,8 @@
 namespace Tidy\UseCases\User;
 
 
-use Tidy\Exceptions\NotFound;
-use Tidy\Requestors\User\IGetUserRequest;
-use Tidy\Responders\User\IUserResponse;
+use Tidy\Domain\Requestors\User\IGetUserRequest;
+use Tidy\Domain\Responders\User\IUserResponse;
 
 class GetUser extends GenericUseCase
 {
@@ -20,7 +19,7 @@ class GetUser extends GenericUseCase
      * @param IGetUserRequest $request
      *
      * @return IUserResponse
-     * @throws NotFound
+     * @throws \Tidy\Components\Exceptions\NotFound
      */
     public function execute(IGetUserRequest $request)
     {

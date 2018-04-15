@@ -9,11 +9,11 @@ namespace Tidy\Tests\Unit\UseCases\User;
 
 
 use Mockery\MockInterface;
-use Tidy\Exceptions\NotFound;
-use Tidy\Gateways\IUserGateway;
-use Tidy\Responders\User\IUserResponseTransformer;
+use Tidy\Components\Exceptions\NotFound;
+use Tidy\Domain\Gateways\IUserGateway;
+use Tidy\Domain\Responders\User\IUserResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Entities\UserStub1;
+use Tidy\Tests\Unit\Domain\Entities\UserStub1;
 use Tidy\UseCases\User\DTO\GetUserRequestDTO;
 use Tidy\UseCases\User\DTO\UserResponseDTO;
 use Tidy\UseCases\User\DTO\UserResponseTransformer;
@@ -25,7 +25,7 @@ use Tidy\UseCases\User\GetUser;
 class GetUserTest extends MockeryTestCase
 {
     /**
-     * @var IUserGateway|MockInterface
+     * @var \Tidy\Domain\Gateways\IUserGateway|MockInterface
      */
     protected $gateway;
 

@@ -8,9 +8,9 @@
 namespace Tidy\Tests\Unit\Components\Middleware;
 
 
+use Tidy\Components\Exceptions\InvalidArgument;
 use Tidy\Components\Middleware\IProcessor;
 use Tidy\Components\Middleware\Runner;
-use Tidy\Exceptions\InvalidArgument;
 use Tidy\Tests\MockeryTestCase;
 
 class RunnerTest extends MockeryTestCase

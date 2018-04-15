@@ -9,7 +9,7 @@ namespace Tidy\Components\Collection;
 
 
 use ArrayIterator;
-use Tidy\Requestors\ICollectionRequest;
+use Tidy\Domain\Requestors\ICollectionRequest;
 
 class PagedCollection implements ICollection, IPagedCollection
 {

@@ -7,9 +7,9 @@
 
 namespace Tidy\UseCases\User\DTO;
 
-use Tidy\Responders\CollectionResponse;
-use Tidy\Responders\User\IUserCollectionResponse;
-use Tidy\Responders\User\IUserResponse;
+use Tidy\Domain\Responders\CollectionResponse;
+use Tidy\Domain\Responders\User\IUserCollectionResponse;
+use Tidy\Domain\Responders\User\IUserResponse;
 
 
 /**

@@ -8,7 +8,7 @@
 namespace Tidy\UseCases\Project\DTO;
 
 
-use Tidy\Requestors\Project\ICreateProjectRequest;
+use Tidy\Domain\Requestors\Project\ICreateProjectRequest;
 
 class CreateProjectRequestDTO implements ICreateProjectRequest
 {

@@ -8,7 +8,7 @@
 namespace Tidy\UseCases\User\DTO;
 
 
-use Tidy\Responders\User\IUserExcerpt;
+use Tidy\Domain\Responders\User\IUserExcerpt;
 
 class UserExcerptDTO implements IUserExcerpt
 {

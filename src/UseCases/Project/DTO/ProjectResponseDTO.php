@@ -8,9 +8,8 @@
 namespace Tidy\UseCases\Project\DTO;
 
 
-use Tidy\Responders\Project\IProjectResponse;
-use Tidy\Responders\User\IUserExcerpt;
-use Tidy\UseCases\User\DTO\UserExcerptDTO;
+use Tidy\Domain\Responders\Project\IProjectResponse;
+use Tidy\Domain\Responders\User\IUserExcerpt;
 
 /**
  * Class ProjectResponseDTO

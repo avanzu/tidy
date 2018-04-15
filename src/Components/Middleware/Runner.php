@@ -8,7 +8,7 @@
 namespace Tidy\Components\Middleware;
 
 
-use Tidy\Exceptions\InvalidArgument;
+use Tidy\Components\Exceptions\InvalidArgument;
 
 /**
  * Class Runner

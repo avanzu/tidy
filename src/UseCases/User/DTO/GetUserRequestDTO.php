@@ -8,7 +8,7 @@
 namespace Tidy\UseCases\User\DTO;
 
 
-use Tidy\Requestors\User\IGetUserRequest;
+use Tidy\Domain\Requestors\User\IGetUserRequest;
 
 /**
  * Class GetUserRequestDTO

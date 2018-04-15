@@ -7,9 +7,9 @@
 
 namespace Tidy\UseCases\User\DTO;
 
-use Tidy\Entities\User;
-use Tidy\Responders\User\IUserResponse;
-use Tidy\Responders\User\IUserResponseTransformer as Transformer;
+use Tidy\Domain\Entities\User;
+use Tidy\Domain\Responders\User\IUserResponse;
+use Tidy\Domain\Responders\User\IUserResponseTransformer as Transformer;
 
 /**
  * Class UserResponseTransformer

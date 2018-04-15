@@ -9,9 +9,9 @@ namespace Tidy\Tests\Unit\UseCases\User\DTO;
 
 use PHPUnit\Framework\TestCase;
 use Tidy\Components\Collection\PagedCollection;
-use Tidy\Responders\User\IUserCollectionResponseTransformer;
-use Tidy\Responders\User\IUserResponse;
-use Tidy\Tests\Unit\Entities\UserStub1;
+use Tidy\Domain\Responders\User\IUserCollectionResponseTransformer;
+use Tidy\Domain\Responders\User\IUserResponse;
+use Tidy\Tests\Unit\Domain\Entities\UserStub1;
 use Tidy\UseCases\User\DTO\UserCollectionResponseDTO;
 use Tidy\UseCases\User\DTO\UserCollectionResponseTransformer;
 use Tidy\UseCases\User\DTO\UserResponseTransformer;

@@ -9,11 +9,11 @@ namespace Tidy\UseCases\User;
 
 
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
-use Tidy\Entities\User;
-use Tidy\Entities\UserProfile;
-use Tidy\Gateways\IUserGateway;
-use Tidy\Requestors\User\ICreateUserRequest;
-use Tidy\Responders\User\IUserResponseTransformer;
+use Tidy\Domain\Entities\User;
+use Tidy\Domain\Entities\UserProfile;
+use Tidy\Domain\Gateways\IUserGateway;
+use Tidy\Domain\Requestors\User\ICreateUserRequest;
+use Tidy\Domain\Responders\User\IUserResponseTransformer;
 
 
 class CreateUser extends GenericUseCase
@@ -55,7 +55,7 @@ class CreateUser extends GenericUseCase
      * @param ICreateUserRequest $request
      * @param                    $password
      *
-     * @return \Tidy\Entities\User
+     * @return \Tidy\Domain\Entities\User
      */
     private function makeUser(ICreateUserRequest $request, $password)
     {

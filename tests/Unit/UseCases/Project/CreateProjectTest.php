@@ -10,15 +10,14 @@ namespace Tidy\Tests\Unit\UseCases\Project;
 
 use Mockery\MockInterface;
 use Tidy\Components\Normalisation\ITextNormaliser;
-use Tidy\Entities\Project;
-use Tidy\Entities\User;
-use Tidy\Gateways\IProjectGateway;
-use Tidy\Gateways\IUserGateway;
-use Tidy\Responders\Project\IProjectResponseTransformer;
+use Tidy\Domain\Entities\Project;
+use Tidy\Domain\Entities\User;
+use Tidy\Domain\Gateways\IProjectGateway;
+use Tidy\Domain\Responders\Project\IProjectResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Entities\ProjectImpl;
-use Tidy\Tests\Unit\Entities\UserStub1;
-use Tidy\Tests\Unit\Entities\UserStub2;
+use Tidy\Tests\Unit\Domain\Entities\ProjectImpl;
+use Tidy\Tests\Unit\Domain\Entities\UserStub1;
+use Tidy\Tests\Unit\Domain\Entities\UserStub2;
 use Tidy\UseCases\Project\CreateProject;
 use Tidy\UseCases\Project\DTO\CreateProjectRequestDTO;
 use Tidy\UseCases\Project\DTO\ProjectResponseDTO;
@@ -41,10 +40,7 @@ class CreateProjectTest extends MockeryTestCase
      * @var ITextNormaliser|MockInterface
      */
     protected $normaliser;
-    /**
-     * @var IUserGateway|MockInterface
-     */
-    protected $userGateway;
+
 
     public function test_instantiation()
     {

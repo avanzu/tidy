@@ -9,13 +9,13 @@ namespace Tidy\Tests\Unit\UseCases\User;
 
 
 use Mockery\MockInterface;
-use Tidy\Entities\User;
-use Tidy\Exceptions\NotFound;
-use Tidy\Gateways\IUserGateway;
-use Tidy\Responders\User\IUserResponse;
-use Tidy\Responders\User\IUserResponseTransformer;
+use Tidy\Components\Exceptions\NotFound;
+use Tidy\Domain\Entities\User;
+use Tidy\Domain\Gateways\IUserGateway;
+use Tidy\Domain\Responders\User\IUserResponse;
+use Tidy\Domain\Responders\User\IUserResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Entities\UserStub1;
+use Tidy\Tests\Unit\Domain\Entities\UserStub1;
 use Tidy\UseCases\User\ActivateUser;
 use Tidy\UseCases\User\DTO\ActivateUserRequestDTO;
 use Tidy\UseCases\User\DTO\UserResponseTransformer;

@@ -9,11 +9,10 @@ namespace Tidy\UseCases\Project;
 
 
 use Tidy\Components\Normalisation\ITextNormaliser;
-use Tidy\Gateways\IProjectGateway;
-use Tidy\Gateways\IUserGateway;
-use Tidy\Requestors\Project\ICreateProjectRequest;
-use Tidy\Responders\Project\IProjectResponse;
-use Tidy\Responders\Project\IProjectResponseTransformer;
+use Tidy\Domain\Gateways\IProjectGateway;
+use Tidy\Domain\Requestors\Project\ICreateProjectRequest;
+use Tidy\Domain\Responders\Project\IProjectResponse;
+use Tidy\Domain\Responders\Project\IProjectResponseTransformer;
 
 class CreateProject
 {
@@ -35,9 +34,9 @@ class CreateProject
     /**
      * CreateProject constructor.
      *
-     * @param IProjectGateway $projectGateway
-     * @param IProjectResponseTransformer $transformer
-     * @param ITextNormaliser $normaliser
+     * @param \Tidy\Components\Gateways\IProjectGateway $projectGateway
+     * @param IProjectResponseTransformer               $transformer
+     * @param ITextNormaliser                           $normaliser
      */
     public function __construct(
         IProjectGateway $projectGateway,
@@ -86,8 +85,4 @@ class CreateProject
         $this->normaliser = $normaliser;
     }
 
-    public function setUserGateway($userGateway)
-    {
-        $this->userGateway = $userGateway;
-    }
 }

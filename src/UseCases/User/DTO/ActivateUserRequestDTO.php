@@ -8,7 +8,7 @@
 namespace Tidy\UseCases\User\DTO;
 
 
-use Tidy\Requestors\User\IActivateUserRequest;
+use Tidy\Domain\Requestors\User\IActivateUserRequest;
 
 class ActivateUserRequestDTO implements IActivateUserRequest
 {

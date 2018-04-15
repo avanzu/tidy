@@ -8,11 +8,11 @@
 namespace Tidy\UseCases\User;
 
 
+use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
-use Tidy\Exceptions\NotFound;
-use Tidy\Gateways\IUserGateway;
-use Tidy\Requestors\User\IResetPasswordRequest;
-use Tidy\Responders\User\IUserResponseTransformer;
+use Tidy\Domain\Gateways\IUserGateway;
+use Tidy\Domain\Requestors\User\IResetPasswordRequest;
+use Tidy\Domain\Responders\User\IUserResponseTransformer;
 
 class ResetPassword extends GenericUseCase
 {

@@ -8,9 +8,9 @@
 namespace Tidy\UseCases\User\DTO;
 
 
-use Tidy\Entities\User;
-use Tidy\Responders\User\IUserExcerpt;
-use Tidy\Responders\User\IUserExcerptTransformer;
+use Tidy\Domain\Entities\User;
+use Tidy\Domain\Responders\User\IUserExcerpt;
+use Tidy\Domain\Responders\User\IUserExcerptTransformer;
 
 class UserExcerptTransformer implements IUserExcerptTransformer
 {

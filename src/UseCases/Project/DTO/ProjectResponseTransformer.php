@@ -8,9 +8,9 @@
 namespace Tidy\UseCases\Project\DTO;
 
 
-use Tidy\Entities\Project;
-use Tidy\Responders\Project\IProjectResponseTransformer;
-use Tidy\Responders\User\IUserExcerpt;
+use Tidy\Domain\Entities\Project;
+use Tidy\Domain\Responders\Project\IProjectResponseTransformer;
+use Tidy\Domain\Responders\User\IUserExcerpt;
 use Tidy\UseCases\User\DTO\UserExcerptTransformer;
 
 class ProjectResponseTransformer implements IProjectResponseTransformer

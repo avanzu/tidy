@@ -9,9 +9,8 @@ namespace Tidy\UseCases\User\DTO;
 
 
 use Tidy\Components\Collection\IPagedCollection;
-use Tidy\Components\Collection\PagedCollection;
-use Tidy\Responders\User\IUserCollectionResponseTransformer;
-use Tidy\Responders\User\IUserResponseTransformer;
+use Tidy\Domain\Responders\User\IUserCollectionResponseTransformer;
+use Tidy\Domain\Responders\User\IUserResponseTransformer;
 use Tidy\UseCases\User\DTO\UserResponseTransformer as ItemTransformer;
 
 /**
