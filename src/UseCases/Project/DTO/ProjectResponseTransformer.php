@@ -26,14 +26,15 @@ class ProjectResponseTransformer implements IProjectResponseTransformer
      *
      * @param UserExcerptTransformer $userExcerptTransformer
      */
-    public function __construct(UserExcerptTransformer $userExcerptTransformer) {
+    public function __construct(UserExcerptTransformer $userExcerptTransformer)
+    {
 
         $this->userExcerptTransformer = $userExcerptTransformer;
     }
 
     public function transform(Project $project)
     {
-        $response              = new ProjectResponseDTO();
+        $response = new ProjectResponseDTO();
 
         $this->transformProject($project, $response);
         $this->assignOwner($project, $response);
@@ -69,6 +70,6 @@ class ProjectResponseTransformer implements IProjectResponseTransformer
      */
     private function transformOwner(Project $project)
     {
-        return $this->userExcerptTransformer->transform($project->getOwner());
-}
+        return $this->userExcerptTransformer->excerpt($project->getOwner());
+    }
 }

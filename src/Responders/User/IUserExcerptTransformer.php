@@ -8,7 +8,6 @@
 namespace Tidy\Responders\User;
 
 use Tidy\Entities\User;
-use Tidy\UseCases\User\DTO\UserExcerptDTO;
 
 interface IUserExcerptTransformer
 {
@@ -17,5 +16,5 @@ interface IUserExcerptTransformer
      *
      * @return IUserExcerpt
      */
-    public function transform(User $user);
+    public function excerpt(User $user);
 }

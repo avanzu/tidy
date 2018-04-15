@@ -20,7 +20,7 @@ class UserExcerptTransformer implements IUserExcerptTransformer
      *
      * @return IUserExcerpt
      */
-    public function transform(User $user)
+    public function excerpt(User $user)
     {
         $excerpt           = new UserExcerptDTO();
         $excerpt->userName = $user->getUserName();

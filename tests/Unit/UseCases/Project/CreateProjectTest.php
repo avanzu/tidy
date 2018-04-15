@@ -70,8 +70,7 @@ class CreateProjectTest extends MockeryTestCase
 
         $this->expectMake(new ProjectImpl());
         $this->expectNameTransformation($name, $canonical);
-        $this->userGateway->expects('find')->with($owner->getId())->andReturn($owner);
-
+        $this->expectOwnerLookup($owner);
         $this->expectIdentifyingSave($name, $description, $id, $canonical, $owner);
 
         $response = $this->useCase->execute($request);
@@ -167,6 +166,14 @@ class CreateProjectTest extends MockeryTestCase
     private function expectNameTransformation($name, $canonical)
     {
         $this->normaliser->expects('transform')->with($name)->andReturn($canonical);
+    }
+
+    /**
+     * @param User $owner
+     */
+    private function expectOwnerLookup(User $owner)
+    {
+        $this->userGateway->expects('find')->with($owner->getId())->andReturn($owner);
     }
 
 
