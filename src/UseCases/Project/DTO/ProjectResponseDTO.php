@@ -8,12 +8,14 @@
 namespace Tidy\UseCases\Project\DTO;
 
 
+use Tidy\Responders\Project\IProjectResponse;
+use Tidy\Responders\User\IUserExcerpt;
 use Tidy\UseCases\User\DTO\UserExcerptDTO;
 
 /**
  * Class ProjectResponseDTO
  */
-class ProjectResponseDTO
+class ProjectResponseDTO implements IProjectResponse
 {
 
     /**
@@ -33,7 +35,7 @@ class ProjectResponseDTO
      */
     public $canonical;
     /**
-     * @var UserExcerptDTO
+     * @var IUserExcerpt
      */
     public $owner;
 
@@ -70,7 +72,7 @@ class ProjectResponseDTO
     }
 
     /**
-     * @return UserExcerptDTO
+     * @return IUserExcerpt
      */
     public function getOwner()
     {

@@ -11,8 +11,9 @@ namespace Tidy\UseCases\Project;
 use Tidy\Components\Normalisation\ITextNormaliser;
 use Tidy\Gateways\IProjectGateway;
 use Tidy\Gateways\IUserGateway;
+use Tidy\Requestors\Project\ICreateProjectRequest;
+use Tidy\Responders\Project\IProjectResponseTransformer;
 use Tidy\UseCases\Project\DTO\CreateProjectRequestDTO;
-use Tidy\UseCases\Project\DTO\ProjectResponseDTO;
 use Tidy\UseCases\Project\DTO\ProjectResponseTransformer;
 
 class CreateProject
@@ -23,7 +24,7 @@ class CreateProject
      */
     protected $projectGateway;
     /**
-     * @var ProjectResponseTransformer
+     * @var IProjectResponseTransformer
      */
     protected $transformer;
     /**
@@ -35,11 +36,13 @@ class CreateProject
      */
     protected $userGateway;
 
-    public function setResponseTransformer($transformer) {
+    public function setResponseTransformer($transformer)
+    {
         $this->transformer = $transformer;
     }
 
-    public function execute(CreateProjectRequestDTO $request) {
+    public function execute(ICreateProjectRequest $request)
+    {
 
         $project   = $this->projectGateway->make();
         $owner     = $this->userGateway->find($request->getOwnerId());
@@ -56,15 +59,18 @@ class CreateProject
         return $this->transformer->transform($project);
     }
 
-    public function setProjectGateway($gateway) {
+    public function setProjectGateway($gateway)
+    {
         $this->projectGateway = $gateway;
     }
 
-    public function setNormaliser($normaliser) {
+    public function setNormaliser($normaliser)
+    {
         $this->normaliser = $normaliser;
     }
 
-    public function setUserGateway($userGateway) {
+    public function setUserGateway($userGateway)
+    {
         $this->userGateway = $userGateway;
     }
 }

@@ -9,9 +9,11 @@ namespace Tidy\UseCases\Project\DTO;
 
 
 use Tidy\Entities\Project;
+use Tidy\Responders\Project\IProjectResponseTransformer;
+use Tidy\Responders\User\IUserExcerpt;
 use Tidy\UseCases\User\DTO\UserExcerptTransformer;
 
-class ProjectResponseTransformer
+class ProjectResponseTransformer implements IProjectResponseTransformer
 {
     /**
      * @var UserExcerptTransformer
@@ -63,7 +65,7 @@ class ProjectResponseTransformer
     /**
      * @param Project $project
      *
-     * @return \Tidy\UseCases\User\DTO\UserExcerptDTO
+     * @return IUserExcerpt
      */
     private function transformOwner(Project $project)
     {

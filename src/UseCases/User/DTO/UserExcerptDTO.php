@@ -8,7 +8,9 @@
 namespace Tidy\UseCases\User\DTO;
 
 
-class UserExcerptDTO
+use Tidy\Responders\User\IUserExcerpt;
+
+class UserExcerptDTO implements IUserExcerpt
 {
     public $id;
     public $userName;

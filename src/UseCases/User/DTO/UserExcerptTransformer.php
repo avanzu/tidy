@@ -9,14 +9,16 @@ namespace Tidy\UseCases\User\DTO;
 
 
 use Tidy\Entities\User;
+use Tidy\Responders\User\IUserExcerpt;
+use Tidy\Responders\User\IUserExcerptTransformer;
 
-class UserExcerptTransformer
+class UserExcerptTransformer implements IUserExcerptTransformer
 {
 
     /**
      * @param User $user
      *
-     * @return UserExcerptDTO
+     * @return IUserExcerpt
      */
     public function transform(User $user)
     {

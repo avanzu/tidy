@@ -8,14 +8,16 @@
 namespace Tidy\UseCases\Project\DTO;
 
 
-class CreateProjectRequestDTO
+use Tidy\Requestors\Project\ICreateProjectRequest;
+
+class CreateProjectRequestDTO implements ICreateProjectRequest
 {
     public $name;
     public $description;
     public $ownerId;
 
     /**
-     * @return CreateProjectRequestDTO
+     * @return ICreateProjectRequest
      */
     public static function make()
     {
@@ -25,7 +27,7 @@ class CreateProjectRequestDTO
     /**
      * @param $name
      *
-     * @return CreateProjectRequestDTO
+     * @return ICreateProjectRequest
      */
     public function withName($name)
     {
@@ -37,7 +39,7 @@ class CreateProjectRequestDTO
     /**
      * @param $description
      *
-     * @return CreateProjectRequestDTO
+     * @return ICreateProjectRequest
      */
     public function withDescription($description)
     {
@@ -62,7 +64,7 @@ class CreateProjectRequestDTO
     /**
      * @param $owner
      *
-     * @return CreateProjectRequestDTO
+     * @return ICreateProjectRequest
      */
     public function withOwnerId($owner)
     {
