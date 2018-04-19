@@ -8,6 +8,8 @@
 namespace Tidy\Domain\Requestors;
 
 
+use Tidy\Components\DataAccess\Comparison;
+
 abstract class CollectionRequest implements ICollectionRequest
 {
     /**
@@ -18,6 +20,9 @@ abstract class CollectionRequest implements ICollectionRequest
      * @var int
      */
     public $pageSize;
+
+
+    public $criteria = [];
 
     /**
      * CollectionRequest constructor.
@@ -31,6 +36,16 @@ abstract class CollectionRequest implements ICollectionRequest
         $this->pageSize = $pageSize;
     }
 
+    /**
+     * @param int $page
+     * @param int $pageSize
+     *
+     * @return static
+     */
+    public static function make($page = CollectionRequest::DEFAULT_PAGE, $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE)
+    {
+        return new static($page, $pageSize);
+    }
 
     /**
      * @return int
@@ -60,5 +75,15 @@ abstract class CollectionRequest implements ICollectionRequest
         $this->pageSize = $pageSize;
 
         return $this;
+    }
+
+    public function getCriteria()
+    {
+        return array_filter($this->criteria);
+    }
+
+    protected function useComparison($name, Comparison $comparison)
+    {
+        $this->criteria[$name] = $comparison;
     }
 }

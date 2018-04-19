@@ -24,20 +24,6 @@ class GetUserCollectionRequestDTO extends CollectionRequest implements IGetUserC
     public $firstName;
     public $lastName;
 
-
-    public $criteria = [];
-
-    /**
-     * @param int $page
-     * @param int $pageSize
-     *
-     * @return static
-     */
-    public static function make($page = CollectionRequest::DEFAULT_PAGE, $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE)
-    {
-        return new static($page, $pageSize);
-    }
-
     /**
      * @param Comparison $comparison
      *
@@ -45,50 +31,48 @@ class GetUserCollectionRequestDTO extends CollectionRequest implements IGetUserC
      */
     public function withUserName(Comparison $comparison = null)
     {
-        $this->criteria['userName'] = $comparison;
+
+        $this->useComparison('userName', $comparison);
 
         return $this;
     }
 
     public function withEMail(Comparison $comparison = null)
     {
-        $this->criteria['eMail'] = $comparison;
+        $this->useComparison('eMail', $comparison);
 
         return $this;
     }
 
     public function withAccess(Comparison $comparison = null)
     {
-        $this->criteria['enabled'] = $comparison;
+        $this->useComparison('enabled', $comparison);
 
         return $this;
     }
 
     public function withToken(Comparison $comparison = null)
     {
-        $this->criteria['token'] = $comparison;
+        $this->useComparison('token', $comparison);
 
         return $this;
     }
 
     public function withFirstName(Comparison $comparison = null)
     {
-        $this->criteria['firstName'] = $comparison;
+        $this->useComparison('firstName', $comparison);
 
         return $this;
     }
 
     public function withLastName(Comparison $comparison = null)
     {
-        $this->criteria['lastName'] = $comparison;
+        $this->useComparison('lastName', $comparison);
 
         return $this;
     }
 
-    public function getCriteria()
-    {
-        return array_filter($this->criteria);
-    }
+
 
 
 }
