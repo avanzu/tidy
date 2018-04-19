@@ -8,6 +8,8 @@
 namespace Tidy\Domain\Responders;
 
 
+use Tidy\Components\Collection\IPagedCollection;
+
 interface ICollectionResponse
 {
     /**
@@ -29,4 +31,6 @@ interface ICollectionResponse
      * @return int
      */
     public function total();
+
+    public function pickBoundaries(IPagedCollection $collection);
 }

@@ -28,4 +28,5 @@ interface IPagedCollection extends ICollection
      * @return int
      */
     public function getTotal();
+
 }

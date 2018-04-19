@@ -8,14 +8,16 @@
 namespace Tidy\Domain\Responders;
 
 
+use Tidy\Components\Collection\IPagedCollection;
+
 abstract class CollectionResponse implements ICollectionResponse, \Countable
 {
     /**
-     * @var
+     * @var int
      */
     public $page;
     /**
-     * @var
+     * @var int
      */
     public $pageSize;
     /**
@@ -59,6 +61,14 @@ abstract class CollectionResponse implements ICollectionResponse, \Countable
     public function pagesTotal()
     {
         return $this->pagesTotal;
+    }
+
+    public function pickBoundaries(IPagedCollection $collection)
+    {
+        $this->page       = $collection->getPage();
+        $this->pageSize   = $collection->getPageSize();
+        $this->itemsTotal = $collection->getTotal();
+        $this->pagesTotal = $collection->getPagesTotal();
     }
 
 

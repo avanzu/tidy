@@ -55,11 +55,8 @@ class UserCollectionResponseTransformer implements IUserCollectionResponseTransf
     public function transform(IPagedCollection $collection)
     {
         $response             = new UserCollectionResponseDTO();
-        $response->page       = $collection->getPage();
-        $response->pageSize   = $collection->getPageSize();
-        $response->itemsTotal = $collection->getTotal();
-        $response->pagesTotal = $collection->getPagesTotal();
         $response->items      = $collection->map(function ($item) { return $this->itemTransformer->transform($item); });
+        $response->pickBoundaries($collection);
 
         return $response;
     }

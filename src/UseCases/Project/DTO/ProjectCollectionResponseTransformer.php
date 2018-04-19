@@ -34,14 +34,12 @@ class ProjectCollectionResponseTransformer
         return $previous;
     }
 
-    public function transform(IPagedCollection $collection) {
+    public function transform(IPagedCollection $collection)
+    {
 
-        $response = new ProjectCollectionResponseDTO();
-        $response->page       = $collection->getPage();
-        $response->pageSize   = $collection->getPageSize();
-        $response->itemsTotal = $collection->getTotal();
-        $response->pagesTotal = $collection->getPagesTotal();
-        $response->items      = $collection->map(function ($item) { return $this->itemTransformer->transform($item); });
+        $response        = new ProjectCollectionResponseDTO();
+        $response->items = $collection->map(function ($item) { return $this->itemTransformer->transform($item); });
+        $response->pickBoundaries($collection);
 
         return $response;
 
