@@ -67,9 +67,9 @@ class GetUserCollectionTest extends MockeryTestCase
 
         $result = $this->useCase->execute($request);
 
-        $this->assertEquals($request->getPage(), $result->getPage());
-        $this->assertEquals($request->getPageSize(), $result->getPageSize());
-        $this->assertEquals(1, $result->getTotal());
+        $this->assertEquals($request->getPage(), $result->currentPage());
+        $this->assertEquals($request->getPageSize(), $result->pageSize());
+        $this->assertEquals(1, $result->total());
         $this->assertEquals(1, $result->pagesTotal());
 
     }
@@ -137,7 +137,7 @@ class GetUserCollectionTest extends MockeryTestCase
                       ->andReturn([new UserStub1(), new UserStub2()])
                       ->byDefault();
 
-        $this->gateway->expects('getTotal')->andReturn(2);
+        $this->gateway->expects('total')->andReturn(2);
         $result = $this->useCase->execute($request);
         $this->assertInstanceOf(IUserCollectionResponse::class, $result);
 
@@ -160,7 +160,7 @@ class GetUserCollectionTest extends MockeryTestCase
     private function setupFetchCollection(...$elements)
     {
         $this->gateway->expects('fetchCollection')->andReturn($elements);
-        $this->gateway->expects('getTotal')->andReturn(count($elements));
+        $this->gateway->expects('total')->andReturn(count($elements));
 
     }
 

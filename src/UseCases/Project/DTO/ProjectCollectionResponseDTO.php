@@ -1,30 +1,25 @@
 <?php
 /**
- * UserCollectionResponseDTO.php
- * tidy
- * Date: 07.04.18
+ * ProjectCollectionResponseDTO.php
+ * Tidy
+ * Date: 19.04.18
  */
 
-namespace Tidy\UseCases\User\DTO;
+namespace Tidy\UseCases\Project\DTO;
 
 use Tidy\Domain\Responders\CollectionResponse;
-use Tidy\Domain\Responders\User\IUserCollectionResponse;
-use Tidy\Domain\Responders\User\IUserResponse;
+use Tidy\Domain\Responders\Project\IProjectResponse;
 
-/**
- * Class UserCollectionResponseDTO
- */
-class UserCollectionResponseDTO extends CollectionResponse implements IUserCollectionResponse
+class ProjectCollectionResponseDTO extends CollectionResponse
 {
 
-
     /**
-     * @var IUserResponse[]
+     * @var IProjectResponse[]
      */
-    public $items;
+    public $items = [];
 
     /**
-     * @return IUserResponse[]
+     * @return IProjectResponse[]
      */
     public function getItems()
     {

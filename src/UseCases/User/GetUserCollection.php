@@ -39,7 +39,7 @@ class GetUserCollection
 
         $collection = new PagedCollection(
             $this->gateway->fetchCollection($request->getPage(), $request->getPageSize(), $request->getCriteria()),
-            $this->gateway->getTotal(),
+            $this->gateway->total(),
             $request->getPage(),
             $request->getPageSize()
         );

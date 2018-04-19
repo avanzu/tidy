@@ -13,12 +13,12 @@ interface ICollectionResponse
     /**
      * @return int
      */
-    public function getPage();
+    public function currentPage();
 
     /**
      * @return int
      */
-    public function getPageSize();
+    public function pageSize();
 
     /**
      * @return int
@@ -28,5 +28,5 @@ interface ICollectionResponse
     /**
      * @return int
      */
-    public function getTotal();
+    public function total();
 }

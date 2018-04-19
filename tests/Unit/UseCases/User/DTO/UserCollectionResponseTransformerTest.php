@@ -44,6 +44,8 @@ class UserCollectionResponseTransformerTest extends TestCase
         $items  = [];
         $result = $this->transformer->transform(new PagedCollection($items, 10, 1, 20));
         $this->assertInstanceOf(UserCollectionResponseDTO::class, $result);
+        $this->assertCount(0, $result);
+
     }
 
     /**
@@ -57,9 +59,9 @@ class UserCollectionResponseTransformerTest extends TestCase
         $total    = 10;
         $result   = $this->transformer->transform(new PagedCollection($items, $total, $page, $pageSize));
 
-        $this->assertEquals($page, $result->getPage());
-        $this->assertEquals($pageSize, $result->getPageSize());
-        $this->assertEquals($total, $result->getTotal());
+        $this->assertEquals($page, $result->currentPage());
+        $this->assertEquals($pageSize, $result->pageSize());
+        $this->assertEquals($total, $result->total());
         $this->assertInternalType('array', $result->getItems());
     }
 

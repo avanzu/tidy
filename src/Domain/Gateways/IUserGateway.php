@@ -35,7 +35,7 @@ interface IUserGateway
     /**
      * @return int
      */
-    public function getTotal();
+    public function total();
 
     /**
      * @param User $user
