@@ -65,5 +65,6 @@ class CatalogueResponseTransformer implements ICatalogueResponseTransformer
     {
         if( $project =  $catalogue->getProject() )
             return $this->excerptTransformer()->excerpt($project);
+        return null;
     }
 }

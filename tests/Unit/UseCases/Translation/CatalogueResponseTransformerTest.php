@@ -10,7 +10,9 @@ namespace Tidy\Tests\Unit\UseCases\Translation;
 
 use Tidy\Domain\Responders\Project\IExcerptTransformer;
 use Tidy\Tests\MockeryTestCase;
+use Tidy\Tests\Unit\Domain\Entities\ProjectImpl;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman as Testee;
+use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueImpl;
 use Tidy\UseCases\Project\DTO\ExcerptDTO;
 use Tidy\UseCases\Translation\DTO\CatalogueResponseTransformer;
 
@@ -43,7 +45,12 @@ class CatalogueResponseTransformerTest extends MockeryTestCase
         assertThat($response->getTargetLanguage(), is(equalTo(Testee::TARGET_LANG)));
         assertThat($response->getTargetCulture(), is(equalTo(Testee::TARGET_CULTURE)));
         assertThat($response->getProject(), is(anInstanceOf(ExcerptDTO::class)));
+    }
 
+    public function test_transform_empty_project()
+    {
+        $response =  $this->transformer->transform(new TranslationCatalogueImpl());
+        assertThat($response->getProject(), is(nullValue()));
     }
 
     protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */

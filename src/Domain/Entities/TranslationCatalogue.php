@@ -160,38 +160,6 @@ abstract class TranslationCatalogue
     }
 
     /**
-     * @param mixed $id
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTranslations(): array
-    {
-        return $this->translations;
-    }
-
-    /**
-     * @param array $translations
-     *
-     * @return $this
-     */
-    public function setTranslations($translations)
-    {
-        $this->translations = $translations;
-
-        return $this;
-    }
-
-    /**
      * @return mixed
      */
     public function getCanonical()
