@@ -29,6 +29,21 @@ class ComparisonTest extends MockeryTestCase
         $this->assertEquals($operator, $result->getOperator());
     }
 
+    public function test_in()
+    {
+        $comparison = Comparison::in(1,2,3,4);
+        $this->assertEquals([1,2,3,4], $comparison->getValue());
+        $this->assertEquals(Comparison::IN, $comparison->getOperator());
+    }
+
+    public function test_not_in()
+    {
+        $comparison = Comparison::notIn(1,2,3,4);
+        $this->assertEquals([1,2,3,4], $comparison->getValue());
+        $this->assertEquals(Comparison::NIN, $comparison->getOperator());
+    }
+
+
     public function factoryMethods()
     {
         return [
@@ -44,8 +59,6 @@ class ComparisonTest extends MockeryTestCase
             'istEmpty'          => ['isEmpty', null, Comparison::EQ],
             'startsWith'        => ['startsWith', 'foo', Comparison::STARTS_WITH],
             'EndsWith'          => ['endsWith', 'bar', Comparison::ENDS_WITH],
-
-
         ];
     }
 

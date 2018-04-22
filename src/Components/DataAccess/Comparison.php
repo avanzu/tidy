@@ -232,7 +232,7 @@ class Comparison
      *
      * @return static
      */
-    public function notIn(...$values)
+    public static  function notIn(...$values)
     {
         return new static($values, static::NIN);
     }
