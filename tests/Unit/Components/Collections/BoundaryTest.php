@@ -15,10 +15,9 @@ class BoundaryTest extends MockeryTestCase
     public function test_instantiation()
     {
         $boundary = new Boundary(2, 25);
-        $this->assertNotNull($boundary);
+        assertThat($boundary->page, is(equalTo(2)));
+        assertThat($boundary->pageSize, is(equalTo(25)));
 
-        $this->assertEquals(2, $boundary->page);
-        $this->assertEquals(25, $boundary->pageSize);
     }
 
     public function test_defaults()

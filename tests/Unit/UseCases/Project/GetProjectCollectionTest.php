@@ -8,6 +8,7 @@
 namespace Tidy\Tests\Unit\UseCases\Project;
 
 use Mockery\MockInterface;
+use Tidy\Components\Collection\Boundary;
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\CollectionRequest;
@@ -55,7 +56,7 @@ class GetProjectCollectionTest extends MockeryTestCase
             ->withOwner(Comparison::in(1, 2, 3))
         ;
 
-        $this->expectGatewayFetchCollection($page, $pageSize, $request);
+        $this->expectGatewayFetchCollection(new Boundary($page, $pageSize));
         $this->expectGatewayTotal($request);
 
         $result = $this->useCase->execute($request);
@@ -81,7 +82,7 @@ class GetProjectCollectionTest extends MockeryTestCase
      * @param $page
      * @param $pageSize
      */
-    protected function expectGatewayFetchCollection($page, $pageSize)
+    protected function expectGatewayFetchCollection($boundary)
     {
         $criteriaCheck = function ($argument) {
             if (count($argument) != 5) {
@@ -92,7 +93,7 @@ class GetProjectCollectionTest extends MockeryTestCase
         };
 
         $this->gateway->expects('fetchCollection')
-                      ->with($page, $pageSize, argumentThat($criteriaCheck))
+                      ->with(equalTo($boundary), argumentThat($criteriaCheck))
                       ->andReturn([new ProjectSilverTongue()])
                       ->byDefault()
         ;

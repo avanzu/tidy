@@ -7,6 +7,7 @@
 
 namespace Tidy\UseCases\Project;
 
+use Tidy\Components\Collection\Boundary;
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\UseCases\Project\DTO\GetProjectCollectionRequestDTO;
@@ -39,11 +40,8 @@ class GetProjectCollection
     public function execute(GetProjectCollectionRequestDTO $request)
     {
 
-        $items      = $this->gateway->fetchCollection(
-            $request->getPage(),
-            $request->getPageSize(),
-            $request->getCriteria()
-        );
+        $boundary = new Boundary($request->getPage(), $request->getPageSize());
+        $items    = $this->gateway->fetchCollection($boundary, $request->getCriteria());
 
         $collection = new PagedCollection(
             $items,
