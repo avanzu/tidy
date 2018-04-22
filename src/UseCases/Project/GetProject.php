@@ -29,7 +29,7 @@ class GetProject extends UseCaseProject
             throw new NotFound(sprintf('Unable to find project by identifier %s', $request->projectId()));
         }
 
-        return $this->transformer->transform($project);
+        return $this->transformer()->transform($project);
     }
 
 

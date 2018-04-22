@@ -23,6 +23,6 @@ class RenameProject extends UseCaseProject
         ;
         $this->gateway->save($project);
 
-        return $this->transformer->transform($project);
+        return $this->transformer()->transform($project);
     }
 }

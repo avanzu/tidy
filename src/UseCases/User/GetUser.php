@@ -30,7 +30,7 @@ class GetUser extends UseCaseUser
             throw new NotFound(sprintf('Unable to find user by identifier %s', $request->userId()));
         }
 
-        return $this->responseTransformer->transform($user);
+        return $this->transformer()->transform($user);
     }
 
 

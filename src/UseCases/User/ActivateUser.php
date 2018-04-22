@@ -27,7 +27,7 @@ class ActivateUser extends UseCaseUser
 
         $this->userGateway->save($user);
 
-        return $this->responseTransformer->transform($user);
+        return $this->transformer()->transform($user);
     }
 
 

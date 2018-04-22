@@ -24,7 +24,7 @@ class ResetPassword extends UseCaseUser
     public function __construct(
         IPasswordEncoder $encoder,
         IUserGateway $userGateway,
-        IUserResponseTransformer $responseTransformer
+        IUserResponseTransformer $responseTransformer = null
     ) {
         parent::__construct($userGateway, $responseTransformer);
         $this->encoder = $encoder;
@@ -43,7 +43,7 @@ class ResetPassword extends UseCaseUser
         $user->setPassword($password)->clearToken();
         $this->userGateway->save($user);
 
-        return $this->responseTransformer->transform($user);
+        return $this->transformer()->transform($user);
     }
 
 

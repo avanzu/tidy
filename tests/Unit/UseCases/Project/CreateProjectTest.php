@@ -47,9 +47,7 @@ class CreateProjectTest extends MockeryTestCase
     public function test_instantiation()
     {
         $useCase = new CreateProject(
-            mock(IProjectGateway::class),
-            mock(IProjectResponseTransformer::class),
-            mock(ITextNormaliser::class)
+            mock(IProjectGateway::class), mock(ITextNormaliser::class), mock(IProjectResponseTransformer::class)
         );
 
         $this->assertInstanceOf(CreateProject::class, $useCase);
@@ -107,9 +105,7 @@ class CreateProjectTest extends MockeryTestCase
     {
 
         $this->useCase = new CreateProject(
-            mock(IProjectGateway::class),
-            mock(IProjectResponseTransformer::class),
-            mock(ITextNormaliser::class)
+            mock(IProjectGateway::class), mock(ITextNormaliser::class), mock(IProjectResponseTransformer::class)
         );
 
         $this->gateway    = mock(IProjectGateway::class);

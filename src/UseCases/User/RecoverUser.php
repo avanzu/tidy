@@ -23,6 +23,6 @@ class RecoverUser extends UseCaseUser
         $user->assignToken(uniqid());
         $this->userGateway->save($user);
 
-        return $this->responseTransformer->transform($user);
+        return $this->transformer()->transform($user);
     }
 }

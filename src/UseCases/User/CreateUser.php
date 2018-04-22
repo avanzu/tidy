@@ -25,8 +25,8 @@ class CreateUser extends UseCaseUser
 
     public function __construct(
         IUserGateway $userGateway,
-        IUserResponseTransformer $responseTransformer,
-        IPasswordEncoder $encoder
+        IPasswordEncoder $encoder,
+        IUserResponseTransformer $responseTransformer = null
     ) {
         parent::__construct($userGateway, $responseTransformer);
         $this->passwordEncoder = $encoder;
@@ -47,7 +47,7 @@ class CreateUser extends UseCaseUser
 
         $this->userGateway->save($user);
 
-        return $this->responseTransformer->transform($user);
+        return $this->transformer()->transform($user);
 
     }
 

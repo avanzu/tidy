@@ -35,7 +35,14 @@ class GetProjectCollection
     public function __construct(IProjectGateway $gateway, IProjectCollectionResponseTransformer $transformer = null)
     {
         $this->gateway     = $gateway;
-        $this->transformer = $transformer ?: new ProjectCollectionResponseTransformer();
+        $this->transformer = $transformer;
+    }
+
+    protected function transformer()
+    {
+        if(! $this->transformer) $this->transformer = new ProjectCollectionResponseTransformer();
+        return $this->transformer;
+
     }
 
     public function execute(IGetProjectCollectionRequest $request)
@@ -46,7 +53,7 @@ class GetProjectCollection
         $total      = $this->gateway->total($request->criteria());
         $collection = new PagedCollection($items, $total, $boundary->page, $boundary->pageSize);
 
-        return $this->transformer->transform($collection);
+        return $this->transformer()->transform($collection);
     }
 
 

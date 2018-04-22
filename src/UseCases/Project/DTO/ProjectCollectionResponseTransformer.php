@@ -21,10 +21,12 @@ class ProjectCollectionResponseTransformer implements IProjectCollectionResponse
 
     /**
      * ProjectCollectionResponseTransformer constructor.
+     *
+     * @param IProjectResponseTransformer|null $itemTransformer
      */
-    public function __construct()
+    public function __construct(IProjectResponseTransformer $itemTransformer = null)
     {
-        $this->itemTransformer = new ProjectResponseTransformer();
+        $this->itemTransformer = $itemTransformer;
     }
 
     public function swapItemTransformer(IProjectResponseTransformer $itemTransformer)
@@ -35,11 +37,17 @@ class ProjectCollectionResponseTransformer implements IProjectCollectionResponse
         return $previous;
     }
 
+    protected function itemTransformer()
+    {
+        if( ! $this->itemTransformer) $this->itemTransformer = new ProjectResponseTransformer();
+        return $this->itemTransformer;
+    }
+
     public function transform(IPagedCollection $collection)
     {
 
         $response        = new ProjectCollectionResponseDTO();
-        $response->items = $collection->map(function ($item) { return $this->itemTransformer->transform($item); });
+        $response->items = $collection->map(function ($item) { return $this->itemTransformer()->transform($item); });
         $response->pickBoundaries($collection);
 
         return $response;

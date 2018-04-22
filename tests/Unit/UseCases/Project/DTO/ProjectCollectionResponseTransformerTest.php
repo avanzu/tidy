@@ -34,12 +34,13 @@ class ProjectCollectionResponseTransformerTest extends MockeryTestCase
 
     public function test_swapItemTransformer()
     {
+        $transformer = new ProjectCollectionResponseTransformer(mock(IProjectResponseTransformer::class));
         $next     = mock(ProjectResponseTransformer::class);
-        $previous = $this->transformer->swapItemTransformer($next);
+        $previous = $transformer->swapItemTransformer($next);
         $this->assertInstanceOf(IProjectResponseTransformer::class, $previous);
         $this->assertNotSame($previous, $next);
 
-        $this->assertSame($next, $this->transformer->swapItemTransformer($previous));
+        $this->assertSame($next, $transformer->swapItemTransformer($previous));
     }
 
     /**

@@ -27,13 +27,13 @@ class CreateProject extends UseCaseProject
      * CreateProject constructor.
      *
      * @param IProjectGateway             $projectGateway
-     * @param IProjectResponseTransformer $transformer
      * @param ITextNormaliser             $normaliser
+     * @param IProjectResponseTransformer $transformer
      */
     public function __construct(
         IProjectGateway $projectGateway,
-        IProjectResponseTransformer $transformer,
-        ITextNormaliser $normaliser
+        ITextNormaliser $normaliser,
+        IProjectResponseTransformer $transformer = null
     ) {
         parent::__construct($projectGateway, $transformer);
         $this->normaliser     = $normaliser;
@@ -57,7 +57,7 @@ class CreateProject extends UseCaseProject
 
         $this->gateway->save($project);
 
-        return $this->transformer->transform($project);
+        return $this->transformer()->transform($project);
     }
 
     public function setNormaliser($normaliser)

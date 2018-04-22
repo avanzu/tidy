@@ -25,19 +25,22 @@ use Tidy\UseCases\User\DTO\UserResponseTransformer;
 
 class CreateUserTest extends MockeryTestCase
 {
-    const TIMMY      = self::TIMMY_FIRSTNAME;
-    const PLAIN_PASS = '123999';
-    const TIMMY_MAIL = 'timmy@example.com';
+    const TIMMY           = self::TIMMY_FIRSTNAME;
+    const PLAIN_PASS      = '123999';
+    const TIMMY_MAIL      = 'timmy@example.com';
     const TIMMY_FIRSTNAME = 'Timmy';
-    const TIMMY_LASTNAME = 'Tungsten';
+    const TIMMY_LASTNAME  = 'Tungsten';
+
     /**
      * @var \Tidy\Domain\Gateways\IUserGateway|MockInterface
      */
     protected $gateway;
+
     /**
      * @var IPasswordEncoder|MockInterface
      */
     protected $encoder;
+
     /**
      * @var CreateUser
      */
@@ -45,8 +48,10 @@ class CreateUserTest extends MockeryTestCase
 
     public function testInstantiation()
     {
-        $this->assertInstanceOf(CreateUser::class, $this->useCase);
+        $useCase = new CreateUser(mock(IUserGateway::class), mock(IPasswordEncoder::class));
+        assertThat($useCase, is (notNullValue()));
 
+        $this->assertInstanceOf(CreateUser::class, $this->useCase);
     }
 
     public function test_CreateUserRequest_returnsUserResponse()
@@ -60,7 +65,6 @@ class CreateUserTest extends MockeryTestCase
         $this->expectGatewaySaveCall($username);
         $this->expectPasswordEncoderCall($plainPassword);
 
-
         $request = $this->makeRequestDTO($username, $plainPassword, $eMail, $firstName, $lastName);
 
         $result = $this->useCase->execute($request);
@@ -73,7 +77,6 @@ class CreateUserTest extends MockeryTestCase
         $this->assertNotEquals($plainPassword, $result->getPassword(), 'plain password should be encoded');
         $this->assertEquals($firstName, $result->getFirstName(), 'FirstName should be assigned.');
         $this->assertEquals($lastName, $result->getLastName(), 'LastName should be assigned.');
-
 
         $this->assertEquals(999, $result->getId());
     }
@@ -134,7 +137,7 @@ class CreateUserTest extends MockeryTestCase
     {
         $this->encoder = mock(IPasswordEncoder::class);
         $this->gateway = mock(IUserGateway::class);
-        $this->useCase = new CreateUser($this->gateway, mock(IUserResponseTransformer::class), $this->encoder);
+        $this->useCase = new CreateUser($this->gateway, $this->encoder, mock(IUserResponseTransformer::class));
 
         $this->gateway->allows('makeUser')->andReturn(new UserImpl());
         $this->gateway->allows('makeProfile')->andReturn(new UserProfileImpl());

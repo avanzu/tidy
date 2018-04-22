@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Responders\User\IUserCollectionResponseTransformer;
 use Tidy\Domain\Responders\User\IUserResponse;
+use Tidy\Domain\Responders\User\IUserResponseTransformer;
 use Tidy\Tests\Unit\Domain\Entities\UserStub1;
 use Tidy\UseCases\User\DTO\UserCollectionResponseDTO;
 use Tidy\UseCases\User\DTO\UserCollectionResponseTransformer;
@@ -89,9 +90,10 @@ class UserCollectionResponseTransformerTest extends TestCase
      */
     public function test_swapItemTransformer_AcceptsNewTransformer_ReturnsCurrentTransformer()
     {
+        $transformer     = new UserCollectionResponseTransformer(mock(IUserResponseTransformer::class));
         $itemTransformer = new UserResponseTransformer();
-        $lastTransformer = $this->transformer->swapItemTransformer($itemTransformer);
-        $this->assertSame($itemTransformer, $this->transformer->swapItemTransformer($lastTransformer));
+        $lastTransformer = $transformer->swapItemTransformer($itemTransformer);
+        $this->assertSame($itemTransformer, $transformer->swapItemTransformer($lastTransformer));
 
     }
 

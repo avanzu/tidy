@@ -9,6 +9,7 @@ namespace Tidy\UseCases\Project;
 
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Responders\Project\IProjectResponseTransformer;
+use Tidy\UseCases\Project\DTO\ProjectResponseTransformer;
 
 abstract class UseCaseProject
 {
@@ -28,10 +29,16 @@ abstract class UseCaseProject
      * @param IProjectGateway             $projectGateway
      * @param IProjectResponseTransformer $transformer
      */
-    public function __construct(IProjectGateway $projectGateway, IProjectResponseTransformer $transformer)
+    public function __construct(IProjectGateway $projectGateway, IProjectResponseTransformer $transformer = null)
     {
         $this->transformer = $transformer;
         $this->gateway     = $projectGateway;
+    }
+
+    protected function transformer()
+    {
+        if( ! $this->transformer) $this->transformer = new ProjectResponseTransformer();
+        return $this->transformer;
     }
 
     public function setResponseTransformer($transformer)

@@ -27,10 +27,11 @@ class UserCollectionResponseTransformer implements IUserCollectionResponseTransf
     /**
      * UserCollectionResponseTransformer constructor.
      *
+     * @param IUserResponseTransformer|null $itemTransformer
      */
-    public function __construct()
+    public function __construct(IUserResponseTransformer $itemTransformer = null)
     {
-        $this->itemTransformer = new ItemTransformer();
+        $this->itemTransformer = $itemTransformer;
     }
 
     /**
@@ -46,6 +47,13 @@ class UserCollectionResponseTransformer implements IUserCollectionResponseTransf
         return $previous;
     }
 
+    protected function itemTransformer()
+    {
+        if( ! $this->itemTransformer ) $this->itemTransformer = new ItemTransformer();
+        return $this->itemTransformer;
+    }
+
+
     /**
      *
      * @param IPagedCollection $collection
@@ -55,7 +63,7 @@ class UserCollectionResponseTransformer implements IUserCollectionResponseTransf
     public function transform(IPagedCollection $collection)
     {
         $response             = new UserCollectionResponseDTO();
-        $response->items      = $collection->map(function ($item) { return $this->itemTransformer->transform($item); });
+        $response->items      = $collection->map(function ($item) { return $this->itemTransformer()->transform($item); });
         $response->pickBoundaries($collection);
 
         return $response;
