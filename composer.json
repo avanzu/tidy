@@ -22,6 +22,9 @@
         "psr-4" : {
             "Tidy\\Tests\\" : "tests/"
         },
-        "files" : ["tests/Mockery.php"]
+        "files" : [
+            "tests/Mockery.php",
+            "vendor/hamcrest/hamcrest-php/hamcrest/Hamcrest.php"
+        ]
     }
 }
