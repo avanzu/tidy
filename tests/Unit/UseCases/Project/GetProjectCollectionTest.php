@@ -66,7 +66,7 @@ class GetProjectCollectionTest extends MockeryTestCase
                       ->with($page, $pageSize, argumentThat($criteriaCheck))
                       ->andReturn([new ProjectSilverTongue()])
                       ->byDefault();
-        $this->gateway->expects('total')->andReturn(2);
+        $this->gateway->expects('total')->with($request->getCriteria())->andReturn(2);
 
         $result = $this->useCase->execute($request);
 

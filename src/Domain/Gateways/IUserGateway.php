@@ -33,9 +33,11 @@ interface IUserGateway
     public function fetchCollection($page, $pageSize, $criteria = []);
 
     /**
+     * @param array $criteria
+     *
      * @return int
      */
-    public function total();
+    public function total($criteria = null);
 
     /**
      * @param User $user

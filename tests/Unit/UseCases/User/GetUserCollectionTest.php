@@ -137,7 +137,11 @@ class GetUserCollectionTest extends MockeryTestCase
                       ->andReturn([new UserStub1(), new UserStub2()])
                       ->byDefault();
 
-        $this->gateway->expects('total')->andReturn(2);
+        $this->gateway
+            ->expects('total')
+            ->with($request->getCriteria())
+            ->andReturn(2);
+
         $result = $this->useCase->execute($request);
         $this->assertInstanceOf(IUserCollectionResponse::class, $result);
 

@@ -47,7 +47,7 @@ class GetProjectCollection
 
         $collection = new PagedCollection(
             $items,
-            $this->gateway->total(),
+            $this->gateway->total($request->getCriteria()),
             $request->getPage(),
             $request->getPageSize()
         );

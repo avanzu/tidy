@@ -49,8 +49,10 @@ interface IProjectGateway
     public function fetchCollection($page, $pageSize,  $criteria = null);
 
     /**
+     * @param null $criteria
+     *
      * @return int
      */
-    public function total();
+    public function total($criteria = null);
 
 }
