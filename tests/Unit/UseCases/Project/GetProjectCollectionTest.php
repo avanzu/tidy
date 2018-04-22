@@ -52,21 +52,11 @@ class GetProjectCollectionTest extends MockeryTestCase
             ->withDescription(Comparison::containing(ProjectSilverTongue::DESCRIPTION))
             ->withCanonical(Comparison::startsWith(ProjectSilverTongue::CANONICAL))
             ->withId(Comparison::greaterOrEqualTo(ProjectSilverTongue::ID))
+            ->withOwner(Comparison::in(1, 2, 3))
         ;
 
-        $criteriaCheck = function ($argument) {
-            if (count($argument) != 4) {
-                return false;
-            }
-
-            return count(array_filter($argument, function ($item) { return !($item instanceof Comparison); })) === 0;
-        };
-
-        $this->gateway->expects('fetchCollection')
-                      ->with($page, $pageSize, argumentThat($criteriaCheck))
-                      ->andReturn([new ProjectSilverTongue()])
-                      ->byDefault();
-        $this->gateway->expects('total')->with($request->getCriteria())->andReturn(2);
+        $this->expectGatewayFetchCollection($page, $pageSize, $request);
+        $this->expectGatewayTotal($request);
 
         $result = $this->useCase->execute($request);
 
@@ -85,5 +75,34 @@ class GetProjectCollectionTest extends MockeryTestCase
 
         $this->gateway  = mock(IProjectGateway::class);
         $this->useCase = new GetProjectCollection($this->gateway, new ProjectCollectionResponseTransformer());
+    }
+
+    /**
+     * @param $page
+     * @param $pageSize
+     */
+    protected function expectGatewayFetchCollection($page, $pageSize)
+    {
+        $criteriaCheck = function ($argument) {
+            if (count($argument) != 5) {
+                return false;
+            }
+
+            return count(array_filter($argument, function ($item) { return !($item instanceof Comparison); })) === 0;
+        };
+
+        $this->gateway->expects('fetchCollection')
+                      ->with($page, $pageSize, argumentThat($criteriaCheck))
+                      ->andReturn([new ProjectSilverTongue()])
+                      ->byDefault()
+        ;
+    }
+
+    /**
+     * @param $request
+     */
+    protected function expectGatewayTotal($request): void
+    {
+        $this->gateway->expects('total')->with($request->getCriteria())->andReturn(2);
     }
 }

@@ -217,4 +217,23 @@ class Comparison
         return new static($string, static::ENDS_WITH);
     }
 
+    /**
+     * @param mixed ...$values
+     *
+     * @return static
+     */
+    public static function in(...$values) {
+        return new static($values, static::IN);
+    }
+
+
+    /**
+     * @param mixed ...$values
+     *
+     * @return static
+     */
+    public function notIn(...$values)
+    {
+        return new static($values, static::NIN);
+    }
 }

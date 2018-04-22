@@ -17,7 +17,7 @@ class GetProjectCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetProjectCollectionRequestDTO
+     * @return $this
      */
     public function withName(Comparison $comparison = null)
     {
@@ -30,7 +30,7 @@ class GetProjectCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetProjectCollectionRequestDTO
+     * @return $this
      */
     public function withDescription(Comparison $comparison = null)
     {
@@ -41,7 +41,7 @@ class GetProjectCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetProjectCollectionRequestDTO
+     * @return $this
      */
     public function withCanonical(Comparison $comparison = null)
     {
@@ -52,11 +52,21 @@ class GetProjectCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetProjectCollectionRequestDTO
+     * @return $this
      */
     public function withId(Comparison $comparison = null)
     {
         $this->useComparison('id', $comparison);
+        return $this;
+    }
+
+    /**
+     * @param Comparison|null $comparison
+     *
+     * @return $this
+     */
+    public function withOwner(Comparison $comparison = null) {
+        $this->useComparison('owner', $comparison);
         return $this;
     }
 }
