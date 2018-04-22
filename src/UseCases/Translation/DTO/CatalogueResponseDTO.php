@@ -17,6 +17,7 @@ class CatalogueResponseDTO
     public $sourceCulture;
     public $targetLanguage;
     public $targetCulture;
+    public $project;
 
     /**
      * @return mixed
@@ -73,5 +74,15 @@ class CatalogueResponseDTO
     {
         return $this->targetCulture;
     }
+
+    /**
+     * @return Excerpt
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+
 
 }

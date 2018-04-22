@@ -24,6 +24,31 @@ abstract class TranslationCatalogue
 
     protected $canonical;
 
+    /**
+     * @return Project
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
+     * @param Project $project
+     *
+     * @return $this
+     */
+    public function setProject($project)
+    {
+        $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * @var Project
+     */
+    protected $project;
+
     protected $translations = [];
 
     /**

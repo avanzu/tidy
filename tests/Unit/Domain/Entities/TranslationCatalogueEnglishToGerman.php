@@ -12,16 +12,19 @@ use Tidy\Domain\Entities\TranslationCatalogue;
 
 class TranslationCatalogueEnglishToGerman extends TranslationCatalogue
 {
+    const ID             = 4711;
     const TARGET_CULTURE = 'DE';
     const SOURCE_CULTURE = 'US';
     const TARGET_LANG    = 'de';
     const SOURCE_LANG    = 'en';
     const NAME           = 'Messages';
-    const ID             = 'messages';
+    const CANONICAL      = 'messages';
 
     protected $name           = self::NAME;
 
     protected $id             = self::ID;
+
+    protected $canonical      = self::CANONICAL;
 
     protected $sourceLanguage = self::SOURCE_LANG;
 
@@ -31,7 +34,13 @@ class TranslationCatalogueEnglishToGerman extends TranslationCatalogue
 
     protected $targetCulture  = self::TARGET_CULTURE;
 
-
+    /**
+     * TranslationCatalogueEnglishToGerman constructor.
+     */
+    public function __construct()
+    {
+        $this->project = new ProjectSilverTongue();
+    }
 
 
 }

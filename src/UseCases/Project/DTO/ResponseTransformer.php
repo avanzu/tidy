@@ -45,7 +45,7 @@ class ResponseTransformer implements IResponseTransformer
     /**
      * @return IOwnerExcerptTransformer|OwnerExcerptTransformer
      */
-    private function getOwnerTransformer()
+    private function ownerTransformer()
     {
         if (!$this->ownerExcerptTransformer) {
             $this->ownerExcerptTransformer = new OwnerExcerptTransformer();
@@ -82,6 +82,6 @@ class ResponseTransformer implements IResponseTransformer
      */
     private function transformOwner(Project $project)
     {
-        return $this->getOwnerTransformer()->excerpt($project->getOwner());
+        return $this->ownerTransformer()->excerpt($project->getOwner());
     }
 }

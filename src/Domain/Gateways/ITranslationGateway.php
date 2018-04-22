@@ -16,7 +16,8 @@ interface ITranslationGateway
     /**
      * @return TranslationCatalogue
      */
-    public function makeCatalogue();
+    public function makeCatalogueForProject($projectId);
+
 
     /**
      * @param $catalogue

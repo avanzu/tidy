@@ -48,7 +48,7 @@ class CreateCatalogue
     public function execute(CreateCatalogueRequestDTO $request)
     {
 
-        $catalogue = $this->gateway->makeCatalogue();
+        $catalogue = $this->gateway->makeCatalogueForProject($request->projectId());
         $catalogue
             ->setName($request->name())
             ->setCanonical($request->canonical())

@@ -8,22 +8,49 @@
 
 namespace Tidy\UseCases\Translation\DTO;
 
+/**
+ * Class CreateCatalogueRequestDTO
+ */
 class CreateCatalogueRequestDTO
 {
+    /**
+     * @var string
+     */
     public    $name;
 
+    /**
+     * @var string
+     */
     public    $sourceLanguage;
 
+    /**
+     * @var string
+     */
     public    $sourceCulture;
 
+    /**
+     * @var string
+     */
     public    $targetLanguage;
 
+    /**
+     * @var string
+     */
     public    $targetCulture;
 
+    /**
+     * @var int
+     */
     public    $projectId;
 
+    /**
+     * @var string
+     */
     public $canonical;
 
+    /**
+     * @return CreateCatalogueRequestDTO
+     */
     public static function make()
     {
         return new self();
@@ -107,22 +134,41 @@ class CreateCatalogueRequestDTO
         return $this->canonical;
     }
 
+    /**
+     * @return string
+     */
     public function sourceLanguage() {
         return $this->sourceLanguage;
     }
 
+    /**
+     * @return string
+     */
     public function sourceCulture() {
         return $this->sourceCulture;
     }
 
+    /**
+     * @return string
+     */
     public function targetLanguage()
     {
         return $this->targetLanguage;
     }
 
+    /**
+     * @return string
+     */
     public function targetCulture()
     {
         return $this->targetCulture;
+    }
+
+    /**
+     * @return int
+     */
+    public function projectId() {
+        return $this->projectId;
     }
 
 }
