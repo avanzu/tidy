@@ -12,7 +12,7 @@ use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\IResetPasswordRequest;
-use Tidy\Domain\Responders\User\IUserResponseTransformer;
+use Tidy\Domain\Responders\User\IResponseTransformer;
 
 class ResetPassword extends UseCaseUser
 {
@@ -24,7 +24,7 @@ class ResetPassword extends UseCaseUser
     public function __construct(
         IPasswordEncoder $encoder,
         IUserGateway $userGateway,
-        IUserResponseTransformer $responseTransformer = null
+        IResponseTransformer $responseTransformer = null
     ) {
         parent::__construct($userGateway, $responseTransformer);
         $this->encoder = $encoder;

@@ -13,12 +13,12 @@ use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Gateways\IUserGateway;
-use Tidy\Domain\Responders\User\IUserResponse;
-use Tidy\Domain\Responders\User\IUserResponseTransformer;
+use Tidy\Domain\Responders\User\IResponse;
+use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\UserStub2;
 use Tidy\UseCases\User\DTO\ResetPasswordRequestDTO;
-use Tidy\UseCases\User\DTO\UserResponseTransformer;
+use Tidy\UseCases\User\DTO\ResponseTransformer;
 use Tidy\UseCases\User\ResetPassword;
 
 class ResetPasswordTest extends MockeryTestCase
@@ -42,7 +42,7 @@ class ResetPasswordTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $useCase = new ResetPassword($this->encoder, $this->gateway, mock(IUserResponseTransformer::class));
+        $useCase = new ResetPassword($this->encoder, $this->gateway, mock(IResponseTransformer::class));
         $this->assertInstanceOf(ResetPassword::class, $useCase);
     }
 
@@ -59,7 +59,7 @@ class ResetPasswordTest extends MockeryTestCase
 
         $result = $this->useCase->execute($request);
 
-        $this->assertInstanceOf(IUserResponse::class, $result);
+        $this->assertInstanceOf(IResponse::class, $result);
         $this->assertEquals(UserStub2::ID, $result->getId(), 'User should match.');
         $this->assertEquals($hash, $result->getPassword(), 'Password should be the new hash.');
         $this->assertEmpty($result->getToken(), 'Token should be cleared.');
@@ -82,7 +82,7 @@ class ResetPasswordTest extends MockeryTestCase
     {
         $this->gateway = mock(IUserGateway::class);
         $this->encoder = mock(IPasswordEncoder::class);
-        $this->useCase = new ResetPassword($this->encoder, $this->gateway, new UserResponseTransformer());
+        $this->useCase = new ResetPassword($this->encoder, $this->gateway, new ResponseTransformer());
 
 
     }

@@ -10,9 +10,9 @@ namespace Tidy\UseCases\Project;
 use Tidy\Components\Collection\Boundary;
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Gateways\IProjectGateway;
-use Tidy\Domain\Requestors\Project\IGetProjectCollectionRequest;
-use Tidy\Domain\Responders\Project\IProjectCollectionResponseTransformer;
-use Tidy\UseCases\Project\DTO\ProjectCollectionResponseTransformer;
+use Tidy\Domain\Requestors\Project\IGetCollectionRequest;
+use Tidy\Domain\Responders\Project\ICollectionResponseTransformer;
+use Tidy\UseCases\Project\DTO\CollectionResponseTransformer;
 
 class GetProjectCollection
 {
@@ -22,17 +22,17 @@ class GetProjectCollection
     protected $gateway;
 
     /**
-     * @var IProjectCollectionResponseTransformer
+     * @var ICollectionResponseTransformer
      */
     protected $transformer;
 
     /**
      * GetProjectCollection constructor.
      *
-     * @param IProjectGateway                       $gateway
-     * @param IProjectCollectionResponseTransformer $transformer
+     * @param IProjectGateway                $gateway
+     * @param ICollectionResponseTransformer $transformer
      */
-    public function __construct(IProjectGateway $gateway, IProjectCollectionResponseTransformer $transformer = null)
+    public function __construct(IProjectGateway $gateway, ICollectionResponseTransformer $transformer = null)
     {
         $this->gateway     = $gateway;
         $this->transformer = $transformer;
@@ -40,12 +40,12 @@ class GetProjectCollection
 
     protected function transformer()
     {
-        if(! $this->transformer) $this->transformer = new ProjectCollectionResponseTransformer();
+        if(! $this->transformer) $this->transformer = new CollectionResponseTransformer();
         return $this->transformer;
 
     }
 
-    public function execute(IGetProjectCollectionRequest $request)
+    public function execute(IGetCollectionRequest $request)
     {
 
         $boundary   = $request->boundary();

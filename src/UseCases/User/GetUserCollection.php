@@ -10,10 +10,10 @@ namespace Tidy\UseCases\User;
 use Tidy\Components\Collection\Boundary;
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Gateways\IUserGateway;
-use Tidy\Domain\Requestors\User\IGetUserCollectionRequest;
-use Tidy\Domain\Responders\User\IUserCollectionResponse;
-use Tidy\Domain\Responders\User\IUserCollectionResponseTransformer;
-use Tidy\UseCases\User\DTO\UserCollectionResponseTransformer;
+use Tidy\Domain\Requestors\User\IGetCollectionRequest;
+use Tidy\Domain\Responders\User\ICollectionResponse;
+use Tidy\Domain\Responders\User\ICollectionResponseTransformer;
+use Tidy\UseCases\User\DTO\CollectionResponseTransformer;
 
 /**
  * Class GetUserCollection
@@ -26,16 +26,16 @@ class GetUserCollection
     protected $gateway;
 
     /**
-     * @var IUserCollectionResponseTransformer
+     * @var ICollectionResponseTransformer
      */
     private $transformer;
 
     /**
-     * @param IGetUserCollectionRequest $request
+     * @param IGetCollectionRequest $request
      *
-     * @return IUserCollectionResponse
+     * @return ICollectionResponse
      */
-    public function execute(IGetUserCollectionRequest $request)
+    public function execute(IGetCollectionRequest $request)
     {
         $boundary   = $request->boundary();
         $items      = $this->gateway->fetchCollection($boundary, $request->criteria());
@@ -49,7 +49,7 @@ class GetUserCollection
 
     protected function transformer()
     {
-        if( ! $this->transformer ) $this->transformer = new UserCollectionResponseTransformer();
+        if( ! $this->transformer ) $this->transformer = new CollectionResponseTransformer();
         return $this->transformer;
     }
 
@@ -62,9 +62,9 @@ class GetUserCollection
     }
 
     /**
-     * @param IUserCollectionResponseTransformer $transformer
+     * @param ICollectionResponseTransformer $transformer
      */
-    public function setResponseTransformer(IUserCollectionResponseTransformer $transformer)
+    public function setResponseTransformer(ICollectionResponseTransformer $transformer)
     {
         $this->transformer = $transformer;
     }

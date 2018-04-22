@@ -9,16 +9,20 @@
 namespace Tidy\Tests\Unit\UseCases\Translation;
 
 use Mockery\MockInterface;
+use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\Domain\Responders\Translation\ITranslationCatalogueResponseTransformer;
+use Tidy\Domain\Responders\Translation\ICatalogueResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
+use Tidy\Tests\Unit\Domain\Entities\ProjectSilverTongue;
+use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueImpl;
 use Tidy\UseCases\Translation\CreateCatalogue;
+use Tidy\UseCases\Translation\DTO\CatalogueResponseDTO;
 use Tidy\UseCases\Translation\DTO\CreateCatalogueRequestDTO;
 
 class CreateCatalogueTest extends MockeryTestCase
 {
     /**
-     * @var MockInterface|ITranslationCatalogueResponseTransformer
+     * @var MockInterface|ICatalogueResponseTransformer
      */
     protected $transformer;
 
@@ -36,7 +40,7 @@ class CreateCatalogueTest extends MockeryTestCase
     {
         $useCase = new CreateCatalogue(
             mock(ITranslationGateway::class),
-            mock(ITranslationCatalogueResponseTransformer::class)
+            mock(ICatalogueResponseTransformer::class)
         );
 
         assertThat($useCase, is(notNullValue()));
@@ -46,18 +50,55 @@ class CreateCatalogueTest extends MockeryTestCase
     {
         $request = CreateCatalogueRequestDTO::make();
         assertThat($request, is(notNullValue()));
+
+        $request
+            ->withName('Error messages')
+            ->withCanonical('errors')
+            ->withSourceLocale('en', 'US')
+            ->withTargetLocale('de', 'DE')
+            ->withProjectId(ProjectSilverTongue::ID)
+            ;
+
+        $this->gateway->expects('makeCatalogue')->andReturn(new TranslationCatalogueImpl());
+
+
+        $this->gateway->expects('save')->with(argumentThat(function(TranslationCatalogue $catalogue){
+            assertThat($catalogue->getName(), is(equalTo('Error messages')));
+            assertThat($catalogue->getCanonical(), is(equalTo('errors')));
+            assertThat($catalogue->getSourceLanguage(), is(equalTo('en')));
+            assertThat($catalogue->getSourceCulture(), is(equalTo('US')));
+            assertThat($catalogue->getTargetLanguage(), is(equalTo('de')));
+            assertThat($catalogue->getTargetCulture(), is(equalTo('DE')));
+
+            return true;
+        }))
+        ->andReturnUsing(function($catalogue){
+            identify($catalogue, 2342);
+            return $catalogue;
+        });
+
+
+        $response = $this->useCase->execute($request);
+        assertThat($response, is(anInstanceOf(CatalogueResponseDTO::class)));
+        assertThat($response->getName(), is(equalTo('Error messages')));
+        assertThat($response->getCanonical(), is(equalTo('errors')));
+        assertThat($response->getSourceCulture(), is(equalTo('US')));
+        assertThat($response->getSourceLanguage(), is(equalTo('en')));
+        assertThat($response->getTargetLanguage(), is(equalTo('de')));
+        assertThat($response->getTargetCulture(), is(equalTo('DE')));
+        assertThat($response->getId(), is(equalTo(2342)));
     }
 
     protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */
     {
         parent::setUp();
-        $this->transformer = mock(ITranslationCatalogueResponseTransformer::class);
         $this->gateway     = mock(ITranslationGateway::class);
         $this->useCase = new CreateCatalogue(
-            $this->gateway,
-            $this->transformer
+            $this->gateway
         );
     }
+
+
 
 
 }

@@ -22,6 +22,8 @@ abstract class TranslationCatalogue
 
     protected $id;
 
+    protected $canonical;
+
     protected $translations = [];
 
     /**
@@ -164,5 +166,23 @@ abstract class TranslationCatalogue
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCanonical()
+    {
+        return $this->canonical;
+    }
 
+    /**
+     * @param mixed $canonical
+     *
+     * @return $this
+     */
+    public function setCanonical($canonical)
+    {
+        $this->canonical = $canonical;
+
+        return $this;
+    }
 }

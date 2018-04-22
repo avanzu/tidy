@@ -9,8 +9,9 @@
 namespace Tidy\UseCases\Translation;
 
 use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\Domain\Responders\Translation\ITranslationCatalogueResponseTransformer;
-use Tidy\Domain\Responders\Translation\ITranslationResponseTransformer;
+use Tidy\Domain\Responders\Translation\ICatalogueResponseTransformer;
+use Tidy\UseCases\Translation\DTO\CatalogueResponseTransformer;
+use Tidy\UseCases\Translation\DTO\CreateCatalogueRequestDTO;
 
 class CreateCatalogue
 {
@@ -20,20 +21,46 @@ class CreateCatalogue
     protected $gateway;
 
     /**
-     * @var ITranslationResponseTransformer
+     * @var ICatalogueResponseTransformer
      */
     private $transformer;
 
     /**
      * CreateCatalogue constructor.
      *
-     * @param ITranslationGateway                      $gateway
-     * @param ITranslationCatalogueResponseTransformer $transformer
+     * @param ITranslationGateway           $gateway
+     * @param ICatalogueResponseTransformer $transformer
      */
-    public function __construct(ITranslationGateway $gateway, ITranslationCatalogueResponseTransformer $transformer)
+    public function __construct(ITranslationGateway $gateway, ICatalogueResponseTransformer $transformer = null)
     {
         $this->gateway     = $gateway;
         $this->transformer = $transformer;
+    }
+
+    /**
+     * @return ICatalogueResponseTransformer
+     */
+    protected function transformer()
+    {
+        if( ! $this->transformer ) $this->transformer = new CatalogueResponseTransformer();
+        return $this->transformer;
+    }
+    public function execute(CreateCatalogueRequestDTO $request)
+    {
+
+        $catalogue = $this->gateway->makeCatalogue();
+        $catalogue
+            ->setName($request->name())
+            ->setCanonical($request->canonical())
+            ->setSourceLanguage($request->sourceLanguage())
+            ->setSourceCulture($request->sourceCulture())
+            ->setTargetLanguage($request->targetLanguage())
+            ->setTargetCulture($request->targetCulture())
+        ;
+
+        $this->gateway->save($catalogue);
+
+        return $this->transformer()->transform($catalogue);
     }
 
 

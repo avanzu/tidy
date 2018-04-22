@@ -9,14 +9,14 @@ namespace Tidy\UseCases\User;
 
 
 use Tidy\Domain\Gateways\IUserGateway;
-use Tidy\Domain\Responders\User\IUserResponseTransformer;
-use Tidy\UseCases\User\DTO\UserResponseTransformer;
+use Tidy\Domain\Responders\User\IResponseTransformer;
+use Tidy\UseCases\User\DTO\ResponseTransformer;
 
 abstract class UseCaseUser
 {
 
     /**
-     * @var IUserResponseTransformer
+     * @var IResponseTransformer
      */
     protected $responseTransformer;
     /**
@@ -27,17 +27,17 @@ abstract class UseCaseUser
     /**
      * UseCaseUser constructor.
      *
-     * @param IUserGateway             $userGateway
-     * @param IUserResponseTransformer $responseTransformer
+     * @param IUserGateway         $userGateway
+     * @param IResponseTransformer $responseTransformer
      */
-    public function __construct(IUserGateway $userGateway, IUserResponseTransformer $responseTransformer = null)
+    public function __construct(IUserGateway $userGateway, IResponseTransformer $responseTransformer = null)
     {
         $this->userGateway         = $userGateway;
         $this->responseTransformer = $responseTransformer;
     }
 
     protected function transformer() {
-        if( ! $this->responseTransformer ) $this->responseTransformer = new UserResponseTransformer();
+        if( ! $this->responseTransformer ) $this->responseTransformer = new ResponseTransformer();
 
         return $this->responseTransformer;
     }

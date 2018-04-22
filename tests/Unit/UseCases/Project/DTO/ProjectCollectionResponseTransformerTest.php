@@ -8,36 +8,36 @@
 namespace Tidy\Tests\Unit\UseCases\Project\DTO;
 
 use Tidy\Components\Collection\PagedCollection;
-use Tidy\Domain\Responders\Project\IProjectCollectionResponseTransformer;
-use Tidy\Domain\Responders\Project\IProjectResponse;
-use Tidy\Domain\Responders\Project\IProjectResponseTransformer;
+use Tidy\Domain\Responders\Project\ICollectionResponseTransformer;
+use Tidy\Domain\Responders\Project\IResponse;
+use Tidy\Domain\Responders\Project\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\ProjectSilverTongue;
-use Tidy\UseCases\Project\DTO\ProjectCollectionResponseDTO;
-use Tidy\UseCases\Project\DTO\ProjectCollectionResponseTransformer;
-use Tidy\UseCases\Project\DTO\ProjectResponseTransformer;
+use Tidy\UseCases\Project\DTO\CollectionResponseDTO;
+use Tidy\UseCases\Project\DTO\CollectionResponseTransformer;
+use Tidy\UseCases\Project\DTO\ResponseTransformer;
 
 class ProjectCollectionResponseTransformerTest extends MockeryTestCase
 {
 
 
     /**
-     * @var IProjectCollectionResponseTransformer
+     * @var ICollectionResponseTransformer
      */
     protected $transformer;
 
     public function test_instantiation()
     {
-        $transformer = new ProjectCollectionResponseTransformer();
-        $this->assertInstanceOf(ProjectCollectionResponseTransformer::class, $transformer);
+        $transformer = new CollectionResponseTransformer();
+        $this->assertInstanceOf(CollectionResponseTransformer::class, $transformer);
     }
 
     public function test_swapItemTransformer()
     {
-        $transformer = new ProjectCollectionResponseTransformer(mock(IProjectResponseTransformer::class));
-        $next     = mock(ProjectResponseTransformer::class);
+        $transformer = new CollectionResponseTransformer(mock(IResponseTransformer::class));
+        $next     = mock(ResponseTransformer::class);
         $previous = $transformer->swapItemTransformer($next);
-        $this->assertInstanceOf(IProjectResponseTransformer::class, $previous);
+        $this->assertInstanceOf(IResponseTransformer::class, $previous);
         $this->assertNotSame($previous, $next);
 
         $this->assertSame($next, $transformer->swapItemTransformer($previous));
@@ -50,7 +50,7 @@ class ProjectCollectionResponseTransformerTest extends MockeryTestCase
     {
         $items  = [];
         $result = $this->transformer->transform(new PagedCollection($items, 10, 1, 20));
-        $this->assertInstanceOf(ProjectCollectionResponseDTO::class, $result);
+        $this->assertInstanceOf(CollectionResponseDTO::class, $result);
         $this->assertEquals(1, $result->currentPage());
         $this->assertEquals(1, $result->pagesTotal());
         $this->assertEquals(20, $result->pageSize());
@@ -61,14 +61,14 @@ class ProjectCollectionResponseTransformerTest extends MockeryTestCase
         $items = [new ProjectSilverTongue()];
         $result = $this->transformer->transform(new PagedCollection($items));
         $this->assertCount(1, $result);
-        $this->assertInstanceOf(IProjectResponse::class, current($result->getItems()));
+        $this->assertInstanceOf(IResponse::class, current($result->getItems()));
     }
 
 
     protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */
     {
         parent::setUp();
-        $this->transformer = new ProjectCollectionResponseTransformer();
+        $this->transformer = new CollectionResponseTransformer();
 
     }
 }

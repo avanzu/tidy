@@ -9,13 +9,13 @@ namespace Tidy\Tests\Unit\UseCases\User\DTO;
 
 use PHPUnit\Framework\TestCase;
 use Tidy\Components\Collection\PagedCollection;
-use Tidy\Domain\Responders\User\IUserCollectionResponseTransformer;
-use Tidy\Domain\Responders\User\IUserResponse;
-use Tidy\Domain\Responders\User\IUserResponseTransformer;
+use Tidy\Domain\Responders\User\ICollectionResponseTransformer;
+use Tidy\Domain\Responders\User\IResponse;
+use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Tests\Unit\Domain\Entities\UserStub1;
-use Tidy\UseCases\User\DTO\UserCollectionResponseDTO;
-use Tidy\UseCases\User\DTO\UserCollectionResponseTransformer;
-use Tidy\UseCases\User\DTO\UserResponseTransformer;
+use Tidy\UseCases\User\DTO\CollectionResponseDTO;
+use Tidy\UseCases\User\DTO\CollectionResponseTransformer;
+use Tidy\UseCases\User\DTO\ResponseTransformer;
 
 /**
  * Class UserCollectionResponseTransformerTest
@@ -24,7 +24,7 @@ class UserCollectionResponseTransformerTest extends TestCase
 {
 
     /**
-     * @var IUserCollectionResponseTransformer
+     * @var ICollectionResponseTransformer
      */
     private $transformer;
 
@@ -33,7 +33,7 @@ class UserCollectionResponseTransformerTest extends TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf(UserCollectionResponseTransformer::class, $this->transformer);
+        $this->assertInstanceOf(CollectionResponseTransformer::class, $this->transformer);
     }
 
 
@@ -44,7 +44,7 @@ class UserCollectionResponseTransformerTest extends TestCase
     {
         $items  = [];
         $result = $this->transformer->transform(new PagedCollection($items, 10, 1, 20));
-        $this->assertInstanceOf(UserCollectionResponseDTO::class, $result);
+        $this->assertInstanceOf(CollectionResponseDTO::class, $result);
         $this->assertCount(0, $result);
 
     }
@@ -77,9 +77,9 @@ class UserCollectionResponseTransformerTest extends TestCase
         $pageSize = 20;
         $result   = $this->transformer->transform(new PagedCollection($items, 10, $page, $pageSize));
 
-        /** @var $item IUserResponse */
+        /** @var $item IResponse */
         list($item) = $result->getItems();
-        $this->assertInstanceOf(IUserResponse::class, $item);
+        $this->assertInstanceOf(IResponse::class, $item);
         $this->assertEquals(UserStub1::ID, $item->getId());
 
     }
@@ -90,8 +90,8 @@ class UserCollectionResponseTransformerTest extends TestCase
      */
     public function test_swapItemTransformer_AcceptsNewTransformer_ReturnsCurrentTransformer()
     {
-        $transformer     = new UserCollectionResponseTransformer(mock(IUserResponseTransformer::class));
-        $itemTransformer = new UserResponseTransformer();
+        $transformer     = new CollectionResponseTransformer(mock(IResponseTransformer::class));
+        $itemTransformer = new ResponseTransformer();
         $lastTransformer = $transformer->swapItemTransformer($itemTransformer);
         $this->assertSame($itemTransformer, $transformer->swapItemTransformer($lastTransformer));
 
@@ -102,7 +102,7 @@ class UserCollectionResponseTransformerTest extends TestCase
      */
     protected function setUp()
     {
-        $this->transformer = new UserCollectionResponseTransformer();
+        $this->transformer = new CollectionResponseTransformer();
 
     }
 
