@@ -11,7 +11,7 @@ namespace Tidy\UseCases\User;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Requestors\User\IRecoverUserRequest;
 
-class RecoverUser extends GenericUseCase
+class RecoverUser extends UseCaseUser
 {
     public function execute(IRecoverUserRequest $request)
     {

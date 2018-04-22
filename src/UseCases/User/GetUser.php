@@ -12,7 +12,7 @@ use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Requestors\User\IGetUserRequest;
 use Tidy\Domain\Responders\User\IUserResponse;
 
-class GetUser extends GenericUseCase
+class GetUser extends UseCaseUser
 {
 
 

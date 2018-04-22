@@ -14,7 +14,7 @@ use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\IResetPasswordRequest;
 use Tidy\Domain\Responders\User\IUserResponseTransformer;
 
-class ResetPassword extends GenericUseCase
+class ResetPassword extends UseCaseUser
 {
     /**
      * @var IPasswordEncoder

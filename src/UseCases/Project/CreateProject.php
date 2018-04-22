@@ -14,17 +14,9 @@ use Tidy\Domain\Requestors\Project\ICreateProjectRequest;
 use Tidy\Domain\Responders\Project\IProjectResponse;
 use Tidy\Domain\Responders\Project\IProjectResponseTransformer;
 
-class CreateProject
+class CreateProject extends UseCaseProject
 {
 
-    /**
-     * @var IProjectGateway
-     */
-    protected $projectGateway;
-    /**
-     * @var IProjectResponseTransformer
-     */
-    protected $transformer;
     /**
      * @var ITextNormaliser
      */
@@ -43,15 +35,8 @@ class CreateProject
         IProjectResponseTransformer $transformer,
         ITextNormaliser $normaliser
     ) {
-        $this->projectGateway = $projectGateway;
-        $this->transformer    = $transformer;
+        parent::__construct($projectGateway, $transformer);
         $this->normaliser     = $normaliser;
-    }
-
-
-    public function setResponseTransformer($transformer)
-    {
-        $this->transformer = $transformer;
     }
 
     /**
@@ -62,7 +47,7 @@ class CreateProject
     public function execute(ICreateProjectRequest $request)
     {
 
-        $project   = $this->projectGateway->makeForOwner($request->getOwnerId());
+        $project   = $this->gateway->makeForOwner($request->getOwnerId());
         $canonical = $this->normaliser->transform($request->getName());
         $project
             ->setName($request->getName())
@@ -70,14 +55,9 @@ class CreateProject
             ->setCanonical($canonical)
         ;
 
-        $this->projectGateway->save($project);
+        $this->gateway->save($project);
 
         return $this->transformer->transform($project);
-    }
-
-    public function setProjectGateway($gateway)
-    {
-        $this->projectGateway = $gateway;
     }
 
     public function setNormaliser($normaliser)

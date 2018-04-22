@@ -17,7 +17,7 @@ use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TimmyUser;
 use Tidy\UseCases\User\DTO\RecoverUserRequestDTO;
 use Tidy\UseCases\User\DTO\UserResponseTransformer;
-use Tidy\UseCases\User\GenericUseCase;
+use Tidy\UseCases\User\UseCaseUser;
 use Tidy\UseCases\User\RecoverUser;
 
 class RecoverUserTest extends MockeryTestCase
@@ -35,7 +35,7 @@ class RecoverUserTest extends MockeryTestCase
     public function test_instantiation()
     {
         $useCase = new RecoverUser(mock(IUserGateway::class), mock(IUserResponseTransformer::class));
-        $this->assertInstanceOf(GenericUseCase::class, $useCase);
+        $this->assertInstanceOf(UseCaseUser::class, $useCase);
     }
 
     public function test_recover_success()

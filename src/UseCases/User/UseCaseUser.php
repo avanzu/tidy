@@ -1,6 +1,6 @@
 <?php
 /**
- * GenericUseCase.php
+ * UseCaseUser.php
  * Tidy
  * Date: 14.04.18
  */
@@ -11,7 +11,7 @@ namespace Tidy\UseCases\User;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Responders\User\IUserResponseTransformer;
 
-abstract class GenericUseCase
+abstract class UseCaseUser
 {
 
     /**
@@ -24,7 +24,7 @@ abstract class GenericUseCase
     protected $userGateway;
 
     /**
-     * GenericUseCase constructor.
+     * UseCaseUser constructor.
      *
      * @param IUserGateway             $userGateway
      * @param IUserResponseTransformer $responseTransformer

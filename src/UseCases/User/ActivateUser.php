@@ -11,7 +11,7 @@ namespace Tidy\UseCases\User;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Requestors\User\IActivateUserRequest;
 
-class ActivateUser extends GenericUseCase
+class ActivateUser extends UseCaseUser
 {
 
     public function execute(IActivateUserRequest $request)
