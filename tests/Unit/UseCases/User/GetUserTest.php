@@ -39,7 +39,12 @@ class GetUserTest extends MockeryTestCase
      */
     public function testInstantiation()
     {
+        $useCase = new GetUser(mock(IUserGateway::class));
+        assertThat($useCase, is(notNullValue()));
         $this->assertInstanceOf(GetUser::class, $this->useCase);
+
+        $useCase->setUserGateway($this->gateway);
+        $useCase->setResponseTransformer(new UserResponseTransformer());
     }
 
     /**
@@ -78,9 +83,7 @@ class GetUserTest extends MockeryTestCase
     protected function setUp()
     {
         $this->gateway = mock(IUserGateway::class);
-        $this->useCase = new GetUser($this->gateway, mock(IUserResponseTransformer::class));
-        $this->useCase->setUserGateway($this->gateway);
-        $this->useCase->setResponseTransformer(new UserResponseTransformer());
+        $this->useCase = new GetUser($this->gateway);
     }
 
 

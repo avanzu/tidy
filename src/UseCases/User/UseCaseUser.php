@@ -37,8 +37,7 @@ abstract class UseCaseUser
     }
 
     protected function transformer() {
-        if( ! $this->responseTransformer )
-            $this->responseTransformer = new UserResponseTransformer();
+        if( ! $this->responseTransformer ) $this->responseTransformer = new UserResponseTransformer();
 
         return $this->responseTransformer;
     }
