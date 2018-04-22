@@ -8,9 +8,10 @@
 namespace Tidy\UseCases\Project\DTO;
 
 use Tidy\Components\Collection\IPagedCollection;
+use Tidy\Domain\Responders\Project\IProjectCollectionResponseTransformer;
 use Tidy\Domain\Responders\Project\IProjectResponseTransformer;
 
-class ProjectCollectionResponseTransformer
+class ProjectCollectionResponseTransformer implements IProjectCollectionResponseTransformer
 {
     /**
      * @var IProjectResponseTransformer

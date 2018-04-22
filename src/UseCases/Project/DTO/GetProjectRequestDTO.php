@@ -8,12 +8,14 @@
 namespace Tidy\UseCases\Project\DTO;
 
 
-class GetProjectRequestDTO
+use Tidy\Domain\Requestors\Project\IGetProjectRequest;
+
+class GetProjectRequestDTO implements IGetProjectRequest
 {
     public $projectId;
 
     /**
-     * @return GetProjectRequestDTO
+     * @return IGetProjectRequest
      */
     public static function make()
     {
@@ -23,7 +25,7 @@ class GetProjectRequestDTO
     /**
      * @param $id
      *
-     * @return $this
+     * @return IGetProjectRequest
      */
     public function withProjectId($id)
     {

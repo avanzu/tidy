@@ -8,6 +8,7 @@
 namespace Tidy\Tests\Unit\UseCases\Project\DTO;
 
 use Tidy\Components\Collection\PagedCollection;
+use Tidy\Domain\Responders\Project\IProjectCollectionResponseTransformer;
 use Tidy\Domain\Responders\Project\IProjectResponse;
 use Tidy\Domain\Responders\Project\IProjectResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
@@ -21,7 +22,7 @@ class ProjectCollectionResponseTransformerTest extends MockeryTestCase
 
 
     /**
-     * @var ProjectCollectionResponseTransformer
+     * @var IProjectCollectionResponseTransformer
      */
     protected $transformer;
 

@@ -9,15 +9,16 @@ namespace Tidy\UseCases\Project\DTO;
 
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Requestors\CollectionRequest;
+use Tidy\Domain\Requestors\Project\IGetProjectCollectionRequest;
 
-class GetProjectCollectionRequestDTO extends CollectionRequest
+class GetProjectCollectionRequestDTO extends CollectionRequest implements IGetProjectCollectionRequest
 {
     public $name;
 
     /**
      * @param Comparison|null $comparison
      *
-     * @return $this
+     * @return IGetProjectCollectionRequest
      */
     public function withName(Comparison $comparison = null)
     {
@@ -30,7 +31,7 @@ class GetProjectCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return $this
+     * @return IGetProjectCollectionRequest
      */
     public function withDescription(Comparison $comparison = null)
     {
@@ -41,7 +42,7 @@ class GetProjectCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return $this
+     * @return IGetProjectCollectionRequest
      */
     public function withCanonical(Comparison $comparison = null)
     {
@@ -52,7 +53,7 @@ class GetProjectCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return $this
+     * @return IGetProjectCollectionRequest
      */
     public function withId(Comparison $comparison = null)
     {
@@ -63,7 +64,7 @@ class GetProjectCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return $this
+     * @return IGetProjectCollectionRequest
      */
     public function withOwner(Comparison $comparison = null) {
         $this->useComparison('owner', $comparison);

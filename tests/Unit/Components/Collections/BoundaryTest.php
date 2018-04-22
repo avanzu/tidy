@@ -23,7 +23,8 @@ class BoundaryTest extends MockeryTestCase
     public function test_defaults()
     {
         $boundary = new Boundary();
-        $this->assertEquals(Boundary::DEFAULT_PAGE, $boundary->page);
-        $this->assertEquals(Boundary::DEFAULT_PAGE_SIZE, $boundary->pageSize);
+        assertThat($boundary->page, is(equalTo(Boundary::DEFAULT_PAGE)));
+        assertThat($boundary->pageSize, is(equalTo(Boundary::DEFAULT_PAGE_SIZE)));
+
     }
 }

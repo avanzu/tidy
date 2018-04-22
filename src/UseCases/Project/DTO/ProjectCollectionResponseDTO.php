@@ -8,9 +8,10 @@
 namespace Tidy\UseCases\Project\DTO;
 
 use Tidy\Domain\Responders\CollectionResponse;
+use Tidy\Domain\Responders\Project\IProjectCollectionResponse;
 use Tidy\Domain\Responders\Project\IProjectResponse;
 
-class ProjectCollectionResponseDTO extends CollectionResponse
+class ProjectCollectionResponseDTO extends CollectionResponse implements IProjectCollectionResponse
 {
 
     /**
