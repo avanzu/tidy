@@ -2,15 +2,15 @@
 /**
  * This file is part of the Tidy Project.
  *
- * MessageTranslated.php Created by avanzu on 22.04.18 with PhpStorm.
+ * TranslationTranslated.php Created by avanzu on 22.04.18 with PhpStorm.
  *
  */
 
 namespace Tidy\Tests\Unit\Domain\Entities;
 
-use Tidy\Domain\Entities\Message;
+use Tidy\Domain\Entities\Translation;
 
-class MessageTranslated extends Message
+class TranslationTranslated extends Translation
 {
     const MSG_STATE   = 'translated';
     const MSG_NOTES   = 'Integer sed lacus sapien. Ut ac porta risus. ';

@@ -2,13 +2,13 @@
 /**
  * This file is part of the Tidy Project.
  *
- * Message.php Created by avanzu on 22.04.18 with PhpStorm.
+ * Translation.php Created by avanzu on 22.04.18 with PhpStorm.
  *
  */
 
 namespace Tidy\Domain\Entities;
 
-abstract class Message
+abstract class Translation
 {
     protected $id;
 

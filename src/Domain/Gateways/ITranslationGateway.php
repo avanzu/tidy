@@ -6,9 +6,9 @@
  *
  */
 
-namespace Tidy\Domain\Responders\Message;
+namespace Tidy\Domain\Gateways;
 
-interface IMessageResponseTransformer
+interface ITranslationGateway
 {
 
 }

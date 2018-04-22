@@ -8,9 +8,9 @@
 
 namespace Tidy\Tests\Unit\Domain\Entities;
 
-use Tidy\Domain\Entities\MessageCatalogue;
+use Tidy\Domain\Entities\TranslationCatalogue;
 
-class MessageCatalogueEnglishToGerman extends MessageCatalogue
+class TranslationCatalogueEnglishToGerman extends TranslationCatalogue
 {
     const TARGET_CULTURE = 'DE';
     const SOURCE_CULTURE = 'US';

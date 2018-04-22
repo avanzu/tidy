@@ -2,13 +2,13 @@
 /**
  * This file is part of the Tidy Project.
  *
- * MessageCatalogue.php Created by avanzu on 22.04.18 with PhpStorm.
+ * TranslationCatalogue.php Created by avanzu on 22.04.18 with PhpStorm.
  *
  */
 
 namespace Tidy\Domain\Entities;
 
-abstract class MessageCatalogue
+abstract class TranslationCatalogue
 {
     protected $sourceLanguage;
 
@@ -22,7 +22,7 @@ abstract class MessageCatalogue
 
     protected $id;
 
-    protected $messages = [];
+    protected $translations = [];
 
     /**
      * @return mixed
@@ -147,19 +147,19 @@ abstract class MessageCatalogue
     /**
      * @return array
      */
-    public function getMessages(): array
+    public function getTranslations(): array
     {
-        return $this->messages;
+        return $this->translations;
     }
 
     /**
-     * @param array $messages
+     * @param array $translations
      *
      * @return $this
      */
-    public function setMessages($messages)
+    public function setTranslations($translations)
     {
-        $this->messages = $messages;
+        $this->translations = $translations;
 
         return $this;
     }

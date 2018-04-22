@@ -2,15 +2,15 @@
 /**
  * This file is part of the Tidy Project.
  *
- * MessageUntranslated.php Created by avanzu on 22.04.18 with PhpStorm.
+ * TranslationUntranslated.php Created by avanzu on 22.04.18 with PhpStorm.
  *
  */
 
 namespace Tidy\Tests\Unit\Domain\Entities;
 
-use Tidy\Domain\Entities\Message;
+use Tidy\Domain\Entities\Translation;
 
-class MessageUntranslated extends Message
+class TranslationUntranslated extends Translation
 {
     const MSG_STATE   = 'new';
     const MSG_NOTES   = 'Nunc a dolor nulla. Integer quis dignissim ante. ';
