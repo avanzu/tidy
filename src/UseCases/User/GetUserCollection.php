@@ -7,7 +7,7 @@
 
 namespace Tidy\UseCases\User;
 
-
+use Tidy\Components\Collection\Boundary;
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\IGetUserCollectionRequest;
@@ -36,9 +36,9 @@ class GetUserCollection
      */
     public function execute(IGetUserCollectionRequest $request)
     {
-
+        $boundary   = new Boundary($request->getPage(), $request->getPageSize());
         $collection = new PagedCollection(
-            $this->gateway->fetchCollection($request->getPage(), $request->getPageSize(), $request->getCriteria()),
+            $this->gateway->fetchCollection($boundary, $request->getCriteria()),
             $this->gateway->total($request->getCriteria()),
             $request->getPage(),
             $request->getPageSize()

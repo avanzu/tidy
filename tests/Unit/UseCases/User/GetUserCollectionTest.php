@@ -8,6 +8,7 @@
 namespace Tidy\Tests\Unit\UseCases\User;
 
 use Mockery\MockInterface;
+use Tidy\Components\Collection\Boundary;
 use Tidy\Components\Collection\IPagedCollection;
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Components\Exceptions\OutOfBounds;
@@ -133,7 +134,7 @@ class GetUserCollectionTest extends MockeryTestCase
         };
 
         $this->gateway->expects('fetchCollection')
-                      ->with($page, $pageSize, argumentThat($criteriaCheck))
+                      ->with(anInstanceOf(Boundary::class), argumentThat($criteriaCheck))
                       ->andReturn([new UserStub1(), new UserStub2()])
                       ->byDefault();
 
