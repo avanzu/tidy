@@ -8,6 +8,7 @@
 namespace Tidy\Domain\Requestors;
 
 
+use Tidy\Components\Collection\Boundary;
 use Tidy\Components\DataAccess\Comparison;
 
 abstract class CollectionRequest implements ICollectionRequest
@@ -86,4 +87,11 @@ abstract class CollectionRequest implements ICollectionRequest
     {
         $this->criteria[$name] = $comparison;
     }
+
+    public function getBoundary()
+    {
+        return new Boundary($this->page, $this->pageSize);
+    }
+
+
 }

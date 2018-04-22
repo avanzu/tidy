@@ -8,6 +8,7 @@
 namespace Tidy\Domain\Requestors;
 
 
+use Tidy\Components\Collection\Boundary;
 use Tidy\Components\DataAccess\Comparison;
 
 interface ICollectionRequest
@@ -29,4 +30,9 @@ interface ICollectionRequest
      * @return Comparison[]
      */
     public function getCriteria();
+
+    /**
+     * @return Boundary
+     */
+    public function getBoundary();
 }

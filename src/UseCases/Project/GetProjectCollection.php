@@ -12,7 +12,6 @@ use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\IGetProjectCollectionRequest;
 use Tidy\Domain\Responders\Project\IProjectCollectionResponseTransformer;
-use Tidy\UseCases\Project\DTO\GetProjectCollectionRequestDTO;
 use Tidy\UseCases\Project\DTO\ProjectCollectionResponseTransformer;
 
 class GetProjectCollection
@@ -42,15 +41,10 @@ class GetProjectCollection
     public function execute(IGetProjectCollectionRequest $request)
     {
 
-        $boundary = new Boundary($request->getPage(), $request->getPageSize());
-        $items    = $this->gateway->fetchCollection($boundary, $request->getCriteria());
-
-        $collection = new PagedCollection(
-            $items,
-            $this->gateway->total($request->getCriteria()),
-            $request->getPage(),
-            $request->getPageSize()
-        );
+        $boundary   = $request->getBoundary();
+        $items      = $this->gateway->fetchCollection($boundary, $request->getCriteria());
+        $total      = $this->gateway->total($request->getCriteria());
+        $collection = new PagedCollection($items, $total, $boundary->page, $boundary->pageSize);
 
         return $this->transformer->transform($collection);
     }

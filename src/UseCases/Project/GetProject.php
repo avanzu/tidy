@@ -9,34 +9,12 @@ namespace Tidy\UseCases\Project;
 
 
 use Tidy\Components\Exceptions\NotFound;
-use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\IGetProjectRequest;
 use Tidy\Domain\Responders\Project\IProjectResponse;
-use Tidy\Domain\Responders\Project\IProjectResponseTransformer;
-use Tidy\UseCases\Project\DTO\GetProjectRequestDTO;
 
-class GetProject
+class GetProject extends UseCaseProject
 {
-    /**
-     * @var IProjectGateway
-     */
-    protected $gateway;
-    /**
-     * @var IProjectResponseTransformer
-     */
-    protected $transformer;
 
-    /**
-     * GetProject constructor.
-     *
-     * @param IProjectGateway             $gateway
-     * @param IProjectResponseTransformer $transformer
-     */
-    public function __construct(IProjectGateway $gateway, IProjectResponseTransformer $transformer)
-    {
-        $this->gateway     = $gateway;
-        $this->transformer = $transformer;
-    }
 
     /**
      * @param IGetProjectRequest $request

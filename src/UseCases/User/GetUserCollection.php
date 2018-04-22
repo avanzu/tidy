@@ -36,13 +36,10 @@ class GetUserCollection
      */
     public function execute(IGetUserCollectionRequest $request)
     {
-        $boundary   = new Boundary($request->getPage(), $request->getPageSize());
-        $collection = new PagedCollection(
-            $this->gateway->fetchCollection($boundary, $request->getCriteria()),
-            $this->gateway->total($request->getCriteria()),
-            $request->getPage(),
-            $request->getPageSize()
-        );
+        $boundary   = $request->getBoundary();
+        $items      = $this->gateway->fetchCollection($boundary, $request->getCriteria());
+        $total      = $this->gateway->total($request->getCriteria());
+        $collection = new PagedCollection($items,$total,$boundary->page,$boundary->pageSize);
 
         $response = $this->transformer->transform($collection);
 

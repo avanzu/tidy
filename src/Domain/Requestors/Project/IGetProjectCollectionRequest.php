@@ -7,8 +7,9 @@
 namespace Tidy\Domain\Requestors\Project;
 
 use Tidy\Components\DataAccess\Comparison;
+use Tidy\Domain\Requestors\ICollectionRequest;
 
-interface IGetProjectCollectionRequest
+interface IGetProjectCollectionRequest extends ICollectionRequest
 {
     /**
      * @param Comparison|null $comparison
