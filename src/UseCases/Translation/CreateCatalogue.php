@@ -9,6 +9,7 @@
 namespace Tidy\UseCases\Translation;
 
 use Tidy\Domain\Gateways\ITranslationGateway;
+use Tidy\Domain\Responders\Translation\ITranslationCatalogueResponseTransformer;
 use Tidy\Domain\Responders\Translation\ITranslationResponseTransformer;
 
 class CreateCatalogue
@@ -26,10 +27,10 @@ class CreateCatalogue
     /**
      * CreateCatalogue constructor.
      *
-     * @param ITranslationGateway             $gateway
-     * @param ITranslationResponseTransformer $transformer
+     * @param ITranslationGateway                      $gateway
+     * @param ITranslationCatalogueResponseTransformer $transformer
      */
-    public function __construct(ITranslationGateway $gateway, ITranslationResponseTransformer $transformer)
+    public function __construct(ITranslationGateway $gateway, ITranslationCatalogueResponseTransformer $transformer)
     {
         $this->gateway     = $gateway;
         $this->transformer = $transformer;
