@@ -94,6 +94,15 @@ class PagedCollectionTest extends TestCase
         $this->assertEquals(1, $collection->getPagesTotal());
         $this->assertEquals(1, $collection->getPage());
 
+
+        $items      = array_fill(0, 5, uniqid());
+        $collection = new PagedCollection($items, null, 2, 10);
+
+        $this->assertEquals(10, $collection->getPageSize());
+        $this->assertEquals(1, $collection->getPagesTotal());
+        $this->assertEquals(1, $collection->getPage());
+
+
     }
 
 

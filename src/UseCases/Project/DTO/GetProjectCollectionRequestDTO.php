@@ -12,12 +12,51 @@ use Tidy\Domain\Requestors\CollectionRequest;
 
 class GetProjectCollectionRequestDTO extends CollectionRequest
 {
+    public $name;
 
     /**
-     * @return Comparison[]
+     * @param Comparison|null $comparison
+     *
+     * @return GetProjectCollectionRequestDTO
      */
-    public function getCriteria()
+    public function withName(Comparison $comparison = null)
     {
-        // TODO: Implement getCriteria() method.
+        $this->useComparison('name', $comparison);
+
+        return $this;
+    }
+
+
+    /**
+     * @param Comparison|null $comparison
+     *
+     * @return GetProjectCollectionRequestDTO
+     */
+    public function withDescription(Comparison $comparison = null)
+    {
+        $this->useComparison('description', $comparison);
+        return $this;
+    }
+
+    /**
+     * @param Comparison|null $comparison
+     *
+     * @return GetProjectCollectionRequestDTO
+     */
+    public function withCanonical(Comparison $comparison = null)
+    {
+        $this->useComparison('canonical', $comparison);
+        return $this;
+    }
+
+    /**
+     * @param Comparison|null $comparison
+     *
+     * @return GetProjectCollectionRequestDTO
+     */
+    public function withId(Comparison $comparison = null)
+    {
+        $this->useComparison('id', $comparison);
+        return $this;
     }
 }

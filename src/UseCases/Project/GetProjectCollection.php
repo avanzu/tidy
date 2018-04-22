@@ -7,9 +7,9 @@
 
 namespace Tidy\UseCases\Project;
 
+use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\UseCases\Project\DTO\GetProjectCollectionRequestDTO;
-use Tidy\UseCases\Project\DTO\ProjectCollectionResponseDTO;
 use Tidy\UseCases\Project\DTO\ProjectCollectionResponseTransformer;
 
 class GetProjectCollection
@@ -36,10 +36,23 @@ class GetProjectCollection
         $this->transformer = $transformer ?: new ProjectCollectionResponseTransformer();
     }
 
-    public function execute(GetProjectCollectionRequestDTO $request) {
+    public function execute(GetProjectCollectionRequestDTO $request)
+    {
 
+        $items      = $this->gateway->fetchCollection(
+            $request->getPage(),
+            $request->getPageSize(),
+            $request->getCriteria()
+        );
 
-        return new ProjectCollectionResponseDTO();
+        $collection = new PagedCollection(
+            $items,
+            $this->gateway->total(),
+            $request->getPage(),
+            $request->getPageSize()
+        );
+
+        return $this->transformer->transform($collection);
     }
 
 

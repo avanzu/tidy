@@ -8,6 +8,7 @@
 namespace Tidy\Domain\Gateways;
 
 
+use Tidy\Components\Collection\IPagedCollection;
 use Tidy\Domain\Entities\Project;
 
 interface IProjectGateway
@@ -37,4 +38,19 @@ interface IProjectGateway
      * @return Project|null
      */
     public function find($projectId);
+
+    /**
+     * @param      $page
+     * @param      $pageSize
+     * @param null $criteria
+     *
+     * @return IPagedCollection
+     */
+    public function fetchCollection($page, $pageSize,  $criteria = null);
+
+    /**
+     * @return int
+     */
+    public function total();
+
 }
