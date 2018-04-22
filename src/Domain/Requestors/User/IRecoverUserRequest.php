@@ -11,5 +11,5 @@ interface IRecoverUserRequest
 {
     public function withUserName($userName);
 
-    public function getUserName();
+    public function userName();
 }

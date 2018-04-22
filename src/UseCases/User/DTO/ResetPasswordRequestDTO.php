@@ -20,12 +20,12 @@ class ResetPasswordRequestDTO implements IResetPasswordRequest
         return new self;
     }
 
-    public function getPlainPassword()
+    public function plainPassword()
     {
         return $this->plainPassword;
     }
 
-    public function getToken()
+    public function token()
     {
         return $this->token;
     }

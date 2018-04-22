@@ -47,11 +47,11 @@ class CreateProject extends UseCaseProject
     public function execute(ICreateProjectRequest $request)
     {
 
-        $project   = $this->gateway->makeForOwner($request->getOwnerId());
-        $canonical = $this->normaliser->transform($request->getName());
+        $project   = $this->gateway->makeForOwner($request->ownerId());
+        $canonical = $this->normaliser->transform($request->name());
         $project
-            ->setName($request->getName())
-            ->setDescription($request->getDescription())
+            ->setName($request->name())
+            ->setDescription($request->description())
             ->setCanonical($canonical)
         ;
 

@@ -24,9 +24,9 @@ class GetProject extends UseCaseProject
     public function execute(IGetProjectRequest $request)
     {
 
-        $project = $this->gateway->find($request->getProjectId());
+        $project = $this->gateway->find($request->projectId());
         if (!$project) {
-            throw new NotFound(sprintf('Unable to find project by identifier %s', $request->getProjectId()));
+            throw new NotFound(sprintf('Unable to find project by identifier %s', $request->projectId()));
         }
 
         return $this->transformer->transform($project);

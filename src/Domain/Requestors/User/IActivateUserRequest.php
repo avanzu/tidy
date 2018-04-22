@@ -11,5 +11,5 @@ interface IActivateUserRequest
 {
     public function withToken($token);
 
-    public function getToken();
+    public function token();
 }

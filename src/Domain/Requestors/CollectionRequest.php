@@ -51,7 +51,7 @@ abstract class CollectionRequest implements ICollectionRequest
     /**
      * @return int
      */
-    public function getPage()
+    public function page()
     {
         return $this->page;
     }
@@ -59,7 +59,7 @@ abstract class CollectionRequest implements ICollectionRequest
     /**
      * @return int
      */
-    public function getPageSize()
+    public function pageSize()
     {
         return $this->pageSize;
     }
@@ -78,7 +78,7 @@ abstract class CollectionRequest implements ICollectionRequest
         return $this;
     }
 
-    public function getCriteria()
+    public function criteria()
     {
         return array_filter($this->criteria);
     }
@@ -88,7 +88,7 @@ abstract class CollectionRequest implements ICollectionRequest
         $this->criteria[$name] = $comparison;
     }
 
-    public function getBoundary()
+    public function boundary()
     {
         return new Boundary($this->page, $this->pageSize);
     }

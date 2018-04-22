@@ -19,20 +19,20 @@ interface ICollectionRequest
     /**
      * @return int
      */
-    public function getPage();
+    public function page();
 
     /**
      * @return int
      */
-    public function getPageSize();
+    public function pageSize();
 
     /**
      * @return Comparison[]
      */
-    public function getCriteria();
+    public function criteria();
 
     /**
      * @return Boundary
      */
-    public function getBoundary();
+    public function boundary();
 }

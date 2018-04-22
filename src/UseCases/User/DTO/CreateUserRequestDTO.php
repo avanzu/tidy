@@ -26,22 +26,22 @@ class CreateUserRequestDTO implements ICreateUserRequest
         return new static;
     }
 
-    public function getEMail()
+    public function eMail()
     {
         return $this->eMail;
     }
 
-    public function getFirstName()
+    public function firstName()
     {
         return $this->firstName;
     }
 
-    public function getLastName()
+    public function lastName()
     {
         return $this->lastName;
     }
 
-    public function getPlainPassword()
+    public function plainPassword()
     {
         return $this->plainPassword;
     }

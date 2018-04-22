@@ -23,12 +23,12 @@ interface ICreateProjectRequest
      */
     public function withDescription($description);
 
-    public function getName();
+    public function name();
 
     /**
      * @return mixed
      */
-    public function getDescription();
+    public function description();
 
     /**
      * @param $owner
@@ -37,5 +37,5 @@ interface ICreateProjectRequest
      */
     public function withOwnerId($owner);
 
-    public function getOwnerId();
+    public function ownerId();
 }

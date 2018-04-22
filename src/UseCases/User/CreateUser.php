@@ -61,7 +61,7 @@ class CreateUser extends UseCaseUser
     {
         $user = $this->userGateway->makeUser();
         $user->setUserName($request->getUserName())
-             ->setEMail($request->getEMail())
+             ->setEMail($request->eMail())
              ->setPassword($password)
              ->setEnabled($request->isAccessGranted())
         ;
@@ -78,7 +78,7 @@ class CreateUser extends UseCaseUser
     private function makeProfileForUser(User $user, ICreateUserRequest $request)
     {
         $profile = $this->userGateway->makeProfile();
-        $profile->setFirstName($request->getFirstName())->setLastName($request->getLastName());
+        $profile->setFirstName($request->firstName())->setLastName($request->lastName());
 
         $user->assignProfile($profile);
 
@@ -92,7 +92,7 @@ class CreateUser extends UseCaseUser
      */
     private function hashPassword(ICreateUserRequest $request)
     {
-        $password = $this->passwordEncoder->encode($request->getPlainPassword(), null);
+        $password = $this->passwordEncoder->encode($request->plainPassword(), null);
 
         return $password;
     }

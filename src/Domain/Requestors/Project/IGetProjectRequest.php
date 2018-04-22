@@ -18,5 +18,5 @@ interface IGetProjectRequest
     /**
      * @return int
      */
-    public function getProjectId();
+    public function projectId();
 }

@@ -34,12 +34,12 @@ class ResetPassword extends UseCaseUser
     public function execute(IResetPasswordRequest $request)
     {
 
-        $user = $this->userGateway->findByToken($request->getToken());
+        $user = $this->userGateway->findByToken($request->token());
         if (!$user) {
-            throw new NotFound(sprintf('Unable to find user ty token "%s".', $request->getToken()));
+            throw new NotFound(sprintf('Unable to find user ty token "%s".', $request->token()));
         }
 
-        $password = $this->encoder->encode($request->getPlainPassword(), null);
+        $password = $this->encoder->encode($request->plainPassword(), null);
         $user->setPassword($password)->clearToken();
         $this->userGateway->save($user);
 

@@ -16,9 +16,9 @@ interface IResetPasswordRequest
      */
     public function withToken($token);
 
-    public function getToken();
+    public function token();
 
     public function withPlainPassword($password);
 
-    public function getPlainPassword();
+    public function plainPassword();
 }

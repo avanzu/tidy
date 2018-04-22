@@ -24,7 +24,7 @@ class GetUserRequestDTO implements IGetUserRequest
     /**
      * @return int
      */
-    public function getUserId()
+    public function userId()
     {
         return $this->userId;
     }

@@ -19,7 +19,7 @@ class RecoverUserRequestDTO implements IRecoverUserRequest
         return new static;
     }
 
-    public function getUserName()
+    public function userName()
     {
         return $this->userName;
     }

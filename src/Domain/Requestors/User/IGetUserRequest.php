@@ -13,5 +13,5 @@ interface IGetUserRequest
     /**
      * @return int
      */
-    public function getUserId();
+    public function userId();
 }

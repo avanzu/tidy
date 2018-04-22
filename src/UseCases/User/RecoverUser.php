@@ -15,9 +15,9 @@ class RecoverUser extends UseCaseUser
 {
     public function execute(IRecoverUserRequest $request)
     {
-        $user = $this->userGateway->findByUserName($request->getUserName());
+        $user = $this->userGateway->findByUserName($request->userName());
         if (!$user) {
-            throw new NotFound(sprintf('Unable to find user by username "%s".', $request->getUserName()));
+            throw new NotFound(sprintf('Unable to find user by username "%s".', $request->userName()));
         }
 
         $user->assignToken(uniqid());

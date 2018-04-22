@@ -104,6 +104,6 @@ class GetProjectCollectionTest extends MockeryTestCase
      */
     protected function expectGatewayTotal($request): void
     {
-        $this->gateway->expects('total')->with($request->getCriteria())->andReturn(2);
+        $this->gateway->expects('total')->with($request->criteria())->andReturn(2);
     }
 }

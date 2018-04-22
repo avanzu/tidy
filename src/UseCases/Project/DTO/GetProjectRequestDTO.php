@@ -37,7 +37,7 @@ class GetProjectRequestDTO implements IGetProjectRequest
     /**
      * @return int
      */
-    public function getProjectId()
+    public function projectId()
     {
         return $this->projectId;
     }

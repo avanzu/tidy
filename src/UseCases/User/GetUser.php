@@ -25,9 +25,9 @@ class GetUser extends UseCaseUser
     public function execute(IGetUserRequest $request)
     {
 
-        $user = $this->userGateway->find($request->getUserId());
+        $user = $this->userGateway->find($request->userId());
         if (!$user) {
-            throw new NotFound(sprintf('Unable to find user by identifier %s', $request->getUserId()));
+            throw new NotFound(sprintf('Unable to find user by identifier %s', $request->userId()));
         }
 
         return $this->responseTransformer->transform($user);

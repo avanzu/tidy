@@ -32,9 +32,9 @@ interface ICreateUserRequest
      */
     public function withEMail($eMail);
 
-    public function getEMail();
+    public function eMail();
 
-    public function getPlainPassword();
+    public function plainPassword();
 
     /**
      * @return ICreateUserRequest
@@ -60,10 +60,10 @@ interface ICreateUserRequest
     /**
      * @return string
      */
-    public function getFirstName();
+    public function firstName();
 
     /**
      * @return string
      */
-    public function getLastName();
+    public function lastName();
 }

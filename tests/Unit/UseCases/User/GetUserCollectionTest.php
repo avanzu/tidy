@@ -68,8 +68,8 @@ class GetUserCollectionTest extends MockeryTestCase
 
         $result = $this->useCase->execute($request);
 
-        $this->assertEquals($request->getPage(), $result->currentPage());
-        $this->assertEquals($request->getPageSize(), $result->pageSize());
+        $this->assertEquals($request->page(), $result->currentPage());
+        $this->assertEquals($request->pageSize(), $result->pageSize());
         $this->assertEquals(1, $result->total());
         $this->assertEquals(1, $result->pagesTotal());
 
@@ -140,7 +140,7 @@ class GetUserCollectionTest extends MockeryTestCase
 
         $this->gateway
             ->expects('total')
-            ->with($request->getCriteria())
+            ->with($request->criteria())
             ->andReturn(2);
 
         $result = $this->useCase->execute($request);

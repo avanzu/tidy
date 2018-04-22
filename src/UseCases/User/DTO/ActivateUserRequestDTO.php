@@ -20,7 +20,7 @@ class ActivateUserRequestDTO implements IActivateUserRequest
         return new self;
     }
 
-    public function getToken()
+    public function token()
     {
         return $this->token;
     }

@@ -17,10 +17,10 @@ class ActivateUser extends UseCaseUser
     public function execute(IActivateUserRequest $request)
     {
 
-        $user = $this->userGateway->findByToken($request->getToken());
+        $user = $this->userGateway->findByToken($request->token());
 
         if (!$user) {
-            throw new NotFound(sprintf('Unable to find user by token "%s".', $request->getToken()));
+            throw new NotFound(sprintf('Unable to find user by token "%s".', $request->token()));
         }
 
         $user->setEnabled(true)->clearToken();

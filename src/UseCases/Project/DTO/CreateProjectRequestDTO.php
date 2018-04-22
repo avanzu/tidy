@@ -27,17 +27,17 @@ class CreateProjectRequestDTO implements ICreateProjectRequest
     /**
      * @return mixed
      */
-    public function getDescription()
+    public function description()
     {
         return $this->description;
     }
 
-    public function getName()
+    public function name()
     {
         return $this->name;
     }
 
-    public function getOwnerId()
+    public function ownerId()
     {
         return $this->ownerId;
     }
