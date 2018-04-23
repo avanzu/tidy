@@ -12,6 +12,7 @@ use Mockery\MockInterface;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\UseCases\Translation\CreateTranslation;
+use Tidy\UseCases\Translation\DTO\TranslationResponseTransformer;
 
 class CreateTranslationTest extends MockeryTestCase
 {
@@ -30,7 +31,23 @@ class CreateTranslationTest extends MockeryTestCase
     {
         $useCase = new CreateTranslation(mock(ITranslationGateway::class));
         assertThat($useCase, is(notNullValue()));
+
+
     }
+
+    public function test_swapTransformer()
+    {
+        $initial = mock(TranslationResponseTransformer::class);
+        $swapped  = mock(TranslationResponseTransformer::class);
+
+        $useCase = new CreateTranslation($this->gateway, $initial);
+        $result = $useCase->swapTransformer($swapped);
+
+        assertThat($result, is(sameInstance($initial)));
+        assertThat($useCase->swapTransformer($initial), is(sameInstance($swapped)));
+    }
+
+
 
 
     protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */

@@ -9,6 +9,7 @@
 namespace Tidy\UseCases\Translation;
 
 use Tidy\Domain\Gateways\ITranslationGateway;
+use Tidy\UseCases\Translation\DTO\TranslationResponseTransformer;
 
 class CreateTranslation
 {
@@ -18,13 +19,39 @@ class CreateTranslation
     protected $gateway;
 
     /**
+     * @var TranslationResponseTransformer
+     */
+    private $transformer;
+
+    /**
      * CreateTranslation constructor.
      *
-     * @param ITranslationGateway $gateway
+     * @param ITranslationGateway                 $gateway
+     * @param TranslationResponseTransformer|null $transformer
      */
-    public function __construct(ITranslationGateway $gateway) {
-        $this->gateway = $gateway;
+    public function __construct(ITranslationGateway $gateway, TranslationResponseTransformer $transformer = null)
+    {
+        $this->gateway     = $gateway;
+        $this->transformer = $transformer;
     }
 
+    public function swapTransformer(TranslationResponseTransformer $transformer)
+    {
+        $previous          = $this->transformer;
+        $this->transformer = $transformer;
+
+        return $previous;
+    }
+
+    /*
+    protected function transformer()
+    {
+        if (!$this->transformer) {
+            $this->transformer = new TranslationResponseTransformer();
+        }
+
+        return $this->transformer;
+    }
+    */
 
 }
