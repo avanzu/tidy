@@ -6,17 +6,17 @@
  *
  */
 
-namespace Tidy\UseCases\Translation\DTO;
+namespace Tidy\Domain\Responders\Audit;
 
 use Tidy\Components\Audit\Change;
 use Tidy\Components\Audit\ChangeSet;
 
-class ChangeResponseTransformer
+class ChangeResponseTransformer implements IChangeResponseTransformer
 {
 
     public function transform(ChangeSet $changeSet) {
 
-        $response = new ChangeResponseDTO();
+        $response = new ChangeResponse();
         /** @var Change $change */
         foreach ($changeSet as $change) {
             $response->changes[] = array_filter((array)$change);

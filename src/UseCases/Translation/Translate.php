@@ -12,7 +12,8 @@ use Tidy\Components\Audit\Change;
 use Tidy\Components\Audit\ChangeSet;
 use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\UseCases\Translation\DTO\ChangeResponseTransformer;
+use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
+use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
 use Tidy\UseCases\Translation\DTO\TranslateRequestDTO;
 
 class Translate
@@ -23,17 +24,17 @@ class Translate
     protected $gateway;
 
     /**
-     * @var ChangeResponseTransformer
+     * @var IChangeResponseTransformer
      */
     protected $transformer;
 
     /**
      * Translate constructor.
      *
-     * @param ITranslationGateway            $gateway
-     * @param ChangeResponseTransformer|null $transformer
+     * @param ITranslationGateway             $gateway
+     * @param IChangeResponseTransformer|null $transformer
      */
-    public function __construct(ITranslationGateway $gateway, ChangeResponseTransformer $transformer = null)
+    public function __construct(ITranslationGateway $gateway, IChangeResponseTransformer $transformer = null)
     {
         $this->gateway     = $gateway;
         $this->transformer = $transformer;

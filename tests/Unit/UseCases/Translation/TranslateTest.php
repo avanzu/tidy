@@ -14,7 +14,7 @@ use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\Tests\Unit\Domain\Entities\TranslationUntranslated;
-use Tidy\UseCases\Translation\DTO\ChangeResponseDTO;
+use Tidy\Domain\Responders\Audit\ChangeResponse;
 use Tidy\UseCases\Translation\DTO\TranslateRequestDTO;
 use Tidy\UseCases\Translation\Translate;
 
@@ -84,7 +84,7 @@ class TranslateTest extends MockeryTestCase
 
         ];
 
-        assertThat($response, is(anInstanceOf(ChangeResponseDTO::class)));
+        assertThat($response, is(anInstanceOf(ChangeResponse::class)));
         assertThat($response->changes(), is(arrayContaining($expected)));
         assertThat($translation->getLocaleString(), is(equalTo(self::LIPSUM)));
         assertThat($translation->getState(), is(equalTo('translated')));

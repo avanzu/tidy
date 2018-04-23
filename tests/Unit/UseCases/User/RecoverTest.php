@@ -4,7 +4,7 @@
  * Date: 15.04.18
  */
 
-namespace Tidy\Tests\Unit\UseCases;
+namespace Tidy\Tests\Unit\UseCases\User;
 
 
 use Mockery\MockInterface;

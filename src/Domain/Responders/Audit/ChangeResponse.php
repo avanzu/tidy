@@ -6,9 +6,9 @@
  *
  */
 
-namespace Tidy\UseCases\Translation\DTO;
+namespace Tidy\Domain\Responders\Audit;
 
-class ChangeResponseDTO
+class ChangeResponse implements IChangeResponse
 {
 
     public $changes = [];

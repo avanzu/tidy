@@ -19,10 +19,12 @@ abstract class UseCaseUser
      * @var IResponseTransformer
      */
     protected $responseTransformer;
+
     /**
      * @var \Tidy\Domain\Gateways\IUserGateway
      */
     protected $userGateway;
+
 
     /**
      * UseCaseUser constructor.
@@ -37,9 +39,13 @@ abstract class UseCaseUser
     }
 
     protected function transformer() {
-        if( ! $this->responseTransformer ) $this->responseTransformer = new ResponseTransformer();
+        if( ! $this->responseTransformer ) $this->responseTransformer = $this->makeDefaultTransformer();
 
         return $this->responseTransformer;
+    }
+
+    protected function makeDefaultTransformer() {
+        return new ResponseTransformer();
     }
 
     public function setUserGateway($userGateway)
