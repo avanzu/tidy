@@ -8,10 +8,12 @@
 namespace Tidy\UseCases\User;
 
 
+use Tidy\Components\Audit\Change;
+use Tidy\Components\Audit\ChangeSet;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Requestors\User\IRecoverRequest;
 
-class Recover extends UseCaseUser
+class Recover extends UseCasePatch
 {
     public function execute(IRecoverRequest $request)
     {
@@ -22,7 +24,11 @@ class Recover extends UseCaseUser
 
         $user->assignToken(uniqid());
         $this->userGateway->save($user);
+        $result = ChangeSet::make()
+                 ->add(Change::test($request->userName(), 'userName'))
+                 ->add(Change::add($user->getToken(), 'token'))
+            ;
 
-        return $this->transformer()->transform($user);
+        return $this->transformer()->transform($result);
     }
 }

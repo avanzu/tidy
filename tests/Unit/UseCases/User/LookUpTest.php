@@ -44,7 +44,7 @@ class LookUpTest extends MockeryTestCase
         $this->assertInstanceOf(LookUp::class, $this->useCase);
 
         $useCase->setUserGateway($this->gateway);
-        $useCase->setResponseTransformer(new ResponseTransformer());
+        $useCase->setTransformer(new ResponseTransformer());
     }
 
     /**

@@ -16,7 +16,7 @@ use Tidy\Domain\Requestors\User\ICreateRequest;
 use Tidy\Domain\Responders\User\IResponseTransformer;
 
 
-class Create extends UseCaseUser
+class Create extends UseCase
 {
     /**
      * @var IPasswordEncoder

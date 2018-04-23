@@ -142,7 +142,7 @@ class CreateTest extends MockeryTestCase
         $this->gateway->allows('makeProfile')->andReturn(new UserProfileImpl());
 
         $this->useCase->setUserGateway($this->gateway);
-        $this->useCase->setResponseTransformer(new ResponseTransformer());
+        $this->useCase->setTransformer(new ResponseTransformer());
 
     }
 

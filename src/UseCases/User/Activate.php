@@ -7,13 +7,21 @@
 
 namespace Tidy\UseCases\User;
 
-
+use Tidy\Components\Audit\Change;
+use Tidy\Components\Audit\ChangeSet;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Requestors\User\IActivateRequest;
+use Tidy\Domain\Responders\Audit\ChangeResponse;
+use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
 
-class Activate extends UseCaseUser
+class Activate extends UseCasePatch
 {
 
+    /**
+     * @param IActivateRequest $request
+     *
+     * @return ChangeResponse
+     */
     public function execute(IActivateRequest $request)
     {
 
@@ -23,11 +31,17 @@ class Activate extends UseCaseUser
             throw new NotFound(sprintf('Unable to find user by token "%s".', $request->token()));
         }
 
+        $result = ChangeSet::make()
+                           ->add(Change::test($request->token(), 'token'))
+                           ->add(Change::replace(true, 'enabled'))
+                           ->add(Change::remove( 'token'))
+        ;
+
         $user->setEnabled(true)->clearToken();
 
         $this->userGateway->save($user);
 
-        return $this->transformer()->transform($user);
+        return $this->transformer()->transform($result);
     }
 
 

@@ -12,7 +12,7 @@ use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Requestors\User\ILookUpRequest;
 use Tidy\Domain\Responders\User\IResponse;
 
-class LookUp extends UseCaseUser
+class LookUp extends UseCase
 {
 
 

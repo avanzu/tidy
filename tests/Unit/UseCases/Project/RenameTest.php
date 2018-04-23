@@ -7,17 +7,17 @@
 namespace Tidy\Tests\Unit\UseCases\Project;
 
 use Mockery\MockInterface;
+use Tidy\Components\Audit\Change;
 use Tidy\Domain\Entities\Project;
 use Tidy\Domain\Gateways\IProjectGateway;
-use Tidy\Domain\Responders\Project\IResponse;
-use Tidy\Domain\Responders\Project\IResponseTransformer;
+use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
+use Tidy\Domain\Responders\Audit\IChangeResponse;
+use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\ProjectSilverTongue;
-use Tidy\UseCases\Project\DTO\ResponseDTO;
-use Tidy\UseCases\Project\DTO\ResponseTransformer;
 use Tidy\UseCases\Project\DTO\RenameRequestDTO;
 use Tidy\UseCases\Project\Rename;
-use Tidy\UseCases\Project\UseCaseProject;
+use Tidy\UseCases\Project\UseCasePatch;
 
 class RenameTest extends MockeryTestCase
 {
@@ -33,10 +33,10 @@ class RenameTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $useCase = new Rename(mock(IProjectGateway::class), mock(IResponseTransformer::class));
+        $useCase = new Rename(mock(IProjectGateway::class), mock(IChangeResponseTransformer::class));
 
         assertThat($useCase, is(notNullValue()));
-        assertThat($useCase, is(anInstanceOf(UseCaseProject::class)));
+        assertThat($useCase, is(anInstanceOf(UseCasePatch::class)));
     }
 
     public function test_rename()
@@ -56,18 +56,33 @@ class RenameTest extends MockeryTestCase
 
         $result = $this->useCase->execute($request);
 
-        assertThat($result, is(anInstanceOf(IResponse::class)));
-        assertThat($result->getId(), is(equalTo(ProjectSilverTongue::ID)));
+        $expected = [
+            [
+                'op'    => Change::OP_TEST,
+                'value' => ProjectSilverTongue::ID,
+                'path'  => 'id',
+            ],
+            [
+                'op'    => Change::OP_REPLACE,
+                'value' => $expectedName,
+                'path'  => 'name',
+            ],
+            [
+                'op'    => Change::OP_REPLACE,
+                'value' => $expectedDescription,
+                'path'  => 'description',
+            ],
+        ];
+        assertThat($result, is(anInstanceOf(IChangeResponse::class)));
+        assertThat($result->changes(), is(equalTo($expected)));
     }
-
-
 
 
     protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */
     {
         parent::setUp();
         $this->gateway = mock(IProjectGateway::class);
-        $this->useCase = new Rename($this->gateway, new ResponseTransformer());
+        $this->useCase = new Rename($this->gateway, new ChangeResponseTransformer());
     }
 
     protected function expectProjectLookUp($projectId, $returnValue)

@@ -7,14 +7,15 @@
 
 namespace Tidy\UseCases\User;
 
-
+use Tidy\Components\Audit\Change;
+use Tidy\Components\Audit\ChangeSet;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\IResetPasswordRequest;
-use Tidy\Domain\Responders\User\IResponseTransformer;
+use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
 
-class ResetPassword extends UseCaseUser
+class ResetPassword extends UseCasePatch
 {
     /**
      * @var IPasswordEncoder
@@ -24,9 +25,9 @@ class ResetPassword extends UseCaseUser
     public function __construct(
         IPasswordEncoder $encoder,
         IUserGateway $userGateway,
-        IResponseTransformer $responseTransformer = null
+        IChangeResponseTransformer $transformer = null
     ) {
-        parent::__construct($userGateway, $responseTransformer);
+        parent::__construct($userGateway, $transformer);
         $this->encoder = $encoder;
     }
 
@@ -43,7 +44,13 @@ class ResetPassword extends UseCaseUser
         $user->setPassword($password)->clearToken();
         $this->userGateway->save($user);
 
-        return $this->transformer()->transform($user);
+        $result = ChangeSet::make()
+                           ->add(Change::test($request->token(), 'token'))
+                           ->add(Change::replace('**********', 'password' ))
+                           ->add(Change::remove('token'))
+        ;
+
+        return $this->transformer()->transform($result);
     }
 
 

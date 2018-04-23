@@ -7,10 +7,11 @@
 
 namespace Tidy\UseCases\Project;
 
+use Tidy\Components\Audit\Change;
+use Tidy\Components\Audit\ChangeSet;
 use Tidy\Domain\Requestors\Project\IRenameRequest;
-use Tidy\UseCases\Project\DTO\RenameRequestDTO;
 
-class Rename extends UseCaseProject
+class Rename extends UseCasePatch
 {
 
     public function execute(IRenameRequest $request)
@@ -21,8 +22,15 @@ class Rename extends UseCaseProject
             ->setName($request->name())
             ->setDescription($request->description())
         ;
+
         $this->gateway->save($project);
 
-        return $this->transformer()->transform($project);
+        $result = ChangeSet::make()
+                            ->add(Change::test($request->projectId(), 'id'))
+                           ->add(Change::replace($request->name(), 'name'))
+                           ->add(Change::replace($request->description(), 'description'))
+        ;
+
+        return $this->transformer()->transform($result);
     }
 }

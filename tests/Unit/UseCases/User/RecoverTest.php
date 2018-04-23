@@ -6,18 +6,19 @@
 
 namespace Tidy\Tests\Unit\UseCases\User;
 
-
 use Mockery\MockInterface;
+use Tidy\Components\Audit\Change;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Gateways\IUserGateway;
-use Tidy\Domain\Responders\User\IResponse;
+use Tidy\Domain\Responders\Audit\ChangeResponse;
+use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
 use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TimmyUser;
 use Tidy\UseCases\User\DTO\RecoverRequestDTO;
-use Tidy\UseCases\User\DTO\ResponseTransformer;
-use Tidy\UseCases\User\UseCaseUser;
 use Tidy\UseCases\User\Recover;
+use Tidy\UseCases\User\UseCasePatch;
+use Tidy\UseCases\User\UseCase;
 
 class RecoverTest extends MockeryTestCase
 {
@@ -25,6 +26,7 @@ class RecoverTest extends MockeryTestCase
      * @var IUserGateway|MockInterface
      */
     protected $gateway;
+
     /**
      * @var Recover
      */
@@ -33,8 +35,8 @@ class RecoverTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $useCase = new Recover(mock(IUserGateway::class), mock(IResponseTransformer::class));
-        $this->assertInstanceOf(UseCaseUser::class, $useCase);
+        $useCase = new Recover(mock(IUserGateway::class), mock(IChangeResponseTransformer::class));
+        $this->assertInstanceOf(UseCasePatch::class, $useCase);
     }
 
     public function test_recover_success()
@@ -52,11 +54,20 @@ class RecoverTest extends MockeryTestCase
         )
         ;
 
-
         $result = $this->useCase->execute($request);
+
+        $expected = [
+            ['op' => Change::OP_TEST, 'value' => TimmyUser::USERNAME, 'path' => 'userName'],
+            ['op' => Change::OP_ADD, 'path' => 'token']
+        ];
+        assertThat($result, is(anInstanceOf(ChangeResponse::class)));
+        $this->assertArraySubset($expected, $result->changes());
+
+        /*
         $this->assertInstanceOf(IResponse::class, $result);
         $this->assertEquals(TimmyUser::ID, $result->getId());
         $this->assertNotEmpty($result->getToken());
+        */
     }
 
     public function test_recover_failure()
@@ -73,7 +84,7 @@ class RecoverTest extends MockeryTestCase
     protected function setUp()
     {
         $this->gateway = mock(IUserGateway::class);
-        $this->useCase = new Recover($this->gateway, new ResponseTransformer());
+        $this->useCase = new Recover($this->gateway);
     }
 
 

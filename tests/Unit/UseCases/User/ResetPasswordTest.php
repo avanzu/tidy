@@ -13,6 +13,8 @@ use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Gateways\IUserGateway;
+use Tidy\Domain\Responders\Audit\ChangeResponse;
+use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
 use Tidy\Domain\Responders\User\IResponse;
 use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
@@ -42,7 +44,7 @@ class ResetPasswordTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $useCase = new ResetPassword($this->encoder, $this->gateway, mock(IResponseTransformer::class));
+        $useCase = new ResetPassword($this->encoder, $this->gateway, mock(IChangeResponseTransformer::class));
         $this->assertInstanceOf(ResetPassword::class, $useCase);
     }
 
@@ -58,11 +60,22 @@ class ResetPasswordTest extends MockeryTestCase
         $this->expectSaveWithEncodedPassword($hash);
 
         $result = $this->useCase->execute($request);
+        assertThat($result, is(anInstanceOf(ChangeResponse::class)));
 
+
+        $expected = [
+            ['op' => 'test', 'value' => self::RESET_TOKEN, 'path' => 'token'],
+            ['op' => 'replace', 'value' => '**********', 'path' => 'password'],
+            ['op' => 'remove', 'path' => 'token'],
+        ];
+        assertThat($result->changes(), is(equalTo($expected)));
+
+        /*
         $this->assertInstanceOf(IResponse::class, $result);
         $this->assertEquals(UserStub2::ID, $result->getId(), 'User should match.');
         $this->assertEquals($hash, $result->getPassword(), 'Password should be the new hash.');
         $this->assertEmpty($result->getToken(), 'Token should be cleared.');
+        */
     }
 
 
@@ -82,7 +95,7 @@ class ResetPasswordTest extends MockeryTestCase
     {
         $this->gateway = mock(IUserGateway::class);
         $this->encoder = mock(IPasswordEncoder::class);
-        $this->useCase = new ResetPassword($this->encoder, $this->gateway, new ResponseTransformer());
+        $this->useCase = new ResetPassword($this->encoder, $this->gateway);
 
 
     }
