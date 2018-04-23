@@ -8,16 +8,30 @@
 
 namespace Tidy\Domain\Gateways;
 
+use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
 
 interface ITranslationGateway
 {
 
     /**
+     * @param $projectId
+     *
      * @return TranslationCatalogue
      */
     public function makeCatalogueForProject($projectId);
 
+    /**
+     * @return Translation
+     */
+    public function makeTranslation();
+
+    /**
+     * @param $catalogueId
+     *
+     * @return TranslationCatalogue|null
+     */
+    public function findCatalogue($catalogueId);
 
     /**
      * @param $catalogue

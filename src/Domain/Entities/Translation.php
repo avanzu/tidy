@@ -12,6 +12,8 @@ abstract class Translation
 {
     protected $id;
 
+    protected $token;
+
     protected $sourceString;
 
     protected $localeString;
@@ -23,23 +25,17 @@ abstract class Translation
     protected $state;
 
     /**
+     * @var TranslationCatalogue
+     */
+    protected $catalogue;
+
+
+    /**
      * @return mixed
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     /**
@@ -141,6 +137,43 @@ abstract class Translation
 
         return $this;
     }
+
+    /**
+     * @param TranslationCatalogue $catalogue
+     *
+     * @return $this
+     */
+    public function setCatalogue($catalogue)
+    {
+        $this->catalogue = $catalogue;
+
+        return $this;
+    }
+
+    public function getCatalogue() {
+        return $this->catalogue;
+
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param mixed $token
+     *
+     * @return $this
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+        return $this;
+    }
+
 
 
 }

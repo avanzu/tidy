@@ -8,6 +8,8 @@
 
 namespace Tidy\Domain\Entities;
 
+use ArrayObject;
+
 abstract class TranslationCatalogue
 {
     protected $sourceLanguage;
@@ -23,6 +25,16 @@ abstract class TranslationCatalogue
     protected $id;
 
     protected $canonical;
+
+    /**
+     * @var Translation[]|ArrayObject
+     */
+    protected $translations;
+
+    /**
+     * @var Project
+     */
+    protected $project;
 
     /**
      * @return Project
@@ -44,12 +56,6 @@ abstract class TranslationCatalogue
         return $this;
     }
 
-    /**
-     * @var Project
-     */
-    protected $project;
-
-    protected $translations = [];
 
     /**
      * @return mixed
@@ -177,5 +183,30 @@ abstract class TranslationCatalogue
         $this->canonical = $canonical;
 
         return $this;
+    }
+
+    protected function translations()
+    {
+        if (!$this->translations) {
+            $this->translations = new ArrayObject();
+        }
+
+        return $this->translations;
+    }
+
+    public function addTranslation(Translation $translation)
+    {
+        $this->translations()->offsetSet($translation->getToken(), $translation);
+
+        return $this;
+    }
+
+    public function find($token)
+    {
+        if ($this->translations()->offsetExists($token)) {
+            return $this->translations()->offsetGet($token);
+        }
+
+        return null;
     }
 }
