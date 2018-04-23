@@ -185,6 +185,19 @@ abstract class TranslationCatalogue
         return $this;
     }
 
+    public function path() {
+        return implode('/', [$this->getCanonical(), $this->sourceLocale(), $this->targetLocale()]);
+    }
+
+    public function sourceLocale() {
+        return implode('-', array_filter([$this->sourceLanguage, $this->sourceCulture]));
+    }
+
+    public function targetLocale()
+    {
+        return implode('-', array_filter([$this->targetLanguage, $this->targetCulture]));
+    }
+
     protected function translations()
     {
         if (!$this->translations) {

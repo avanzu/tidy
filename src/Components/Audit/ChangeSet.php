@@ -24,9 +24,10 @@ class ChangeSet implements \Countable, \IteratorAggregate
      *
      * @return ChangeSet
      */
-    public function add(Change $change)
+    public function add(Change $change = null)
     {
-        $this->changes[] = $change;
+        if( null !== $change)
+            $this->changes[] = $change;
 
         return $this;
     }

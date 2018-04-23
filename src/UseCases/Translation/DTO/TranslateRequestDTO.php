@@ -70,4 +70,20 @@ class TranslateRequestDTO
 
         return $this;
     }
+
+    public function localeString() {
+        return $this->localeString;
+    }
+
+    public function state() {
+        return $this->state;
+    }
+
+    public function catalogueId() {
+        return $this->catalogueId;
+    }
+
+    public function token() {
+        return $this->token;
+    }
 }
