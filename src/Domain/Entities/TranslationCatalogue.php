@@ -10,7 +10,7 @@ namespace Tidy\Domain\Entities;
 
 use ArrayObject;
 
-abstract class TranslationCatalogue implements \Countable
+abstract class TranslationCatalogue
 {
     protected $sourceLanguage;
 
@@ -237,9 +237,5 @@ abstract class TranslationCatalogue implements \Countable
         return array_map($callback, $this->translations()->getArrayCopy());
     }
 
-    public function count()
-    {
-        return $this->translations()->count();
-    }
 
 }

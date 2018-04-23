@@ -83,6 +83,7 @@ class CreateTest extends MockeryTestCase
         $this->assertEquals($firstName, $result->getFirstName(), 'FirstName should be assigned.');
         $this->assertEquals($lastName, $result->getLastName(), 'LastName should be assigned.');
         $this->assertEquals(sprintf('/%s/%s', User::PREFIX, $username), $result->path());
+
         $this->assertEquals(999, $result->getId());
     }
 

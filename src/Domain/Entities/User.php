@@ -93,7 +93,7 @@ abstract class User implements IClaimant
     }
 
     public function path() {
-        return $this->path;
+        return sprintf('/%s/%s', static::PREFIX, $this->canonical);
     }
 
     /**
@@ -103,7 +103,6 @@ abstract class User implements IClaimant
      */
     public function setCanonical($canonical) {
         $this->canonical = $canonical;
-        $this->path     = sprintf('/%s/%s', static::PREFIX, $this->canonical);
         return $this;
     }
 

@@ -46,6 +46,7 @@ class ResponseTransformer implements Transformer
         }
         $response->firstName = $profile->getFirstName();
         $response->lastName  = $profile->getLastName();
+
         return $this;
     }
 
@@ -57,13 +58,14 @@ class ResponseTransformer implements Transformer
      */
     private function mapUser(User $user, $response)
     {
-        $response->id       = $user->getId();
-        $response->userName = $user->getUserName();
-        $response->eMail    = $user->getEMail();
-        $response->password = $user->getPassword();
-        $response->enabled  = $user->isEnabled();
-        $response->token    = $user->getToken();
-        $response->path     = $user->path();
+        $response->id        = $user->getId();
+        $response->userName  = $user->getUserName();
+        $response->eMail     = $user->getEMail();
+        $response->password  = $user->getPassword();
+        $response->enabled   = $user->isEnabled();
+        $response->token     = $user->getToken();
+        $response->path      = $user->path();
+        $response->canonical = $user->canonical();
 
         return $this;
     }

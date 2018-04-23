@@ -108,8 +108,4 @@ class CatalogueResponseDTO implements \Countable
         return count($this->translations);
     }
 
-    public function contains($token)
-    {
-        return isset($this->translations[$token]);
-    }
 }
