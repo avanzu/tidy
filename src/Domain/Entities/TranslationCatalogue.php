@@ -201,6 +201,11 @@ abstract class TranslationCatalogue
         return $this;
     }
 
+    /**
+     * @param $token
+     *
+     * @return Translation|null
+     */
     public function find($token)
     {
         if ($this->translations()->offsetExists($token)) {
@@ -208,5 +213,15 @@ abstract class TranslationCatalogue
         }
 
         return null;
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return array
+     */
+    public function map(callable $callback)
+    {
+        return array_map($callback, $this->translations()->getArrayCopy());
     }
 }

@@ -9,6 +9,7 @@
 namespace Tidy\Tests\Unit\UseCases\Translation;
 
 use Mockery\MockInterface;
+use Tidy\Components\Exceptions\Duplicate;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
@@ -16,6 +17,7 @@ use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\Tests\Unit\Domain\Entities\TranslationImpl;
+use Tidy\Tests\Unit\Domain\Entities\TranslationTranslated;
 use Tidy\UseCases\Translation\AddTranslation;
 use Tidy\UseCases\Translation\DTO\AddTranslationRequestDTO;
 use Tidy\UseCases\Translation\DTO\CatalogueResponseDTO;
@@ -90,10 +92,13 @@ class AddTranslationTest extends MockeryTestCase
         $result = $this->useCase->execute($request);
 
         assertThat($result, is(anInstanceOf(CatalogueResponseDTO::class)));
+        assertThat(count($result), is(equalTo(3)));
+        assertThat($result->contains('message.source_code'), is(true));
+
 
     }
 
-    public function test_execute_fail()
+    public function test_execute_fails_on_unknown_catalogue()
     {
         $request = AddTranslationRequestDTO::make();
         $wrongId      = 12345678909876543;
@@ -114,6 +119,24 @@ class AddTranslationTest extends MockeryTestCase
 
     }
 
+    public function test_execute_fails_on_duplicate_token()
+    {
+        $request = AddTranslationRequestDTO::make();
+        $request->withCatalogueId(TranslationCatalogueEnglishToGerman::ID)
+                ->withToken(TranslationTranslated::MSG_ID)
+        ;
+
+        $this->gateway->expects('findCatalogue')->andReturns(new TranslationCatalogueEnglishToGerman());
+        try {
+            $this->useCase->execute($request);
+            $this->fail('Failed to fail.');
+
+        } catch(\Exception $exception){
+            assertThat($exception, is(anInstanceOf(Duplicate::class)));
+            $this->assertStringMatchesFormat('Duplicate token "%s" in catalogue "%s".', $exception->getMessage());
+        }
+
+    }
 
 
 

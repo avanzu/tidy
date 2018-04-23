@@ -25,12 +25,6 @@ abstract class Translation
     protected $state;
 
     /**
-     * @var TranslationCatalogue
-     */
-    protected $catalogue;
-
-
-    /**
      * @return mixed
      */
     public function getId()
@@ -136,23 +130,6 @@ abstract class Translation
         $this->state = $state;
 
         return $this;
-    }
-
-    /**
-     * @param TranslationCatalogue $catalogue
-     *
-     * @return $this
-     */
-    public function setCatalogue($catalogue)
-    {
-        $this->catalogue = $catalogue;
-
-        return $this;
-    }
-
-    public function getCatalogue() {
-        return $this->catalogue;
-
     }
 
     /**

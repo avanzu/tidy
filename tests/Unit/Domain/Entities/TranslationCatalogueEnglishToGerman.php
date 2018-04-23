@@ -40,6 +40,8 @@ class TranslationCatalogueEnglishToGerman extends TranslationCatalogue
     public function __construct()
     {
         $this->project = new ProjectSilverTongue();
+        $this->addTranslation(new TranslationTranslated());
+        $this->addTranslation(new TranslationUntranslated());
     }
 
 

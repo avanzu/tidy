@@ -8,10 +8,13 @@
 
 namespace Tidy\UseCases\Translation;
 
+use Tidy\Components\Exceptions\Duplicate;
 use Tidy\Components\Exceptions\NotFound;
+use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\UseCases\Translation\DTO\AddTranslationRequestDTO;
 use Tidy\UseCases\Translation\DTO\CatalogueResponseTransformer;
+use Tidy\UseCases\Translation\DTO\NestedCatalogueResponseTransformer;
 use Tidy\UseCases\Translation\DTO\TranslationResponseDTO;
 use Tidy\UseCases\Translation\DTO\TranslationResponseTransformer;
 
@@ -50,6 +53,9 @@ class AddTranslation
     public function execute(AddTranslationRequestDTO $request)
     {
         $catalogue   = $this->lookUpCatalogue($request);
+
+        $this->preserveUniqueness($request, $catalogue);
+
         $translation = $this->gateway->makeTranslation();
 
         $translation
@@ -73,7 +79,7 @@ class AddTranslation
     protected function transformer()
     {
         if (!$this->transformer) {
-            $this->transformer = new CatalogueResponseTransformer();
+            $this->transformer = new NestedCatalogueResponseTransformer();
         }
 
         return $this->transformer;
@@ -91,6 +97,17 @@ class AddTranslation
             sprintf('Unable to find catalogue identified by "%d".', $request->catalogueId())
         );
         return $catalogue;
+    }
+
+    /**
+     * @param AddTranslationRequestDTO $request
+     * @param                          $catalogue
+     */
+    protected function preserveUniqueness(AddTranslationRequestDTO $request, TranslationCatalogue $catalogue)
+    {
+        if ($match = $catalogue->find($request->token())) {
+            throw new Duplicate(sprintf('Duplicate token "%s" in catalogue "%s".', $request->token, $catalogue->getName()));
+        }
     }
 
 

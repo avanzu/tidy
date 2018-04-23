@@ -8,6 +8,7 @@
 
 namespace Tidy\UseCases\Translation\DTO;
 
+use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Responders\Project\IExcerptTransformer;
 use Tidy\Domain\Responders\Translation\ICatalogueResponseTransformer;
@@ -20,6 +21,11 @@ class CatalogueResponseTransformer implements ICatalogueResponseTransformer
      * @var IExcerptTransformer
      */
     protected $excerptTransformer;
+
+    /**
+     * @var TranslationResponseTransformer
+     */
+    protected $itemTransformer;
 
     /**
      * CatalogueResponseTransformer constructor.
@@ -35,6 +41,10 @@ class CatalogueResponseTransformer implements ICatalogueResponseTransformer
         $previous = $this->excerptTransformer;
         $this->excerptTransformer = $transformer;
         return $previous;
+    }
+
+    public function useItemTransformer(TranslationResponseTransformer $itemTransformer) {
+        $this->itemTransformer = $itemTransformer;
     }
 
     protected function excerptTransformer()
@@ -54,17 +64,34 @@ class CatalogueResponseTransformer implements ICatalogueResponseTransformer
         $response->targetLanguage = $catalogue->getTargetLanguage();
         $response->targetCulture  = $catalogue->getTargetCulture();
         $response->project        = $this->makeProjectExcerpt($catalogue);
+        $response->translations   = $this->transformTranslations($catalogue);
 
         return $response;
     }
 
     /**
      * @param TranslationCatalogue $catalogue
+     *
+     * @return null|\Tidy\UseCases\Project\DTO\ExcerptDTO
      */
     protected function makeProjectExcerpt(TranslationCatalogue $catalogue)
     {
         if( $project =  $catalogue->getProject() )
             return $this->excerptTransformer()->excerpt($project);
         return null;
+    }
+
+    /**
+     * @param TranslationCatalogue $catalogue
+     *
+     * @return TranslationResponseDTO[]
+     */
+    protected function transformTranslations(TranslationCatalogue $catalogue) {
+        if( ! $this->itemTransformer() ) return [];
+        return $catalogue->map(function(Translation $translation){ return $this->itemTransformer()->transform($translation); });
+    }
+
+    protected  function itemTransformer() {
+        return $this->itemTransformer;
     }
 }

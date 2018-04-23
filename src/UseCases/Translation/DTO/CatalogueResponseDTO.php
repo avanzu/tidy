@@ -8,16 +8,25 @@
 
 namespace Tidy\UseCases\Translation\DTO;
 
-class CatalogueResponseDTO
+class CatalogueResponseDTO implements \Countable
 {
     public $name;
+
     public $canonical;
+
     public $id;
+
     public $sourceLanguage;
+
     public $sourceCulture;
+
     public $targetLanguage;
+
     public $targetCulture;
+
     public $project;
+
+    public $translations = [];
 
     /**
      * @return mixed
@@ -84,5 +93,23 @@ class CatalogueResponseDTO
     }
 
 
+    /**
+     * Count elements of an object
+     *
+     * @link  http://php.net/manual/en/countable.count.php
+     * @return int The custom count as an integer.
+     * </p>
+     * <p>
+     * The return value is cast to an integer.
+     * @since 5.1.0
+     */
+    public function count()
+    {
+        return count($this->translations);
+    }
 
+    public function contains($token)
+    {
+        return isset($this->translations[$token]);
+    }
 }

@@ -21,6 +21,8 @@ class TranslationUntranslated extends Translation
 
     protected $id           = self::MSG_ID;
 
+    protected $token        = self::MSG_ID;
+
     protected $sourceString = self::MSG_SOURCE;
 
     protected $localeString = self::MSG_TARGET;
