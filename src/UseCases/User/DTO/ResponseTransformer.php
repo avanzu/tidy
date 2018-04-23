@@ -63,6 +63,7 @@ class ResponseTransformer implements Transformer
         $response->password = $user->getPassword();
         $response->enabled  = $user->isEnabled();
         $response->token    = $user->getToken();
+        $response->path     = $user->path();
 
         return $this;
     }

@@ -7,7 +7,7 @@
 
 namespace Tidy\UseCases\User;
 
-
+use Tidy\Components\Normalisation\ITextNormaliser;
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Entities\UserProfile;
@@ -15,9 +15,13 @@ use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\ICreateRequest;
 use Tidy\Domain\Responders\User\IResponseTransformer;
 
-
 class Create extends UseCase
 {
+    /**
+     * @var ITextNormaliser
+     */
+    protected $normalizer;
+
     /**
      * @var IPasswordEncoder
      */
@@ -26,16 +30,17 @@ class Create extends UseCase
     public function __construct(
         IUserGateway $userGateway,
         IPasswordEncoder $encoder,
+        ITextNormaliser $normaliser = null,
         IResponseTransformer $responseTransformer = null
     ) {
         parent::__construct($userGateway, $responseTransformer);
         $this->passwordEncoder = $encoder;
+        $this->normalizer      = $normaliser;
     }
 
 
     public function execute(ICreateRequest $request)
     {
-
 
         $password = $this->hashPassword($request);
         $user     = $this->makeUser($request, $password);
@@ -64,6 +69,7 @@ class Create extends UseCase
              ->setEMail($request->eMail())
              ->setPassword($password)
              ->setEnabled($request->isAccessGranted())
+             ->setCanonical($this->normalizer->transform($request->getUserName()))
         ;
 
         return $user;
@@ -96,6 +102,5 @@ class Create extends UseCase
 
         return $password;
     }
-
 
 }

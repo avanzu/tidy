@@ -15,6 +15,8 @@ use Tidy\Components\AccessControl\IClaimant;
  */
 abstract class User implements IClaimant
 {
+    const PREFIX = 'users';
+
     /**
      * @var
      */
@@ -44,6 +46,14 @@ abstract class User implements IClaimant
      * @var UserProfile
      */
     protected $profile;
+
+    /**
+     * @var string
+     */
+    protected $path;
+
+    protected $canonical;
+
 
     /**
      * @return mixed
@@ -79,9 +89,29 @@ abstract class User implements IClaimant
     public function setUserName($userName)
     {
         $this->userName = $userName;
-
         return $this;
     }
+
+    public function path() {
+        return $this->path;
+    }
+
+    /**
+     * @param $canonical
+     *
+     * @return $this
+     */
+    public function setCanonical($canonical) {
+        $this->canonical = $canonical;
+        $this->path     = sprintf('/%s/%s', static::PREFIX, $this->canonical);
+        return $this;
+    }
+
+    public function canonical()
+    {
+        return $this->canonical;
+    }
+
 
     /**
      * @return mixed

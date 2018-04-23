@@ -8,12 +8,12 @@ namespace Tidy\Tests\Unit\UseCases\User;
 
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\PersistenceFailed;
+use Tidy\Components\Normalisation\ITextNormaliser;
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Entities\UserProfile;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\ICreateRequest;
-use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\UserImpl;
 use Tidy\Tests\Unit\Domain\Entities\UserProfileImpl;
@@ -41,6 +41,11 @@ class CreateTest extends MockeryTestCase
     protected $encoder;
 
     /**
+     * @var ITextNormaliser|MockInterface
+     */
+    protected $normaliser;
+
+    /**
      * @var Create
      */
     private $useCase;
@@ -48,7 +53,7 @@ class CreateTest extends MockeryTestCase
     public function testInstantiation()
     {
         $useCase = new Create(mock(IUserGateway::class), mock(IPasswordEncoder::class));
-        assertThat($useCase, is (notNullValue()));
+        assertThat($useCase, is(notNullValue()));
 
         $this->assertInstanceOf(Create::class, $this->useCase);
     }
@@ -63,6 +68,7 @@ class CreateTest extends MockeryTestCase
 
         $this->expectGatewaySaveCall($username);
         $this->expectPasswordEncoderCall($plainPassword);
+        $this->expectNormaliserCall($username);
 
         $request = $this->makeRequestDTO($username, $plainPassword, $eMail, $firstName, $lastName);
 
@@ -76,7 +82,7 @@ class CreateTest extends MockeryTestCase
         $this->assertNotEquals($plainPassword, $result->getPassword(), 'plain password should be encoded');
         $this->assertEquals($firstName, $result->getFirstName(), 'FirstName should be assigned.');
         $this->assertEquals($lastName, $result->getLastName(), 'LastName should be assigned.');
-
+        $this->assertEquals(sprintf('/%s/%s', User::PREFIX, $username), $result->path());
         $this->assertEquals(999, $result->getId());
     }
 
@@ -90,6 +96,7 @@ class CreateTest extends MockeryTestCase
 
         $this->expectGatewaySaveCall($username);
         $this->expectPasswordEncoderCall($plainPass);
+        $this->expectNormaliserCall($username);
 
         $request = $this->makeRequestDTO($username, $plainPass, $eMail, $firstName, $lastName);
         /** @var ResponseDTO $result */
@@ -111,6 +118,7 @@ class CreateTest extends MockeryTestCase
 
         $this->expectGatewaySaveCall($username);
         $this->expectPasswordEncoderCall($plainPass);
+        $this->expectNormaliserCall($username);
 
         $request = $this->makeRequestDTO($username, $plainPass, $eMail, $firstName, $lastName);
 
@@ -126,6 +134,7 @@ class CreateTest extends MockeryTestCase
     public function test_CreateUserRequest_persistenceFailure_throwsPersistenceFailed()
     {
         $this->encoder->expects('encode')->andReturn('');
+        $this->expectNormaliserCall('');
         $this->gateway->expects('save')->andThrows(new PersistenceFailed());
 
         $this->expectException(PersistenceFailed::class);
@@ -134,9 +143,10 @@ class CreateTest extends MockeryTestCase
 
     protected function setUp()
     {
-        $this->encoder = mock(IPasswordEncoder::class);
-        $this->gateway = mock(IUserGateway::class);
-        $this->useCase = new Create($this->gateway, $this->encoder, mock(IResponseTransformer::class));
+        $this->encoder    = mock(IPasswordEncoder::class);
+        $this->gateway    = mock(IUserGateway::class);
+        $this->normaliser = mock(ITextNormaliser::class);
+        $this->useCase    = new Create($this->gateway, $this->encoder, $this->normaliser);
 
         $this->gateway->allows('makeUser')->andReturn(new UserImpl());
         $this->gateway->allows('makeProfile')->andReturn(new UserProfileImpl());
@@ -217,6 +227,10 @@ class CreateTest extends MockeryTestCase
         ;
 
         return $request;
+    }
+
+    private function expectNormaliserCall($username) {
+        $this->normaliser->expects('transform')->with($username)->andReturn($username);
     }
 
 

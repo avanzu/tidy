@@ -31,4 +31,9 @@ interface IResponse
      * @return string
      */
     public function getLastName();
+
+    /**
+     * @return string
+     */
+    public function path();
 }
