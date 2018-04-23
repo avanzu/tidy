@@ -7,12 +7,14 @@
 
 namespace Tidy\Domain\Entities;
 
-
 use Tidy\Components\AccessControl\IClaimable;
 use Tidy\Components\AccessControl\IClaimant;
 
 abstract class Project implements IClaimable
 {
+    const PREFIX = 'projects';
+
+
     /**
      * @var int
      */
@@ -27,14 +29,21 @@ abstract class Project implements IClaimable
      * @var string
      */
     protected $description;
+
     /**
      * @var string
      */
     protected $canonical;
+
     /**
      * @var IClaimant
      */
     protected $owner;
+
+    /**
+     * @var string
+     */
+    protected $path;
 
     /**
      * @return string
@@ -94,8 +103,14 @@ abstract class Project implements IClaimable
     public function setCanonical($canonical)
     {
         $this->canonical = $canonical;
+        $this->path      = sprintf('/%s/%s', static::PREFIX, $this->canonical);
 
         return $this;
+    }
+
+    public function path()
+    {
+        return $this->path;
     }
 
     /**

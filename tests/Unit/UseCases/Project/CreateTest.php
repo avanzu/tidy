@@ -86,6 +86,7 @@ class CreateTest extends MockeryTestCase
         $this->assertInstanceOf(IOwnerExcerpt::class, $response->getOwner());
         $this->assertEquals($owner->getId(), $response->getOwner()->getIdentity());
         $this->assertEquals($owner->getUserName(), $response->getOwner()->getName());
+        $this->assertEquals(sprintf('/%s/%s', Project::PREFIX, $canonical), $response->path());
 
 
     }

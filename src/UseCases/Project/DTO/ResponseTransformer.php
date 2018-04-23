@@ -73,6 +73,7 @@ class ResponseTransformer implements IResponseTransformer
         $response->name        = $project->getName();
         $response->description = $project->getDescription();
         $response->canonical   = $project->getCanonical();
+        $response->path        = $project->path();
     }
 
     /**

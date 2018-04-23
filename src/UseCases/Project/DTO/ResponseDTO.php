@@ -39,6 +39,11 @@ class ResponseDTO implements IResponse
     public $owner;
 
     /**
+     * @var string
+     */
+    public $path;
+
+    /**
      * @return string
      */
     public function getCanonical()
@@ -76,6 +81,11 @@ class ResponseDTO implements IResponse
     public function getOwner()
     {
         return $this->owner;
+    }
+
+    public function path()
+    {
+        return $this->path;
     }
 
 

@@ -39,4 +39,9 @@ interface IResponse
      * @return IOwnerExcerpt
      */
     public function getOwner();
+
+    /**
+     * @return string
+     */
+    public function path();
 }
