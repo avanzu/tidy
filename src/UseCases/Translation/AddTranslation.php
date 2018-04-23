@@ -8,13 +8,15 @@
 
 namespace Tidy\UseCases\Translation;
 
+use Tidy\Components\Audit\Change;
+use Tidy\Components\Audit\ChangeSet;
 use Tidy\Components\Exceptions\Duplicate;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
+use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
+use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
 use Tidy\UseCases\Translation\DTO\AddTranslationRequestDTO;
-use Tidy\UseCases\Translation\DTO\CatalogueResponseTransformer;
-use Tidy\UseCases\Translation\DTO\NestedCatalogueResponseTransformer;
 use Tidy\UseCases\Translation\DTO\TranslationResponseTransformer;
 
 class AddTranslation
@@ -25,23 +27,23 @@ class AddTranslation
     protected $gateway;
 
     /**
-     * @var TranslationResponseTransformer
+     * @var ChangeResponseTransformer
      */
     private $transformer;
 
     /**
      * AddTranslation constructor.
      *
-     * @param ITranslationGateway          $gateway
-     * @param CatalogueResponseTransformer $transformer
+     * @param ITranslationGateway        $gateway
+     * @param IChangeResponseTransformer $transformer
      */
-    public function __construct(ITranslationGateway $gateway, CatalogueResponseTransformer $transformer = null)
+    public function __construct(ITranslationGateway $gateway, IChangeResponseTransformer $transformer = null)
     {
         $this->gateway     = $gateway;
         $this->transformer = $transformer;
     }
 
-    public function swapTransformer(CatalogueResponseTransformer $transformer)
+    public function swapTransformer(IChangeResponseTransformer $transformer)
     {
         $previous          = $this->transformer;
         $this->transformer = $transformer;
@@ -70,7 +72,13 @@ class AddTranslation
 
         $this->gateway->save($catalogue);
 
-        return $this->transformer()->transform($catalogue);
+        $result = ChangeSet::make();
+        $result
+            ->add(Change::test($request->catalogueId(), 'catalogueId'))
+            ->add(Change::add($translation->toArray(), sprintf('%s/%s', $catalogue->path(), $translation->getId())))
+        ;
+
+        return $this->transformer()->transform($result);
 
     }
 
@@ -78,7 +86,7 @@ class AddTranslation
     protected function transformer()
     {
         if (!$this->transformer) {
-            $this->transformer = new NestedCatalogueResponseTransformer();
+            $this->transformer = new ChangeResponseTransformer();
         }
 
         return $this->transformer;

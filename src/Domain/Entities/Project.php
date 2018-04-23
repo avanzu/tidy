@@ -103,14 +103,12 @@ abstract class Project implements IClaimable
     public function setCanonical($canonical)
     {
         $this->canonical = $canonical;
-        $this->path      = sprintf('/%s/%s', static::PREFIX, $this->canonical);
-
         return $this;
     }
 
     public function path()
     {
-        return $this->path;
+        return sprintf('/%s/%s', static::PREFIX, $this->canonical);
     }
 
     /**
