@@ -39,9 +39,20 @@ class ChangeResponseTransformerTest extends MockeryTestCase
         assertThat($result, is(anInstanceOf(ChangeResponseDTO::class)));
 
         $expected = [
-            ['op' => 'replace', 'path' => 'password', 'value' => 'new value'],
-            ['op' => 'remove', 'path' => 'elements/10'],
-            ['op' => 'add', 'path' => '/elements/20', 'value' => '100'],
+            [
+                'op'    => Change::OP_REPLACE,
+                'path'  => 'password',
+                'value' => 'new value',
+            ],
+            [
+                'op'   => Change::OP_REMOVE,
+                'path' => 'elements/10',
+            ],
+            [
+                'op'    => Change::OP_ADD,
+                'path'  => '/elements/20',
+                'value' => '100',
+            ],
         ];
 
         assertThat($result->changes(), is(arrayContaining($expected)));
