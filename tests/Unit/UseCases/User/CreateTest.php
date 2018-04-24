@@ -229,7 +229,8 @@ class CreateTest extends MockeryTestCase
         return $request;
     }
 
-    private function expectNormaliserCall($username) {
+    private function expectNormaliserCall($username)
+    {
         $this->normaliser->expects('transform')->with($username)->andReturn($username);
     }
 

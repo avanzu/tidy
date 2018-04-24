@@ -9,7 +9,6 @@ namespace Tidy\Domain\Responders\Project;
 
 use Tidy\Domain\Responders\AccessControl\IOwnerExcerpt;
 
-
 /**
  * Class ResponseDTO
  */

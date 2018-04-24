@@ -7,7 +7,6 @@
 
 namespace Tidy\UseCases\Project\DTO;
 
-
 use Tidy\Domain\Requestors\Project\ILookUpRequest;
 
 class LookUpRequestDTO implements ILookUpRequest
@@ -23,6 +22,14 @@ class LookUpRequestDTO implements ILookUpRequest
     }
 
     /**
+     * @return int
+     */
+    public function projectId()
+    {
+        return $this->projectId;
+    }
+
+    /**
      * @param $id
      *
      * @return ILookUpRequest
@@ -32,13 +39,5 @@ class LookUpRequestDTO implements ILookUpRequest
         $this->projectId = $id;
 
         return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function projectId()
-    {
-        return $this->projectId;
     }
 }

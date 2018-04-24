@@ -7,7 +7,6 @@
 
 namespace Tidy\Tests\Unit\Components\AccessControl;
 
-
 use Mockery\MockInterface;
 use Tidy\Components\AccessControl\AccessControlBroker;
 use Tidy\Components\AccessControl\IClaimantProvider;

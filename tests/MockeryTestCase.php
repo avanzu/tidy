@@ -7,7 +7,6 @@
 
 namespace Tidy\Tests;
 
-
 use Exception;
 use Hamcrest\MatcherAssert;
 use Mockery\Adapter\Phpunit\MockeryTestCase as PhpUnitAdapter;
@@ -22,8 +21,7 @@ class MockeryTestCase extends PhpUnitAdapter
         MatcherAssert::resetCount();
         try {
             parent::runBare();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             // rethrown below
         }
         $this->addToAssertionCount(MatcherAssert::getCount());

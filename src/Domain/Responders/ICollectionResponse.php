@@ -7,7 +7,6 @@
 
 namespace Tidy\Domain\Responders;
 
-
 use Tidy\Components\Collection\IPagedCollection;
 
 interface ICollectionResponse

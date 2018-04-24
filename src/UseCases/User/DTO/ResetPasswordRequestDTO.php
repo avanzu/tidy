@@ -7,12 +7,12 @@
 
 namespace Tidy\UseCases\User\DTO;
 
-
 use Tidy\Domain\Requestors\User\IResetPasswordRequest;
 
 class ResetPasswordRequestDTO implements IResetPasswordRequest
 {
     public $token;
+
     public $plainPassword;
 
     public static function make()

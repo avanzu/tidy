@@ -54,7 +54,7 @@ class RecoverTest extends MockeryTestCase
         $result = $this->useCase->execute($request);
 
         $expected = [
-            ['op' => Change::OP_ADD, 'path' => 'token']
+            ['op' => Change::OP_ADD, 'path' => 'token'],
         ];
         assertThat($result, is(anInstanceOf(ChangeResponse::class)));
         $this->assertArraySubset($expected, $result->changes());

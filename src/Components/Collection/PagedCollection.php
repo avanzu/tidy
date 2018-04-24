@@ -7,7 +7,6 @@
 
 namespace Tidy\Components\Collection;
 
-
 use ArrayIterator;
 use Tidy\Domain\Requestors\ICollectionRequest;
 
@@ -17,18 +16,22 @@ class PagedCollection implements ICollection, IPagedCollection
      * @var int
      */
     protected $total;
+
     /**
      * @var int
      */
     protected $page;
+
     /**
      * @var array
      */
     protected $items = [];
+
     /**
      * @var int
      */
     protected $pageSize;
+
     /**
      * @var int
      */

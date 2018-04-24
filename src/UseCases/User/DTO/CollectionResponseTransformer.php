@@ -7,7 +7,6 @@
 
 namespace Tidy\UseCases\User\DTO;
 
-
 use Tidy\Components\Collection\IPagedCollection;
 use Tidy\Domain\Responders\User\ICollectionResponseTransformer;
 use Tidy\Domain\Responders\User\IResponseTransformer;
@@ -47,13 +46,6 @@ class CollectionResponseTransformer implements ICollectionResponseTransformer
         return $previous;
     }
 
-    protected function itemTransformer()
-    {
-        if( ! $this->itemTransformer ) $this->itemTransformer = new ItemTransformer();
-        return $this->itemTransformer;
-    }
-
-
     /**
      *
      * @param IPagedCollection $collection
@@ -62,10 +54,19 @@ class CollectionResponseTransformer implements ICollectionResponseTransformer
      */
     public function transform(IPagedCollection $collection)
     {
-        $response             = new CollectionResponseDTO();
-        $response->items      = $collection->map(function ($item) { return $this->itemTransformer()->transform($item); });
+        $response        = new CollectionResponseDTO();
+        $response->items = $collection->map(function ($item) { return $this->itemTransformer()->transform($item); });
         $response->pickBoundaries($collection);
 
         return $response;
+    }
+
+    protected function itemTransformer()
+    {
+        if (!$this->itemTransformer) {
+            $this->itemTransformer = new ItemTransformer();
+        }
+
+        return $this->itemTransformer;
     }
 }

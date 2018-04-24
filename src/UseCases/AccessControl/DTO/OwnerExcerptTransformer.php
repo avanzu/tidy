@@ -7,7 +7,6 @@
 
 namespace Tidy\UseCases\AccessControl\DTO;
 
-
 use Tidy\Components\AccessControl\IClaimant;
 use Tidy\Domain\Responders\AccessControl\IOwnerExcerpt;
 use Tidy\Domain\Responders\AccessControl\IOwnerExcerptTransformer;

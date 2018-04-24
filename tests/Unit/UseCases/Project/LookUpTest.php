@@ -6,7 +6,6 @@
 
 namespace Tidy\Tests\Unit\UseCases\Project;
 
-
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Gateways\IProjectGateway;
@@ -65,8 +64,7 @@ class LookUpTest extends MockeryTestCase
     protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */
     {
         $this->gateway = mock(IProjectGateway::class);
-        $transformer   = new ResponseTransformer();
-        $this->useCase = new LookUp($this->gateway, $transformer);
+        $this->useCase = new LookUp($this->gateway);
     }
 
     /**

@@ -103,6 +103,7 @@ abstract class Project implements IClaimable
     public function setCanonical($canonical)
     {
         $this->canonical = $canonical;
+
         return $this;
     }
 

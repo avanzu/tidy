@@ -7,7 +7,6 @@
 
 namespace Tidy\Components\Exceptions;
 
-
 class OutOfBounds extends \OutOfBoundsException
 {
 

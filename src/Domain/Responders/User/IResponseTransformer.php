@@ -7,7 +7,6 @@
 
 namespace Tidy\Domain\Responders\User;
 
-
 use Tidy\Domain\Entities\User;
 
 interface IResponseTransformer

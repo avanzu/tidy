@@ -9,7 +9,6 @@ namespace Tidy\Tests\Unit\UseCases\User;
 
 use Mockery\MockInterface;
 use Tidy\Components\Collection\Boundary;
-use Tidy\Components\Collection\IPagedCollection;
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Components\Exceptions\OutOfBounds;
 use Tidy\Domain\Gateways\IUserGateway;
@@ -19,9 +18,9 @@ use Tidy\Domain\Responders\User\IResponse;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\UserStub1;
 use Tidy\Tests\Unit\Domain\Entities\UserStub2;
-use Tidy\UseCases\User\DTO\GetCollectionRequestDTO;
 use Tidy\UseCases\User\DTO\CollectionResponseDTO;
 use Tidy\UseCases\User\DTO\CollectionResponseTransformer;
+use Tidy\UseCases\User\DTO\GetCollectionRequestDTO;
 use Tidy\UseCases\User\GetCollection;
 
 /**
@@ -33,6 +32,7 @@ class GetCollectionTest extends MockeryTestCase
      * @var \Tidy\Domain\Gateways\IUserGateway|MockInterface
      */
     protected $gateway;
+
     /**
      * @var GetCollection
      */
@@ -84,7 +84,6 @@ class GetCollectionTest extends MockeryTestCase
      */
     public function test_UserCollectionResponse_ContainsUserResponseItems()
     {
-
 
         $this->setupFetchCollection(new UserStub1(), new UserStub2());
 
@@ -140,12 +139,14 @@ class GetCollectionTest extends MockeryTestCase
         $this->gateway->expects('fetchCollection')
                       ->with(anInstanceOf(Boundary::class), argumentThat($criteriaCheck))
                       ->andReturn([new UserStub1(), new UserStub2()])
-                      ->byDefault();
+                      ->byDefault()
+        ;
 
         $this->gateway
             ->expects('total')
             ->with($request->criteria())
-            ->andReturn(2);
+            ->andReturn(2)
+        ;
 
         $result = $this->useCase->execute($request);
         $this->assertInstanceOf(ICollectionResponse::class, $result);
@@ -167,8 +168,6 @@ class GetCollectionTest extends MockeryTestCase
         $this->gateway->expects('total')->andReturn(count($elements));
 
     }
-
-
 
 
 }

@@ -9,7 +9,6 @@ namespace Tidy\Domain\Responders\User;
 
 use Tidy\Components\Collection\IPagedCollection;
 
-
 /**
  * Class CollectionResponseTransformer
  */

@@ -7,7 +7,6 @@
 
 namespace Tidy\UseCases\Project;
 
-
 use Tidy\Components\Normalisation\ITextNormaliser;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\ICreateRequest;
@@ -37,7 +36,7 @@ class Create extends ItemResponder
         IResponseTransformer $transformer = null
     ) {
         parent::__construct($projectGateway, $transformer);
-        $this->normaliser     = $normaliser;
+        $this->normaliser = $normaliser;
     }
 
     /**

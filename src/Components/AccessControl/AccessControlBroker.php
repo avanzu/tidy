@@ -7,7 +7,6 @@
 
 namespace Tidy\Components\AccessControl;
 
-
 use Tidy\Components\Exceptions\NotFound;
 
 class AccessControlBroker

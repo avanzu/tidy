@@ -7,7 +7,6 @@
 
 namespace Tidy\Domain\Requestors;
 
-
 use Tidy\Components\Collection\Boundary;
 use Tidy\Components\DataAccess\Comparison;
 

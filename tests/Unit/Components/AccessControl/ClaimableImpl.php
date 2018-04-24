@@ -7,14 +7,15 @@
 
 namespace Tidy\Tests\Unit\Components\AccessControl;
 
-
 use Tidy\Components\AccessControl\IClaimable;
 use Tidy\Components\AccessControl\IClaimant;
 
 class ClaimableImpl implements IClaimable
 {
     const ID = 112233;
+
     protected $id = self::ID;
+
     /**
      * @var IClaimant
      */

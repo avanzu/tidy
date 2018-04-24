@@ -34,12 +34,6 @@ abstract class ItemResponder
         $this->gateway     = $projectGateway;
     }
 
-    protected function transformer()
-    {
-        if( ! $this->transformer) $this->transformer = new ResponseTransformer();
-        return $this->transformer;
-    }
-
     public function setResponseTransformer($transformer)
     {
         $this->transformer = $transformer;
@@ -48,6 +42,15 @@ abstract class ItemResponder
     public function setProjectGateway($gateway)
     {
         $this->gateway = $gateway;
+    }
+
+    protected function transformer()
+    {
+        if (!$this->transformer) {
+            $this->transformer = new ResponseTransformer();
+        }
+
+        return $this->transformer;
     }
 
 

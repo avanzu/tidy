@@ -7,7 +7,6 @@
 
 namespace Tidy\Tests\Unit\UseCases\User;
 
-
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
@@ -15,28 +14,28 @@ use Tidy\Domain\Entities\User;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Responders\Audit\ChangeResponse;
 use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
-use Tidy\Domain\Responders\User\IResponse;
-use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\UserStub2;
 use Tidy\UseCases\User\DTO\ResetPasswordRequestDTO;
-use Tidy\UseCases\User\DTO\ResponseTransformer;
 use Tidy\UseCases\User\ResetPassword;
 
 class ResetPasswordTest extends MockeryTestCase
 {
 
-    const RESET_TOKEN = 'reset-token';
-    const PLAIN_PASS = '123123';
+    const RESET_TOKEN   = 'reset-token';
+    const PLAIN_PASS    = '123123';
     const INVALID_TOKEN = 'invalid-token';
+
     /**
      * @var \Tidy\Domain\Gateways\IUserGateway|MockInterface
      */
     protected $gateway;
+
     /**
      * @var ResetPassword
      */
     protected $useCase;
+
     /**
      * @var IPasswordEncoder|MockInterface
      */
@@ -61,7 +60,6 @@ class ResetPasswordTest extends MockeryTestCase
 
         $result = $this->useCase->execute($request);
         assertThat($result, is(anInstanceOf(ChangeResponse::class)));
-
 
         $expected = [
             ['op' => 'replace', 'value' => '**********', 'path' => 'password'],
@@ -95,7 +93,6 @@ class ResetPasswordTest extends MockeryTestCase
         $this->gateway = mock(IUserGateway::class);
         $this->encoder = mock(IPasswordEncoder::class);
         $this->useCase = new ResetPassword($this->encoder, $this->gateway);
-
 
     }
 

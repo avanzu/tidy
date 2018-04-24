@@ -12,10 +12,15 @@ use Tidy\Domain\Requestors\User\ICreateRequest;
 class CreateRequestDTO implements ICreateRequest
 {
     public $userName;
+
     public $plainPassword;
+
     public $eMail;
+
     public $enabled = false;
+
     public $firstName;
+
     public $lastName;
 
     /**
@@ -36,16 +41,6 @@ class CreateRequestDTO implements ICreateRequest
         return $this->firstName;
     }
 
-    public function lastName()
-    {
-        return $this->lastName;
-    }
-
-    public function plainPassword()
-    {
-        return $this->plainPassword;
-    }
-
     public function getUserName()
     {
         return $this->userName;
@@ -61,6 +56,16 @@ class CreateRequestDTO implements ICreateRequest
     public function isAccessGranted()
     {
         return (bool)$this->enabled;
+    }
+
+    public function lastName()
+    {
+        return $this->lastName;
+    }
+
+    public function plainPassword()
+    {
+        return $this->plainPassword;
     }
 
     public function witFirstName($firstName)

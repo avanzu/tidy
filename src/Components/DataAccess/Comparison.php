@@ -7,7 +7,6 @@
 
 namespace Tidy\Components\DataAccess;
 
-
 /**
  * Class Comparison
  */
@@ -16,47 +15,47 @@ class Comparison
     /**
      *
      */
-    const EQ          = '=';
+    const EQ = '=';
     /**
      *
      */
-    const NEQ         = '<>';
+    const NEQ = '<>';
     /**
      *
      */
-    const LT          = '<';
+    const LT = '<';
     /**
      *
      */
-    const LTE         = '<=';
+    const LTE = '<=';
     /**
      *
      */
-    const GT          = '>';
+    const GT = '>';
     /**
      *
      */
-    const GTE         = '>=';
+    const GTE = '>=';
     /**
      *
      */
-    const IS          = '='; // no difference with EQ
+    const IS = '='; // no difference with EQ
     /**
      *
      */
-    const IN          = 'IN';
+    const IN = 'IN';
     /**
      *
      */
-    const NIN         = 'NIN';
+    const NIN = 'NIN';
     /**
      *
      */
-    const CONTAINS    = 'CONTAINS';
+    const CONTAINS = 'CONTAINS';
     /**
      *
      */
-    const MEMBER_OF   = 'MEMBER_OF';
+    const MEMBER_OF = 'MEMBER_OF';
     /**
      *
      */
@@ -71,6 +70,7 @@ class Comparison
      * @var string
      */
     private $operator;
+
     /**
      * @var
      */
@@ -222,7 +222,8 @@ class Comparison
      *
      * @return static
      */
-    public static function in(...$values) {
+    public static function in(...$values)
+    {
         return new static($values, static::IN);
     }
 
@@ -232,7 +233,7 @@ class Comparison
      *
      * @return static
      */
-    public static  function notIn(...$values)
+    public static function notIn(...$values)
     {
         return new static($values, static::NIN);
     }

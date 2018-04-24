@@ -7,13 +7,14 @@
 
 namespace Tidy\UseCases\Project\DTO;
 
-
 use Tidy\Domain\Requestors\Project\ICreateRequest;
 
 class CreateRequestDTO implements ICreateRequest
 {
     public $name;
+
     public $description;
+
     public $ownerId;
 
     /**

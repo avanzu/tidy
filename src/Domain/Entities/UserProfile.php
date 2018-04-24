@@ -7,7 +7,6 @@
 
 namespace Tidy\Domain\Entities;
 
-
 abstract class UserProfile
 {
     protected $firstName;

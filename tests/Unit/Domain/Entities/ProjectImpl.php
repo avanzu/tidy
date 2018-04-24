@@ -7,7 +7,6 @@
 
 namespace Tidy\Tests\Unit\Domain\Entities;
 
-
 use Tidy\Domain\Entities\Project;
 
 class ProjectImpl extends Project

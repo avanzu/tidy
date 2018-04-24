@@ -7,7 +7,6 @@
 
 namespace Tidy\Components\Collection;
 
-
 /**
  * Class PagedCollection
  */

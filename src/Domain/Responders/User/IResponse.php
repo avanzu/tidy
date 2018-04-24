@@ -7,7 +7,6 @@
 
 namespace Tidy\Domain\Responders\User;
 
-
 interface IResponse
 {
     public function getUserName();

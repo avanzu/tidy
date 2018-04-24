@@ -7,7 +7,6 @@
 
 namespace Tidy\Domain\Requestors\User;
 
-
 interface ILookUpRequest
 {
     /**

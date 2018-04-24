@@ -14,12 +14,10 @@ use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Responders\Audit\ChangeResponse;
 use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
 use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
-use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\UserStub1;
 use Tidy\UseCases\User\Activate;
 use Tidy\UseCases\User\DTO\ActivateRequestDTO;
-use Tidy\UseCases\User\DTO\ResponseTransformer;
 
 class ActivateTest extends MockeryTestCase
 {

@@ -7,7 +7,6 @@
 
 namespace Tidy\Domain\Gateways;
 
-
 use Tidy\Components\Collection\Boundary;
 use Tidy\Components\Collection\IPagedCollection;
 use Tidy\Components\DataAccess\Comparison;
@@ -42,12 +41,12 @@ interface IProjectGateway
     public function find($projectId);
 
     /**
-     * @param Boundary $boundary
-     * @param Comparison[]    $criteria
+     * @param Boundary     $boundary
+     * @param Comparison[] $criteria
      *
      * @return IPagedCollection
      */
-    public function fetchCollection(Boundary $boundary,  array $criteria = []);
+    public function fetchCollection(Boundary $boundary, array $criteria = []);
 
     /**
      * @param Comparison[] $criteria

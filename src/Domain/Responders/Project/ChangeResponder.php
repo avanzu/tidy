@@ -42,7 +42,10 @@ abstract class ChangeResponder
      */
     protected function transformer()
     {
-        if( ! $this->transformer) $this->transformer = new ChangeResponseTransformer();
+        if (!$this->transformer) {
+            $this->transformer = new ChangeResponseTransformer();
+        }
+
         return $this->transformer;
     }
 

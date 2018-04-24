@@ -7,7 +7,6 @@
 
 namespace Tidy\UseCases\User\DTO;
 
-
 use Tidy\Domain\Responders\User\IResponse;
 
 /**
@@ -20,12 +19,14 @@ class ResponseDTO implements IResponse
      * @var
      */
     public $id;
+
     /**
      * @var
      */
     public $userName;
 
     public $eMail;
+
     /**
      * @var string
      */

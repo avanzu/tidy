@@ -7,7 +7,6 @@
 
 namespace Tidy\Components\Security\Encoder;
 
-
 interface IPasswordEncoder
 {
     /**

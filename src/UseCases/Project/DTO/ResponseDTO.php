@@ -7,7 +7,6 @@
 
 namespace Tidy\UseCases\Project\DTO;
 
-
 use Tidy\Domain\Responders\AccessControl\IOwnerExcerpt;
 use Tidy\Domain\Responders\Project\IResponse;
 
@@ -21,18 +20,22 @@ class ResponseDTO implements IResponse
      * @var string
      */
     public $name;
+
     /**
      * @var int
      */
     public $id;
+
     /**
      * @var string
      */
     public $description;
+
     /**
      * @var string
      */
     public $canonical;
+
     /**
      * @var IOwnerExcerpt
      */

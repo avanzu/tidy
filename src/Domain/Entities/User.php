@@ -9,7 +9,6 @@ namespace Tidy\Domain\Entities;
 
 use Tidy\Components\AccessControl\IClaimant;
 
-
 /**
  * Class User
  */
@@ -21,22 +20,27 @@ abstract class User implements IClaimant
      * @var
      */
     protected $userName;
+
     /**
      * @var
      */
     protected $id;
+
     /**
      * @var
      */
     protected $eMail;
+
     /**
      * @var
      */
     protected $password;
+
     /**
      * @var bool
      */
     protected $enabled = false;
+
     /**
      * @var
      */
@@ -89,6 +93,7 @@ abstract class User implements IClaimant
     public function setUserName($userName)
     {
         $this->userName = $userName;
+
         return $this;
     }
 
@@ -97,8 +102,10 @@ abstract class User implements IClaimant
      *
      * @return $this
      */
-    public function setCanonical($canonical) {
+    public function setCanonical($canonical)
+    {
         $this->canonical = $canonical;
+
         return $this;
     }
 

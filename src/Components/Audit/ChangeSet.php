@@ -16,9 +16,11 @@ class ChangeSet implements \Countable, \IteratorAggregate
 
     /**
      * ChangeSet constructor.
+     *
      * @param array $changes
      */
-    public function __construct(array $changes = []) {
+    public function __construct(array $changes = [])
+    {
         foreach ($changes as $change) {
             $this->add($change);
         }
@@ -42,8 +44,9 @@ class ChangeSet implements \Countable, \IteratorAggregate
      */
     public function add(Change $change = null)
     {
-        if( null !== $change)
+        if (null !== $change) {
             $this->changes[] = $change;
+        }
 
         return $this;
     }

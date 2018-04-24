@@ -29,8 +29,7 @@ class Rename extends ChangeResponder
         $result = ChangeSet::make(
             Change::replace($request->name(), 'name'),
             Change::replace($request->description(), 'description')
-        )
-        ;
+        );
 
         return $this->transformer()->transform($result);
     }

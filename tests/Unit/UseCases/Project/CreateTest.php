@@ -6,7 +6,6 @@
 
 namespace Tidy\Tests\Unit\UseCases\Project;
 
-
 use Mockery\MockInterface;
 use Tidy\Components\AccessControl\IClaimable;
 use Tidy\Components\AccessControl\IClaimant;
@@ -33,10 +32,12 @@ class CreateTest extends MockeryTestCase
      * @var IProjectGateway|MockInterface
      */
     protected $gateway;
+
     /**
      * @var Create
      */
     protected $useCase;
+
     /**
      * @var ITextNormaliser|MockInterface
      */
@@ -87,7 +88,6 @@ class CreateTest extends MockeryTestCase
         $this->assertEquals($owner->getId(), $response->getOwner()->getIdentity());
         $this->assertEquals($owner->getUserName(), $response->getOwner()->getName());
         $this->assertEquals(sprintf('/%s/%s', Project::PREFIX, $canonical), $response->path());
-
 
     }
 
@@ -149,7 +149,6 @@ class CreateTest extends MockeryTestCase
             if (!$project->getOwner() === $owner) {
                 return false;
             }
-
 
             return true;
         };

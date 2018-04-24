@@ -9,7 +9,6 @@ namespace Tidy\Domain\Responders\User;
 
 use Tidy\Domain\Responders\ICollectionResponse as Response;
 
-
 /**
  * Class CollectionResponseDTO
  */

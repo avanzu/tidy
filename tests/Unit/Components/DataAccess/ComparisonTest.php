@@ -7,7 +7,6 @@
 
 namespace Tidy\Tests\Unit\Components\DataAccess;
 
-
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Tests\MockeryTestCase;
 
@@ -31,15 +30,15 @@ class ComparisonTest extends MockeryTestCase
 
     public function test_in()
     {
-        $comparison = Comparison::in(1,2,3,4);
-        $this->assertEquals([1,2,3,4], $comparison->getValue());
+        $comparison = Comparison::in(1, 2, 3, 4);
+        $this->assertEquals([1, 2, 3, 4], $comparison->getValue());
         $this->assertEquals(Comparison::IN, $comparison->getOperator());
     }
 
     public function test_not_in()
     {
-        $comparison = Comparison::notIn(1,2,3,4);
-        $this->assertEquals([1,2,3,4], $comparison->getValue());
+        $comparison = Comparison::notIn(1, 2, 3, 4);
+        $this->assertEquals([1, 2, 3, 4], $comparison->getValue());
         $this->assertEquals(Comparison::NIN, $comparison->getOperator());
     }
 

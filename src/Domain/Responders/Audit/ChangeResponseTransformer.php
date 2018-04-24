@@ -14,7 +14,8 @@ use Tidy\Components\Audit\ChangeSet;
 class ChangeResponseTransformer implements IChangeResponseTransformer
 {
 
-    public function transform(ChangeSet $changeSet) {
+    public function transform(ChangeSet $changeSet)
+    {
 
         $response = new ChangeResponse();
         /** @var Change $change */

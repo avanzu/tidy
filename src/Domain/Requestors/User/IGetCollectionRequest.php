@@ -9,7 +9,6 @@ namespace Tidy\Domain\Requestors\User;
 
 use Tidy\Domain\Requestors\ICollectionRequest;
 
-
 /**
  * Class GetCollectionRequestDTO
  */

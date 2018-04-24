@@ -7,7 +7,6 @@
 
 namespace Tidy\Domain\Requestors;
 
-
 use Tidy\Components\Collection\Boundary;
 use Tidy\Components\DataAccess\Comparison;
 
@@ -17,6 +16,7 @@ abstract class CollectionRequest implements ICollectionRequest
      * @var int
      */
     public $page;
+
     /**
      * @var int
      */
@@ -25,7 +25,29 @@ abstract class CollectionRequest implements ICollectionRequest
 
     public $criteria = [];
 
+    public function fromPage($page)
+    {
+        $this->page = $page;
 
+        return $this;
+    }
+
+    public function withPageSize($pageSize)
+    {
+        $this->pageSize = $pageSize;
+
+        return $this;
+    }
+
+    public function boundary()
+    {
+        return new Boundary($this->page, $this->pageSize);
+    }
+
+    public function criteria()
+    {
+        return array_filter($this->criteria);
+    }
 
     /**
      * @return int
@@ -43,34 +65,11 @@ abstract class CollectionRequest implements ICollectionRequest
         return $this->pageSize;
     }
 
-    public function fromPage($page)
-    {
-        $this->page = $page;
-
-        return $this;
-    }
-
-    public function withPageSize($pageSize)
-    {
-        $this->pageSize = $pageSize;
-
-        return $this;
-    }
-
-    public function criteria()
-    {
-        return array_filter($this->criteria);
-    }
-
     protected function useComparison($name, Comparison $comparison)
     {
         $this->criteria[$name] = $comparison;
-        return $this;
-    }
 
-    public function boundary()
-    {
-        return new Boundary($this->page, $this->pageSize);
+        return $this;
     }
 
 

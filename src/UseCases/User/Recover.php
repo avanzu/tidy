@@ -7,7 +7,6 @@
 
 namespace Tidy\UseCases\User;
 
-
 use Tidy\Components\Audit\Change;
 use Tidy\Components\Audit\ChangeSet;
 use Tidy\Components\Exceptions\NotFound;

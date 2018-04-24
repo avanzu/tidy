@@ -36,7 +36,7 @@ class Activate extends ChangeResponder
 
         $result = ChangeSet::make(
             Change::replace(true, 'enabled'),
-            Change::remove( 'token')
+            Change::remove('token')
         );
 
         return $this->transformer()->transform($result);

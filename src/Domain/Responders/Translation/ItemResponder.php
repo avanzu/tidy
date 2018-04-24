@@ -9,7 +9,8 @@
 namespace Tidy\Domain\Responders\Translation;
 
 use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\UseCases\Translation\DTO\CatalogueResponseTransformer;
+use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
+use Tidy\UseCases\Translation\Catalogue\DTO\CatalogueResponseTransformer;
 
 abstract class ItemResponder
 {

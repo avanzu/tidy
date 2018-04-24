@@ -7,7 +7,6 @@
 
 namespace Tidy\Components\AccessControl;
 
-
 interface IClaimantProvider
 {
     /**

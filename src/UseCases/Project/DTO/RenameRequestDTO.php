@@ -24,15 +24,30 @@ class RenameRequestDTO implements IRenameRequest
     }
 
     /**
-     * @param $id
+     * @param $description
      *
      * @return IRenameRequest
      */
-    public function withProjectId($id)
+    public function describeAs($description)
     {
-        $this->projectId = $id;
+        $this->description = $description;
 
         return $this;
+    }
+
+    public function description()
+    {
+        return $this->description;
+    }
+
+    public function name()
+    {
+        return $this->name;
+    }
+
+    public function projectId()
+    {
+        return $this->projectId;
     }
 
     /**
@@ -43,33 +58,20 @@ class RenameRequestDTO implements IRenameRequest
     public function renameTo($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
     /**
-     * @param $description
+     * @param $id
      *
      * @return IRenameRequest
      */
-    public function describeAs($description)
+    public function withProjectId($id)
     {
-        $this->description = $description;
+        $this->projectId = $id;
+
         return $this;
-    }
-
-    public function projectId()
-    {
-        return $this->projectId;
-    }
-
-    public function name()
-    {
-        return $this->name;
-    }
-
-    public function description()
-    {
-        return $this->description;
     }
 
 

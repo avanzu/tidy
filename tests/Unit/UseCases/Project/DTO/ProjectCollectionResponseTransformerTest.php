@@ -35,8 +35,8 @@ class ProjectCollectionResponseTransformerTest extends MockeryTestCase
     public function test_swapItemTransformer()
     {
         $transformer = new CollectionResponseTransformer(mock(IResponseTransformer::class));
-        $next     = mock(ResponseTransformer::class);
-        $previous = $transformer->swapItemTransformer($next);
+        $next        = mock(ResponseTransformer::class);
+        $previous    = $transformer->swapItemTransformer($next);
         $this->assertInstanceOf(IResponseTransformer::class, $previous);
         $this->assertNotSame($previous, $next);
 
@@ -58,7 +58,7 @@ class ProjectCollectionResponseTransformerTest extends MockeryTestCase
 
     public function test_transform_callsItemTransformerForItems()
     {
-        $items = [new ProjectSilverTongue()];
+        $items  = [new ProjectSilverTongue()];
         $result = $this->transformer->transform(new PagedCollection($items));
         $this->assertCount(1, $result);
         $this->assertInstanceOf(IResponse::class, current($result->getItems()));

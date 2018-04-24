@@ -37,12 +37,6 @@ class CollectionResponseTransformer implements ICollectionResponseTransformer
         return $previous;
     }
 
-    protected function itemTransformer()
-    {
-        if( ! $this->itemTransformer) $this->itemTransformer = new ResponseTransformer();
-        return $this->itemTransformer;
-    }
-
     public function transform(IPagedCollection $collection)
     {
 
@@ -52,5 +46,14 @@ class CollectionResponseTransformer implements ICollectionResponseTransformer
 
         return $response;
 
+    }
+
+    protected function itemTransformer()
+    {
+        if (!$this->itemTransformer) {
+            $this->itemTransformer = new ResponseTransformer();
+        }
+
+        return $this->itemTransformer;
     }
 }

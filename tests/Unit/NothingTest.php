@@ -7,7 +7,6 @@
 
 namespace Tidy\Tests\Unit;
 
-
 use PHPUnit\Framework\TestCase;
 
 class NothingTest extends TestCase

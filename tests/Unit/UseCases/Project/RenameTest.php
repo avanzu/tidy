@@ -77,7 +77,7 @@ class RenameTest extends MockeryTestCase
     {
         parent::setUp();
         $this->gateway = mock(IProjectGateway::class);
-        $this->useCase = new Rename($this->gateway, new ChangeResponseTransformer());
+        $this->useCase = new Rename($this->gateway);
     }
 
     protected function expectProjectLookUp($projectId, $returnValue)

@@ -7,7 +7,6 @@
 
 namespace Tidy\UseCases\User\DTO;
 
-
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Requestors\CollectionRequest;
 use Tidy\Domain\Requestors\User\IGetCollectionRequest;
@@ -24,9 +23,11 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
      * @param int $page
      * @param int $pageSize
      */
-    public function __construct($page = CollectionRequest::DEFAULT_PAGE, $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE)
-    {
-        $this->page     = $page;
+    public function __construct(
+        $page = CollectionRequest::DEFAULT_PAGE,
+        $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE
+    ) {
+        $this->page = $page;
         $this->pageSize = $pageSize;
     }
 
@@ -36,8 +37,10 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
      *
      * @return static
      */
-    public static function make($page = CollectionRequest::DEFAULT_PAGE, $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE)
-    {
+    public static function make(
+        $page = CollectionRequest::DEFAULT_PAGE,
+        $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE
+    ) {
         return new static($page, $pageSize);
     }
 
@@ -88,8 +91,6 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
 
         return $this;
     }
-
-
 
 
 }

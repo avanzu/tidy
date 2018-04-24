@@ -7,7 +7,6 @@
 
 namespace Tidy\UseCases\User;
 
-
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Requestors\User\ILookUpRequest;
 use Tidy\Domain\Responders\User\IResponse;

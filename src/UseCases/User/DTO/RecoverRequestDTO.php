@@ -7,7 +7,6 @@
 
 namespace Tidy\UseCases\User\DTO;
 
-
 use Tidy\Domain\Requestors\User\IRecoverRequest;
 
 class RecoverRequestDTO implements IRecoverRequest

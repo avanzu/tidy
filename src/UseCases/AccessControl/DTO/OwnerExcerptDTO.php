@@ -7,12 +7,12 @@
 
 namespace Tidy\UseCases\AccessControl\DTO;
 
-
 use Tidy\Domain\Responders\AccessControl\IOwnerExcerpt;
 
 class OwnerExcerptDTO implements IOwnerExcerpt
 {
     public $identity;
+
     public $name;
 
     /**

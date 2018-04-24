@@ -45,7 +45,7 @@ class ChangeTest extends MockeryTestCase
 
     public function test_factory_replace()
     {
-        $change = Change::replace( '999','attribute');
+        $change = Change::replace('999', 'attribute');
         assertThat($change->op, is(equalTo(Change::OP_REPLACE)));
         assertThat($change->path, is(equalTo('attribute')));
         assertThat($change->value, is(equalTo('999')));
@@ -54,7 +54,7 @@ class ChangeTest extends MockeryTestCase
 
     public function test_factory_move()
     {
-        $change = Change::move( '/a/b','/a/c');
+        $change = Change::move('/a/b', '/a/c');
         assertThat($change->op, is(equalTo(Change::OP_MOVE)));
         assertThat($change->path, is(equalTo('/a/c')));
         assertThat($change->value, is(nullValue()));
@@ -63,14 +63,12 @@ class ChangeTest extends MockeryTestCase
 
     public function test_factory_copy()
     {
-        $change = Change::copy( 'left','right');
+        $change = Change::copy('left', 'right');
         assertThat($change->op, is(equalTo(Change::OP_COPY)));
         assertThat($change->from, is('left'));
         assertThat($change->path, is(equalTo('right')));
         assertThat($change->value, is(nullValue()));
     }
-
-
 
 
 }

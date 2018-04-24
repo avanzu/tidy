@@ -7,7 +7,6 @@
 
 namespace Tidy\Components\Middleware;
 
-
 interface IProcessor
 {
     public function process($input, callable $next);

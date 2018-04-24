@@ -19,15 +19,15 @@ class Change
     /**
      *
      */
-    const OP_TEST    = 'test';
+    const OP_TEST = 'test';
     /**
      *
      */
-    const OP_ADD     = 'add';
+    const OP_ADD = 'add';
     /**
      *
      */
-    const OP_REMOVE  = 'remove';
+    const OP_REMOVE = 'remove';
     /**
      *
      */

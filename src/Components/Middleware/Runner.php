@@ -7,7 +7,6 @@
 
 namespace Tidy\Components\Middleware;
 
-
 use Tidy\Components\Exceptions\InvalidArgument;
 
 /**

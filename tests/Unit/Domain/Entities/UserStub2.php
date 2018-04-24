@@ -7,7 +7,6 @@
 
 namespace Tidy\Tests\Unit\Domain\Entities;
 
-
 use Tidy\Domain\Entities\User;
 
 class UserStub2 extends User
@@ -16,6 +15,7 @@ class UserStub2 extends User
     const USERNAME = 'John';
 
     protected $id       = self::ID;
+
     protected $userName = self::USERNAME;
 
 

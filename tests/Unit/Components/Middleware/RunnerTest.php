@@ -7,7 +7,6 @@
 
 namespace Tidy\Tests\Unit\Components\Middleware;
 
-
 use Tidy\Components\Exceptions\InvalidArgument;
 use Tidy\Components\Middleware\IProcessor;
 use Tidy\Components\Middleware\Runner;
@@ -57,7 +56,6 @@ class RunnerTest extends MockeryTestCase
 
         $this->assertCount(5, $result->stack);
         $this->assertEquals(['before', 'before', 'core', 'after', 'after'], $result->stack);
-
 
         $result = $this->runner->process((object)['stack' => ['core']]);
 

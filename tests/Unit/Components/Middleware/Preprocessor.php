@@ -7,7 +7,6 @@
 
 namespace Tidy\Tests\Unit\Components\Middleware;
 
-
 use Tidy\Components\Middleware\IProcessor;
 
 class Preprocessor implements IProcessor

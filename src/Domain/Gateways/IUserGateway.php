@@ -7,7 +7,6 @@
 
 namespace Tidy\Domain\Gateways;
 
-
 use Tidy\Components\Collection\Boundary;
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Entities\User;

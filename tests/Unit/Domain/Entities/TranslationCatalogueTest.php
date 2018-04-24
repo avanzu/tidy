@@ -24,16 +24,21 @@ class TranslationCatalogueTest extends MockeryTestCase
      * @param $expectedSourceLocale
      * @param $expectedTargetLocale
      */
-    public function test_locale($sourceLanguage, $sourceCulture, $targetLanguage, $targetCulture, $expectedSourceLocale,
+    public function test_locale(
+        $sourceLanguage,
+        $sourceCulture,
+        $targetLanguage,
+        $targetCulture,
+        $expectedSourceLocale,
         $expectedTargetLocale
-    )
-    {
+    ) {
         $catalogue = new TranslationCatalogueImpl();
         $catalogue
             ->setSourceLanguage($sourceLanguage)
             ->setSourceCulture($sourceCulture)
             ->setTargetLanguage($targetLanguage)
-            ->setTargetCulture($targetCulture);
+            ->setTargetCulture($targetCulture)
+        ;
         $this->assertEquals($expectedSourceLocale, $catalogue->sourceLocale());
         $this->assertEquals($expectedTargetLocale, $catalogue->targetLocale());
     }
@@ -46,7 +51,7 @@ class TranslationCatalogueTest extends MockeryTestCase
         try {
             $catalogue->sourceLocale();
             $this->fail('failed to fail.');
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             assertThat($exception, is(anInstanceOf(LanguageIsEmpty::class)));
             assertThat($exception->getMessage(), is(equalTo('Source language is not defined.')));
         }
@@ -60,18 +65,19 @@ class TranslationCatalogueTest extends MockeryTestCase
         try {
             $catalogue->targetLocale();
             $this->fail('failed to fail.');
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             assertThat($exception, is(anInstanceOf(LanguageIsEmpty::class)));
             assertThat($exception->getMessage(), is(equalTo('Target language is not defined.')));
         }
     }
 
-    public function provideLocales() {
+    public function provideLocales()
+    {
         return
             [
-                'no culture' => ['de', null, 'en', null, 'de', 'en'],
-                'with culture' => ['de', 'DE', 'en', 'US', 'de-DE', 'en-US'],
-                'with unproper case' => ['DE', 'at', 'EN', 'gb', 'de-AT', 'en-GB']
+                'no culture'         => ['de', null, 'en', null, 'de', 'en'],
+                'with culture'       => ['de', 'DE', 'en', 'US', 'de-DE', 'en-US'],
+                'with unproper case' => ['DE', 'at', 'EN', 'gb', 'de-AT', 'en-GB'],
             ];
     }
 

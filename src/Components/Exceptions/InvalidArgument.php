@@ -7,7 +7,6 @@
 
 namespace Tidy\Components\Exceptions;
 
-
 class InvalidArgument extends \InvalidArgumentException
 {
 

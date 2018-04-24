@@ -7,7 +7,6 @@
 
 namespace Tidy\Tests\Unit\Components\AccessControl;
 
-
 use Tidy\Components\AccessControl\IClaimant;
 
 class ClaimantJimmy implements IClaimant
@@ -16,6 +15,7 @@ class ClaimantJimmy implements IClaimant
     const NAME = 'Jimmy';
 
     protected $id   = self::ID;
+
     protected $name = self::NAME;
 
     public function getName()

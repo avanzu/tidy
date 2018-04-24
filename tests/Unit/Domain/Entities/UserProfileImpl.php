@@ -7,7 +7,6 @@
 
 namespace Tidy\Tests\Unit\Domain\Entities;
 
-
 use Tidy\Domain\Entities\UserProfile;
 
 class UserProfileImpl extends UserProfile
