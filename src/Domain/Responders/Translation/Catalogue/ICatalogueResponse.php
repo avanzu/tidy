@@ -7,6 +7,7 @@
  */
 namespace Tidy\Domain\Responders\Translation\Catalogue;
 
+use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 use Tidy\UseCases\Translation\DTO\Excerpt;
 
 interface ICatalogueResponse
@@ -62,4 +63,9 @@ interface ICatalogueResponse
      * @since 5.1.0
      */
     public function count();
+
+    /**
+     * @return ITranslationResponse[]
+     */
+    public function translations();
 }

@@ -8,12 +8,12 @@
 
 namespace Tidy\Tests\Unit\UseCases\Translation\Catalogue;
 
-use Tidy\Components\Audit\Change;
 use Tidy\Components\Exceptions\NotFound;
+use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\Domain\Responders\Audit\ChangeResponse;
-use Tidy\Domain\Responders\Translation\ChangeResponder;
+use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse;
+use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman as Catalogue;
 use Tidy\Tests\Unit\Domain\Entities\TranslationUntranslated;
@@ -30,7 +30,7 @@ class RemoveTranslationTest extends MockeryTestCase
     public function test_instantiation()
     {
         $useCase = new RemoveTranslation(mock(ITranslationGateway::class));
-        assertThat($useCase, is(anInstanceOf(ChangeResponder::class)));
+        assertThat($useCase, is(anInstanceOf(ItemResponder::class)));
     }
 
     public function test_remove()
@@ -43,32 +43,15 @@ class RemoveTranslationTest extends MockeryTestCase
             ->withToken(TranslationUntranslated::MSG_ID)
         ;
 
-        $catalogue   = $this->expect_Gateway_findCatalogue(
-            mock(TranslationCatalogue::class),
-            Catalogue::ID
-        );
-        $translation = $this->expect_Catalogue_find(
-            $catalogue,
-            TranslationUntranslated::MSG_ID,
-            new TranslationUntranslated()
-        );
-        $this->expect_Catalogue_getCanonical($catalogue, Catalogue::CANONICAL);
-
-        $this->expect_Gateway_removeTranslation($translation);
-        $this->expect_Catalogue_removeTranslation($catalogue, $translation);
+        $this->expect_Gateway_findCatalogue(new Catalogue(), Catalogue::ID);
+        $this->expect_Gateway_removeTranslation(TranslationUntranslated::ID);
 
         $result = $this->useCase->execute($request);
 
-        assertThat($result, is(anInstanceOf(ChangeResponse::class)));
+        assertThat($result, is(anInstanceOf(ICatalogueResponse::class)));
 
-        $expected = [
-            [
-                'op'   => Change::OP_REMOVE,
-                'path' => 'messages/220418',
-            ],
-        ];
+        assertThat(count($result), is(1));
 
-        $this->assertArraySubset($expected, $result->changes());
     }
 
     public function test_remove_with_unknown_Catalogue_throws_NotFound()
@@ -161,9 +144,18 @@ class RemoveTranslationTest extends MockeryTestCase
     /**
      * @param $translation
      */
-    protected function expect_Gateway_removeTranslation($translation): void
+    protected function expect_Gateway_removeTranslation($translationId): void
     {
-        $this->gateway->expects('removeTranslation')->with($translation);
+        $this->gateway->expects('removeTranslation')->with(
+            argumentThat(
+                function (Translation $translation) use ($translationId) {
+                    assertThat($translation->getId(), is(equalTo($translationId)));
+
+                    return true;
+                }
+            )
+        )
+        ;
     }
 
     /**

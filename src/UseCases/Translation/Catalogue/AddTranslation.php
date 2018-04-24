@@ -14,9 +14,11 @@ use Tidy\Components\Exceptions\Duplicate;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Requestors\Translation\Catalogue\IAddTranslationRequest;
-use Tidy\Domain\Responders\Translation\ChangeResponder;
+use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
+use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
+use Tidy\UseCases\Translation\Catalogue\DTO\NestedCatalogueResponseTransformer;
 
-class AddTranslation extends ChangeResponder
+class AddTranslation extends ItemResponder
 {
 
 
@@ -41,12 +43,23 @@ class AddTranslation extends ChangeResponder
 
         $this->gateway->save($catalogue);
 
-        $result = ChangeSet::make(
-            Change::add($translation->toArray(), $this->pathInCatalogue($catalogue, $translation))
-        );
+        return $this->transformer()->transform($catalogue);
 
-        return $this->transformer()->transform($result);
+    }
 
+    public function swapTransformer(ICatalogueResponseTransformer $transformer)
+    {
+        $previous          = $this->transformer;
+        $this->transformer = $transformer;
+
+        return $previous;
+
+    }
+
+    protected function transformer()
+    {
+        if( ! $this->transformer ) $this->transformer = new NestedCatalogueResponseTransformer();
+        return $this->transformer;
     }
 
     /**
@@ -78,17 +91,5 @@ class AddTranslation extends ChangeResponder
             );
         }
     }
-
-    /**
-     * @param $catalogue
-     * @param $translation
-     *
-     * @return string
-     */
-    protected function pathInCatalogue($catalogue, $translation): string
-    {
-        return sprintf('%s/%s', $catalogue->getCanonical(), $translation->getId());
-    }
-
 
 }

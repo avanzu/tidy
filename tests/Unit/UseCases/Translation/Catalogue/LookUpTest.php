@@ -11,7 +11,7 @@ namespace Tidy\Tests\Unit\UseCases\Translation\Catalogue;
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\Domain\Responders\Translation\ItemResponder;
+use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\UseCases\Translation\Catalogue\DTO\CatalogueResponseDTO;

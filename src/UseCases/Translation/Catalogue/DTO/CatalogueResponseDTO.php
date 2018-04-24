@@ -10,6 +10,7 @@ namespace Tidy\UseCases\Translation\Catalogue\DTO;
 
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse;
 use Tidy\Domain\Responders\Project\IExcerpt;
+use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 
 class CatalogueResponseDTO implements \Countable, ICatalogueResponse
 {
@@ -109,5 +110,11 @@ class CatalogueResponseDTO implements \Countable, ICatalogueResponse
     {
         return count($this->translations);
     }
+
+    public function translations()
+    {
+        return $this->translations;
+    }
+
 
 }

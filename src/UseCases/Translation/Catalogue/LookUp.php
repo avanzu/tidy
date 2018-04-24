@@ -10,7 +10,7 @@ namespace Tidy\UseCases\Translation\Catalogue;
 
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Requestors\Translation\Catalogue\IGetCatalogueRequest;
-use Tidy\Domain\Responders\Translation\ItemResponder;
+use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
 use Tidy\UseCases\Translation\Catalogue\DTO\NestedCatalogueResponseTransformer;
 
 class LookUp extends ItemResponder

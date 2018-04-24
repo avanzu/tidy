@@ -13,8 +13,9 @@ use Tidy\Components\Exceptions\Duplicate;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\Domain\Responders\Audit\ChangeResponse;
-use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
+use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse;
+use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
+use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\Tests\Unit\Domain\Entities\TranslationImpl;
@@ -43,13 +44,14 @@ class AddTranslationTest extends MockeryTestCase
     {
         $useCase = new AddTranslation(mock(ITranslationGateway::class));
         assertThat($useCase, is(notNullValue()));
+        assertThat($useCase, is(anInstanceOf(ItemResponder::class)));
 
     }
 
     public function test_swapTransformer()
     {
-        $initial = mock(IChangeResponseTransformer::class);
-        $swapped = mock(IChangeResponseTransformer::class);
+        $initial = mock(ICatalogueResponseTransformer::class);
+        $swapped = mock(ICatalogueResponseTransformer::class);
 
         $useCase = new AddTranslation($this->gateway, $initial);
         $result  = $useCase->swapTransformer($swapped);
@@ -76,27 +78,8 @@ class AddTranslationTest extends MockeryTestCase
 
         $result = $this->useCase->execute($request);
 
-        assertThat($result, is(anInstanceOf(ChangeResponse::class)));
-
-        $expected = [
-
-            [
-                'op'    => 'add',
-                'value' =>
-                    [
-                        'id'           => 47110815,
-                        'token'        => 'message.source_code',
-                        'sourceString' => 'source code',
-                        'localeString' => 'Quelltext',
-                        'meaning'      => self::MEANING,
-                        'notes'        => self::NOTES,
-                        'state'        => 'translated',
-                    ],
-                'path'  => 'messages/47110815',
-            ],
-        ];
-
-        assertThat($result->changes(), is(equalTo($expected)));
+        assertThat($result, is(anInstanceOf(ICatalogueResponse::class)));
+        assertThat(count($result), is(equalTo(3)));
 
     }
 

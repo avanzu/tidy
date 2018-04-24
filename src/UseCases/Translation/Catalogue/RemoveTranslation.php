@@ -8,18 +8,22 @@
 
 namespace Tidy\UseCases\Translation\Catalogue;
 
-use Tidy\Components\Audit\Change;
-use Tidy\Components\Audit\ChangeSet;
 use Tidy\Components\Exceptions\NotFound;
-use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
-use Tidy\Domain\Responders\Translation\ChangeResponder;
+use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
+use Tidy\UseCases\Translation\Catalogue\DTO\NestedCatalogueResponseTransformer;
 use Tidy\UseCases\Translation\Catalogue\DTO\RemoveTranslationRequestDTO;
 
-class RemoveTranslation extends ChangeResponder
+class RemoveTranslation extends ItemResponder
 {
 
-    public function execute(RemoveTranslationRequestDTO $request) {
+    /**
+     * @param RemoveTranslationRequestDTO $request
+     *
+     * @return \Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse
+     */
+    public function execute(RemoveTranslationRequestDTO $request)
+    {
 
         $catalogue   = $this->lookUpCatalogue($request);
         $translation = $this->lookUpTranslation($request, $catalogue);
@@ -27,23 +31,15 @@ class RemoveTranslation extends ChangeResponder
         $this->gateway->removeTranslation($translation);
         $catalogue->remove($translation);
 
-        $result = ChangeSet::make(
-            Change::remove($this->pathInCatalogue($catalogue, $translation))
-        );
-
-        return $this->transformer()->transform($result);
+        return $this->transformer()->transform($catalogue);
     }
 
-    /**
-     * @param $catalogue
-     * @param $translation
-     *
-     * @return string
-     */
-    protected function pathInCatalogue(TranslationCatalogue $catalogue, Translation $translation)
+    protected function transformer()
     {
-        return sprintf('%s/%s', $catalogue->getCanonical(), $translation->getId());
+        if( ! $this->transformer ) $this->transformer = new NestedCatalogueResponseTransformer();
+        return $this->transformer;
     }
+
 
     /**
      * @param RemoveTranslationRequestDTO $request

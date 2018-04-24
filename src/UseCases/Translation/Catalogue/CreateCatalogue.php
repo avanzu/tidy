@@ -9,7 +9,7 @@
 namespace Tidy\UseCases\Translation\Catalogue;
 
 use Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest;
-use Tidy\Domain\Responders\Translation\ItemResponder;
+use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
 
 class CreateCatalogue extends ItemResponder
 {

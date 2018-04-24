@@ -6,10 +6,9 @@
  *
  */
 
-namespace Tidy\Domain\Responders\Translation;
+namespace Tidy\Domain\Responders\Translation\Catalogue;
 
 use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
 use Tidy\UseCases\Translation\Catalogue\DTO\CatalogueResponseTransformer;
 
 abstract class ItemResponder
@@ -47,4 +46,6 @@ abstract class ItemResponder
 
         return $this->transformer;
     }
+
+
 }
