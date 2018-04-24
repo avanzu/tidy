@@ -1,17 +1,16 @@
 <?php
 /**
- * UseCase.php
+ * ItemResponder.php
  * Tidy
  * Date: 14.04.18
  */
 
-namespace Tidy\UseCases\User;
+namespace Tidy\Domain\Responders\User;
 
 use Tidy\Domain\Gateways\IUserGateway;
-use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\UseCases\User\DTO\ResponseTransformer;
 
-abstract class UseCase
+abstract class ItemResponder
 {
 
     /**
@@ -26,7 +25,7 @@ abstract class UseCase
 
 
     /**
-     * UseCase constructor.
+     * ItemResponder constructor.
      *
      * @param IUserGateway         $userGateway
      * @param IResponseTransformer $responseTransformer

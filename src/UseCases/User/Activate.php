@@ -12,9 +12,9 @@ use Tidy\Components\Audit\ChangeSet;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Requestors\User\IActivateRequest;
 use Tidy\Domain\Responders\Audit\ChangeResponse;
-use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
+use Tidy\Domain\Responders\User\ChangeResponder;
 
-class Activate extends UseCasePatch
+class Activate extends ChangeResponder
 {
 
     /**

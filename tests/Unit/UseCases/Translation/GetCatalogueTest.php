@@ -11,12 +11,12 @@ namespace Tidy\Tests\Unit\UseCases\Translation;
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Gateways\ITranslationGateway;
+use Tidy\Domain\Responders\Translation\ItemResponder;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\UseCases\Translation\DTO\CatalogueResponseDTO;
 use Tidy\UseCases\Translation\DTO\GetCatalogueRequestDTO;
 use Tidy\UseCases\Translation\GetCatalogue;
-use Tidy\UseCases\Translation\UseCase;
 
 class GetCatalogueTest extends MockeryTestCase
 {
@@ -35,7 +35,7 @@ class GetCatalogueTest extends MockeryTestCase
     {
 
         $useCase = new GetCatalogue(mock(ITranslationGateway::class));
-        assertThat($useCase, is(anInstanceOf(UseCase::class)));
+        assertThat($useCase, is(anInstanceOf(ItemResponder::class)));
 
     }
 

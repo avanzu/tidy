@@ -6,13 +6,13 @@
  *
  */
 
-namespace Tidy\UseCases\Project;
+namespace Tidy\Domain\Responders\Project;
 
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
 use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
 
-abstract class UseCasePatch
+abstract class ChangeResponder
 {
 
     /**
@@ -26,7 +26,7 @@ abstract class UseCasePatch
     protected $gateway;
 
     /**
-     * UseCaseProject constructor.
+     * ItemResponder constructor.
      *
      * @param IProjectGateway            $projectGateway
      * @param IChangeResponseTransformer $transformer

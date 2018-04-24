@@ -10,9 +10,10 @@ namespace Tidy\UseCases\Translation;
 
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Requestors\Translation\IGetCatalogueRequest;
+use Tidy\Domain\Responders\Translation\ItemResponder;
 use Tidy\UseCases\Translation\DTO\NestedCatalogueResponseTransformer;
 
-class GetCatalogue extends UseCase
+class GetCatalogue extends ItemResponder
 {
 
     public function execute(IGetCatalogueRequest $request)

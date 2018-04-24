@@ -6,13 +6,13 @@
  *
  */
 
-namespace Tidy\UseCases\User;
+namespace Tidy\Domain\Responders\User;
 
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
 use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
 
-abstract class UseCasePatch
+abstract class ChangeResponder
 {
     /**
      * @var IChangeResponseTransformer
@@ -26,7 +26,7 @@ abstract class UseCasePatch
 
 
     /**
-     * UseCase constructor.
+     * ItemResponder constructor.
      *
      * @param IUserGateway               $userGateway
      * @param IChangeResponseTransformer $responseTransformer

@@ -11,8 +11,9 @@ namespace Tidy\UseCases\Project;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Requestors\Project\ILookUpRequest;
 use Tidy\Domain\Responders\Project\IResponse;
+use Tidy\Domain\Responders\Project\ItemResponder;
 
-class LookUp extends UseCaseProject
+class LookUp extends ItemResponder
 {
 
 

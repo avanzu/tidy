@@ -13,8 +13,9 @@ use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\ICreateRequest;
 use Tidy\Domain\Responders\Project\IResponse;
 use Tidy\Domain\Responders\Project\IResponseTransformer;
+use Tidy\Domain\Responders\Project\ItemResponder;
 
-class Create extends UseCaseProject
+class Create extends ItemResponder
 {
 
     /**

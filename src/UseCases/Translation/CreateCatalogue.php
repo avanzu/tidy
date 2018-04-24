@@ -9,8 +9,9 @@
 namespace Tidy\UseCases\Translation;
 
 use Tidy\Domain\Requestors\Translation\ICreateCatalogueRequest;
+use Tidy\Domain\Responders\Translation\ItemResponder;
 
-class CreateCatalogue extends UseCase
+class CreateCatalogue extends ItemResponder
 {
 
 

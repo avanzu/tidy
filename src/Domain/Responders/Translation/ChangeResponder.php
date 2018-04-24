@@ -6,13 +6,13 @@
  *
  */
 
-namespace Tidy\UseCases\Translation;
+namespace Tidy\Domain\Responders\Translation;
 
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
 use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
 
-abstract class PatchUseCase
+abstract class ChangeResponder
 {
 
     /**

@@ -13,11 +13,11 @@ use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
 use Tidy\Domain\Responders\Audit\IChangeResponse;
 use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
+use Tidy\Domain\Responders\Project\ChangeResponder;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\ProjectSilverTongue;
 use Tidy\UseCases\Project\DTO\RenameRequestDTO;
 use Tidy\UseCases\Project\Rename;
-use Tidy\UseCases\Project\UseCasePatch;
 
 class RenameTest extends MockeryTestCase
 {
@@ -36,7 +36,7 @@ class RenameTest extends MockeryTestCase
         $useCase = new Rename(mock(IProjectGateway::class), mock(IChangeResponseTransformer::class));
 
         assertThat($useCase, is(notNullValue()));
-        assertThat($useCase, is(anInstanceOf(UseCasePatch::class)));
+        assertThat($useCase, is(anInstanceOf(ChangeResponder::class)));
     }
 
     public function test_rename()

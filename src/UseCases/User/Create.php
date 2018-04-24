@@ -14,8 +14,9 @@ use Tidy\Domain\Entities\UserProfile;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\ICreateRequest;
 use Tidy\Domain\Responders\User\IResponseTransformer;
+use Tidy\Domain\Responders\User\ItemResponder;
 
-class Create extends UseCase
+class Create extends ItemResponder
 {
     /**
      * @var ITextNormaliser

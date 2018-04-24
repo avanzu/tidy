@@ -10,8 +10,9 @@ namespace Tidy\UseCases\Project;
 use Tidy\Components\Audit\Change;
 use Tidy\Components\Audit\ChangeSet;
 use Tidy\Domain\Requestors\Project\IRenameRequest;
+use Tidy\Domain\Responders\Project\ChangeResponder;
 
-class Rename extends UseCasePatch
+class Rename extends ChangeResponder
 {
 
     public function execute(IRenameRequest $request)

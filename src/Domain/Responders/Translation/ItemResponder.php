@@ -6,13 +6,12 @@
  *
  */
 
-namespace Tidy\UseCases\Translation;
+namespace Tidy\Domain\Responders\Translation;
 
 use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\Domain\Responders\Translation\ICatalogueResponseTransformer;
 use Tidy\UseCases\Translation\DTO\CatalogueResponseTransformer;
 
-abstract class UseCase
+abstract class ItemResponder
 {
     /**
      * @var ICatalogueResponseTransformer

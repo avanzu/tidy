@@ -14,8 +14,9 @@ use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Requestors\Translation\ITranslateRequest;
+use Tidy\Domain\Responders\Translation\ChangeResponder;
 
-class Translate extends PatchUseCase
+class Translate extends ChangeResponder
 {
 
 

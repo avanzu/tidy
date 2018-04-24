@@ -12,8 +12,9 @@ use Tidy\Components\Audit\Change;
 use Tidy\Components\Audit\ChangeSet;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Requestors\User\IRecoverRequest;
+use Tidy\Domain\Responders\User\ChangeResponder;
 
-class Recover extends UseCasePatch
+class Recover extends ChangeResponder
 {
     public function execute(IRecoverRequest $request)
     {

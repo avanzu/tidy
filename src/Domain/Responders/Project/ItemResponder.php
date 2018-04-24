@@ -1,17 +1,16 @@
 <?php
 /**
- * UseCaseProject.php
+ * ItemResponder.php
  * Tidy
  * Date: 22.04.18
  */
 
-namespace Tidy\UseCases\Project;
+namespace Tidy\Domain\Responders\Project;
 
 use Tidy\Domain\Gateways\IProjectGateway;
-use Tidy\Domain\Responders\Project\IResponseTransformer;
 use Tidy\UseCases\Project\DTO\ResponseTransformer;
 
-abstract class UseCaseProject
+abstract class ItemResponder
 {
     /**
      * @var IResponseTransformer
@@ -24,7 +23,7 @@ abstract class UseCaseProject
     protected $gateway;
 
     /**
-     * UseCaseProject constructor.
+     * ItemResponder constructor.
      *
      * @param IProjectGateway      $projectGateway
      * @param IResponseTransformer $transformer
