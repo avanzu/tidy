@@ -8,7 +8,9 @@
 
 namespace Tidy\UseCases\Translation\DTO;
 
-class AddTranslationRequestDTO
+use Tidy\Domain\Requestors\Translation\IAddTranslationRequest;
+
+class AddTranslationRequestDTO implements IAddTranslationRequest
 {
     public $sourceString;
 
@@ -32,7 +34,7 @@ class AddTranslationRequestDTO
     /**
      * @param $string
      *
-     * @return AddTranslationRequestDTO
+     * @return IAddTranslationRequest
      */
     public function withSourceString($string)
     {
@@ -44,7 +46,7 @@ class AddTranslationRequestDTO
     /**
      * @param $string
      *
-     * @return AddTranslationRequestDTO
+     * @return IAddTranslationRequest
      */
     public function withLocaleString($string)
     {
@@ -56,7 +58,7 @@ class AddTranslationRequestDTO
     /**
      * @param $ID
      *
-     * @return AddTranslationRequestDTO
+     * @return IAddTranslationRequest
      */
     public function withCatalogueId($ID)
     {
@@ -68,7 +70,7 @@ class AddTranslationRequestDTO
     /**
      * @param $string
      *
-     * @return AddTranslationRequestDTO
+     * @return IAddTranslationRequest
      */
     public function withMeaning($string)
     {
@@ -80,7 +82,7 @@ class AddTranslationRequestDTO
     /**
      * @param $string
      *
-     * @return AddTranslationRequestDTO
+     * @return IAddTranslationRequest
      */
     public function withNotes($string)
     {
@@ -92,7 +94,7 @@ class AddTranslationRequestDTO
     /**
      * @param $state
      *
-     * @return AddTranslationRequestDTO
+     * @return IAddTranslationRequest
      */
     public function withState($state)
     {
@@ -134,7 +136,7 @@ class AddTranslationRequestDTO
     /**
      * @param $token
      *
-     * @return AddTranslationRequestDTO
+     * @return IAddTranslationRequest
      */
     public function withToken($token)
     {

@@ -13,7 +13,11 @@ use Tidy\Components\Collection\Boundary;
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\CollectionRequest;
+use Tidy\Domain\Requestors\ICollectionRequest;
+use Tidy\Domain\Requestors\Translation\IGetSubSetRequest;
 use Tidy\Domain\Responders\CollectionResponse;
+use Tidy\Domain\Responders\Translation\ISubSetResponse;
+use Tidy\Domain\Responders\Translation\ITranslationResponse;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\Tests\Unit\Domain\Entities\TranslationTranslated;
@@ -48,8 +52,8 @@ class GetSubSetTest extends MockeryTestCase
     public function test_execute()
     {
         $request = GetSubSetRequestDTO::make(TranslationCatalogueEnglishToGerman::ID);
-        assertThat($request, is(anInstanceOf(GetSubSetRequestDTO::class)));
-        assertThat($request, is(anInstanceOf(CollectionRequest::class)));
+        assertThat($request, is(anInstanceOf(IGetSubSetRequest::class)));
+        assertThat($request, is(anInstanceOf(ICollectionRequest::class)));
 
         assertThat($request->catalogueId(), is(equalTo(TranslationCatalogueEnglishToGerman::ID)));
 
@@ -65,25 +69,13 @@ class GetSubSetTest extends MockeryTestCase
             ->withPageSize(15)
         ;
 
-
-        $this->gateway
-            ->expects('getSubSet')
-            ->with(
-                TranslationCatalogueEnglishToGerman::ID,
-                anInstanceOf(Boundary::class),
-                $request->criteria()
-            )
-            ->andReturns([new TranslationTranslated(), new TranslationUntranslated()]);
-
-        $this->gateway->expects('subSetTotal')
-            ->with(TranslationCatalogueEnglishToGerman::ID, $request->criteria())
-            ->andReturns(2)
-            ;
+        $this->expectGetSubSet($request);
+        $this->expectSubSetTotal($request);
 
         $result = $this->useCase->execute($request);
-        assertThat($result, is(anInstanceOf(SubSetResponseDTO::class)));
+        assertThat($result, is(anInstanceOf(ISubSetResponse::class)));
         assertThat(count($result), is(2));
-        $this->assertContainsOnlyInstancesOf(TranslationResponseDTO::class, $result->items());
+        $this->assertContainsOnlyInstancesOf(ITranslationResponse::class, $result->items());
 
     }
 
@@ -92,6 +84,33 @@ class GetSubSetTest extends MockeryTestCase
         parent::setUp();
         $this->gateway = mock(ITranslationGateway::class);
         $this->useCase = new GetSubSet($this->gateway);
+    }
+
+    /**
+     * @param $request
+     */
+    protected function expectGetSubSet($request): void
+    {
+        $this->gateway
+            ->expects('getSubSet')
+            ->with(
+                TranslationCatalogueEnglishToGerman::ID,
+                anInstanceOf(Boundary::class),
+                $request->criteria()
+            )
+            ->andReturns([new TranslationTranslated(), new TranslationUntranslated()])
+        ;
+    }
+
+    /**
+     * @param $request
+     */
+    protected function expectSubSetTotal($request): void
+    {
+        $this->gateway->expects('subSetTotal')
+                      ->with(TranslationCatalogueEnglishToGerman::ID, $request->criteria())
+                      ->andReturns(2)
+        ;
     }
 
 }

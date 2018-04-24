@@ -8,7 +8,9 @@
 
 namespace Tidy\UseCases\Translation\DTO;
 
-class CatalogueResponseDTO implements \Countable
+use Tidy\Domain\Responders\Translation\ICatalogueResponse;
+
+class CatalogueResponseDTO implements \Countable, ICatalogueResponse
 {
     public $name;
 

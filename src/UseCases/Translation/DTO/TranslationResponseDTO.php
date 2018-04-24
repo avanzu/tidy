@@ -8,7 +8,9 @@
 
 namespace Tidy\UseCases\Translation\DTO;
 
-class TranslationResponseDTO
+use Tidy\Domain\Responders\Translation\ITranslationResponse;
+
+class TranslationResponseDTO implements ITranslationResponse
 {
 
     public $id;

@@ -10,20 +10,22 @@ namespace Tidy\UseCases\Translation\DTO;
 
 use Tidy\Components\Collection\IPagedCollection;
 use Tidy\Domain\Entities\Translation;
+use Tidy\Domain\Responders\Translation\ISubSetResponseTransformer;
+use Tidy\Domain\Responders\Translation\ITranslationResponseTransformer;
 
-class SubSetResponseTransformer
+class SubSetResponseTransformer implements ISubSetResponseTransformer
 {
     /**
-     * @var TranslationResponseTransformer
+     * @var ITranslationResponseTransformer
      */
     protected $itemTransformer;
 
     /**
      * SubSetResponseTransformer constructor.
      *
-     * @param TranslationResponseTransformer $itemTransformer
+     * @param ITranslationResponseTransformer $itemTransformer
      */
-    public function __construct(TranslationResponseTransformer $itemTransformer = null)
+    public function __construct(ITranslationResponseTransformer $itemTransformer = null)
     {
         $this->itemTransformer = $itemTransformer;
     }
@@ -39,7 +41,7 @@ class SubSetResponseTransformer
     }
 
     /**
-     * @return TranslationResponseTransformer
+     * @return ITranslationResponseTransformer
      */
     protected function itemTransformer() {
         if( ! $this->itemTransformer ) $this->itemTransformer  = new TranslationResponseTransformer();

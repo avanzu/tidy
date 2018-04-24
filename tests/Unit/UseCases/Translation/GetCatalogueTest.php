@@ -47,11 +47,7 @@ class GetCatalogueTest extends MockeryTestCase
         $request
             ->withId(TranslationCatalogueEnglishToGerman::ID);
 
-        $this->gateway
-            ->expects('findCatalogue')
-            ->with(TranslationCatalogueEnglishToGerman::ID)
-            ->andReturns(new TranslationCatalogueEnglishToGerman())
-        ;
+        $this->expectFindCatalogue();
 
         $result = $this->useCase->execute($request);
         assertThat($result, is(anInstanceOf(CatalogueResponseDTO::class)));
@@ -79,6 +75,15 @@ class GetCatalogueTest extends MockeryTestCase
         parent::setUp();
         $this->gateway = mock(ITranslationGateway::class);
         $this->useCase = new GetCatalogue($this->gateway);
+    }
+
+    protected function expectFindCatalogue(): void
+    {
+        $this->gateway
+            ->expects('findCatalogue')
+            ->with(TranslationCatalogueEnglishToGerman::ID)
+            ->andReturns(new TranslationCatalogueEnglishToGerman())
+        ;
     }
 
 

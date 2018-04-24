@@ -8,7 +8,9 @@
 
 namespace Tidy\UseCases\Translation\DTO;
 
-class TranslateRequestDTO
+use Tidy\Domain\Requestors\Translation\ITranslateRequest;
+
+class TranslateRequestDTO implements ITranslateRequest
 {
     public $catalogueId;
 
@@ -26,7 +28,7 @@ class TranslateRequestDTO
     /**
      * @param $id
      *
-     * @return TranslateRequestDTO
+     * @return ITranslateRequest
      */
     public function withCatalogueId($id)
     {
@@ -38,7 +40,7 @@ class TranslateRequestDTO
     /**
      * @param $token
      *
-     * @return TranslateRequestDTO
+     * @return ITranslateRequest
      */
     public function withToken($token)
     {
@@ -50,7 +52,7 @@ class TranslateRequestDTO
     /**
      * @param $localeString
      *
-     * @return TranslateRequestDTO
+     * @return ITranslateRequest
      */
     public function translateAs($localeString)
     {
@@ -62,7 +64,7 @@ class TranslateRequestDTO
     /**
      * @param $string
      *
-     * @return TranslateRequestDTO
+     * @return ITranslateRequest
      */
     public function commitStateTo($string)
     {

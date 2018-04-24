@@ -13,6 +13,7 @@ use Tidy\Components\Collection\Boundary;
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\CollectionRequest;
+use Tidy\Domain\Requestors\Translation\IGetCollectionRequest;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\UseCases\Translation\DTO\CollectionResponseDTO;
@@ -42,7 +43,7 @@ class GetCollectionTest extends MockeryTestCase
     public function test_execute()
     {
         $request = GetCollectionRequestDTO::make();
-        assertThat($request, is(anInstanceOf(CollectionRequest::class)));
+        assertThat($request, is(anInstanceOf(IGetCollectionRequest::class)));
 
         $request
             ->withName(Comparison::equalTo('some name'))

@@ -9,12 +9,14 @@
 namespace Tidy\UseCases\Translation\DTO;
 
 use Tidy\Domain\Responders\Project\IExcerptTransformer;
+use Tidy\Domain\Responders\Translation\ICatalogueResponseTransformer;
+use Tidy\Domain\Responders\Translation\ITranslationResponseTransformer;
 
-class NestedCatalogueResponseTransformer extends CatalogueResponseTransformer
+class NestedCatalogueResponseTransformer extends CatalogueResponseTransformer implements ICatalogueResponseTransformer
 {
     public function __construct(
         IExcerptTransformer $projectTransformer = null,
-        TranslationResponseTransformer $itemTransformer = null
+        ITranslationResponseTransformer $itemTransformer = null
     ) {
         parent::__construct($projectTransformer);
 

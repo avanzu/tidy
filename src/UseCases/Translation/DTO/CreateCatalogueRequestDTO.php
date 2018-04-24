@@ -8,10 +8,12 @@
 
 namespace Tidy\UseCases\Translation\DTO;
 
+use Tidy\Domain\Requestors\Translation\ICreateCatalogueRequest;
+
 /**
  * Class CreateCatalogueRequestDTO
  */
-class CreateCatalogueRequestDTO
+class CreateCatalogueRequestDTO implements ICreateCatalogueRequest
 {
     /**
      * @var string
@@ -49,7 +51,7 @@ class CreateCatalogueRequestDTO
     public $canonical;
 
     /**
-     * @return CreateCatalogueRequestDTO
+     * @return ICreateCatalogueRequest
      */
     public static function make()
     {
@@ -59,7 +61,7 @@ class CreateCatalogueRequestDTO
     /**
      * @param $name
      *
-     * @return CreateCatalogueRequestDTO
+     * @return ICreateCatalogueRequest
      */
     public function withName($name)
     {
@@ -73,7 +75,7 @@ class CreateCatalogueRequestDTO
      * @param      $language
      * @param null $culture
      *
-     * @return CreateCatalogueRequestDTO
+     * @return ICreateCatalogueRequest
      */
     public function withSourceLocale($language, $culture = null)
     {
@@ -88,7 +90,7 @@ class CreateCatalogueRequestDTO
      * @param      $language
      * @param null $culture
      *
-     * @return CreateCatalogueRequestDTO
+     * @return ICreateCatalogueRequest
      */
     public function withTargetLocale($language, $culture = null)
     {
@@ -101,7 +103,7 @@ class CreateCatalogueRequestDTO
     /**
      * @param $projectId
      *
-     * @return CreateCatalogueRequestDTO
+     * @return ICreateCatalogueRequest
      */
     public function withProjectId($projectId)
     {
@@ -120,7 +122,7 @@ class CreateCatalogueRequestDTO
     /**
      * @param $string
      *
-     * @return CreateCatalogueRequestDTO
+     * @return ICreateCatalogueRequest
      */
     public function withCanonical($string) {
         $this->canonical = $string;

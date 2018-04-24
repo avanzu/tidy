@@ -8,9 +8,9 @@
 
 namespace Tidy\Tests\Unit\UseCases\Translation\DTO;
 
+use Tidy\Domain\Responders\Translation\ITranslationResponse;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationTranslated;
-use Tidy\UseCases\Translation\DTO\TranslationResponseDTO;
 use Tidy\UseCases\Translation\DTO\TranslationResponseTransformer;
 
 class TranslationResponseTransformerTest extends MockeryTestCase
@@ -25,8 +25,8 @@ class TranslationResponseTransformerTest extends MockeryTestCase
     public function test_transform()
     {
         $transformer = new TranslationResponseTransformer();
-        $result = $transformer->transform(new TranslationTranslated());
-        assertThat($result, is(anInstanceOf(TranslationResponseDTO::class)));
+        $result      = $transformer->transform(new TranslationTranslated());
+        assertThat($result, is(anInstanceOf(ITranslationResponse::class)));
 
         assertThat($result->getId(), is(equalTo(TranslationTranslated::ID)));
         assertThat($result->getSourceString(), is(equalTo(TranslationTranslated::MSG_SOURCE)));

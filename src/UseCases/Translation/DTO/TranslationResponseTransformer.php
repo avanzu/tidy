@@ -9,8 +9,9 @@
 namespace Tidy\UseCases\Translation\DTO;
 
 use Tidy\Domain\Entities\Translation;
+use Tidy\Domain\Responders\Translation\ITranslationResponseTransformer;
 
-class TranslationResponseTransformer
+class TranslationResponseTransformer implements ITranslationResponseTransformer
 {
 
     public function transform(Translation $translation) {

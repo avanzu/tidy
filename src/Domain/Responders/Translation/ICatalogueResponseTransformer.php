@@ -16,7 +16,7 @@ interface ICatalogueResponseTransformer
     /**
      * @param TranslationCatalogue $catalogue
      *
-     * @return CatalogueResponseDTO
+     * @return ICatalogueResponse
      */
     public function transform(TranslationCatalogue $catalogue);
 }

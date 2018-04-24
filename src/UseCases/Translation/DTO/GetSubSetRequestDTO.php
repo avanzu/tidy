@@ -10,8 +10,9 @@ namespace Tidy\UseCases\Translation\DTO;
 
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Requestors\CollectionRequest;
+use Tidy\Domain\Requestors\Translation\IGetSubSetRequest;
 
-class GetSubSetRequestDTO extends CollectionRequest
+class GetSubSetRequestDTO extends CollectionRequest implements IGetSubSetRequest
 {
     public $catalogueId;
 
@@ -37,7 +38,7 @@ class GetSubSetRequestDTO extends CollectionRequest
      * @param int $page
      * @param int $pageSize
      *
-     * @return static
+     * @return IGetSubSetRequest
      */
     public static function make(
         $catalogueId,
@@ -55,7 +56,7 @@ class GetSubSetRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetSubSetRequestDTO
+     * @return IGetSubSetRequest
      */
     public function withId(Comparison $comparison = null)
     {
@@ -65,7 +66,7 @@ class GetSubSetRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetSubSetRequestDTO
+     * @return IGetSubSetRequest
      */
     public function withToken(Comparison $comparison = null)
     {
@@ -75,7 +76,7 @@ class GetSubSetRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetSubSetRequestDTO
+     * @return IGetSubSetRequest
      */
     public function withSourceString(Comparison $comparison = null)
     {
@@ -85,7 +86,7 @@ class GetSubSetRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetSubSetRequestDTO
+     * @return IGetSubSetRequest
      */
     public function withLocaleString(Comparison $comparison = null)
     {
@@ -95,7 +96,7 @@ class GetSubSetRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetSubSetRequestDTO
+     * @return IGetSubSetRequest
      */
     public function withState(Comparison $comparison = null)
     {
@@ -105,7 +106,7 @@ class GetSubSetRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetSubSetRequestDTO
+     * @return IGetSubSetRequest
      */
     public function withMeaning(Comparison $comparison = null)
     {
@@ -115,7 +116,7 @@ class GetSubSetRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetSubSetRequestDTO
+     * @return IGetSubSetRequest
      */
     public function withNotes(Comparison $comparison = null)
     {

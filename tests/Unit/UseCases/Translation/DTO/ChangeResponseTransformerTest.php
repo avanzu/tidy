@@ -10,6 +10,7 @@ namespace Tidy\Tests\Unit\UseCases\Translation\DTO;
 
 use Tidy\Components\Audit\Change;
 use Tidy\Components\Audit\ChangeSet;
+use Tidy\Domain\Responders\Audit\IChangeResponse;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Domain\Responders\Audit\ChangeResponse;
 use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
@@ -36,7 +37,7 @@ class ChangeResponseTransformerTest extends MockeryTestCase
         assertThat(count($changes), is(equalTo(3)));
 
         $result = $transformer->transform($changes);
-        assertThat($result, is(anInstanceOf(ChangeResponse::class)));
+        assertThat($result, is(anInstanceOf(IChangeResponse::class)));
 
         $expected = [
             [

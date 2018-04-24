@@ -8,9 +8,9 @@
 
 namespace Tidy\Tests\Unit\UseCases\Translation\DTO;
 
+use Tidy\Domain\Responders\Translation\ICatalogueResponse;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
-use Tidy\UseCases\Translation\DTO\CatalogueResponseDTO;
 use Tidy\UseCases\Translation\DTO\NestedCatalogueResponseTransformer;
 
 class NestedCatalogueResponseTransformerTest extends MockeryTestCase
@@ -25,9 +25,9 @@ class NestedCatalogueResponseTransformerTest extends MockeryTestCase
     public function test_transform()
     {
         $transformer = new NestedCatalogueResponseTransformer();
-        $result = $transformer->transform(new TranslationCatalogueEnglishToGerman());
+        $result      = $transformer->transform(new TranslationCatalogueEnglishToGerman());
 
-        assertThat($result, is(anInstanceOf(CatalogueResponseDTO::class)));
+        assertThat($result, is(anInstanceOf(ICatalogueResponse::class)));
 
     }
 

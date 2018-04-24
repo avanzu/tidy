@@ -58,16 +58,9 @@ class TranslateTest extends MockeryTestCase
         $catalogue   = mock(TranslationCatalogueEnglishToGerman::class);
         $translation = new TranslationUntranslated();
 
-        $this->gateway
-            ->expects('findCatalogue')
-            ->with(TranslationCatalogueEnglishToGerman::ID)
-            ->andReturns($catalogue)
-        ;
-
-
-        $catalogue->expects('find')->with(TranslationUntranslated::MSG_ID)->andReturns($translation);
-
-        $this->gateway->expects('save')->with($catalogue);
+        $this->expect_findCatalogue_on_gateway($catalogue);
+        $this->expect_find_on_catalogue($catalogue, $translation);
+        $this->expect_save_on_gateway($catalogue);
 
         $response = $this->useCase->execute($request);
 
@@ -101,7 +94,7 @@ class TranslateTest extends MockeryTestCase
             ->withToken(TranslationUntranslated::MSG_ID)
         ;
 
-        $this->gateway->expects('findCatalogue')->andReturns(new TranslationCatalogueEnglishToGerman());
+        $this->expect_findCatalogue_on_gateway(new TranslationCatalogueEnglishToGerman());
         $this->gateway->shouldReceive('save')->never();
 
         $result = $this->useCase->execute($request);
@@ -150,5 +143,34 @@ class TranslateTest extends MockeryTestCase
         parent::setUp();
         $this->gateway = mock(ITranslationGateway::class);
         $this->useCase = new Translate($this->gateway);
+    }
+
+    /**
+     * @param $catalogue
+     */
+    protected function expect_findCatalogue_on_gateway($catalogue): void
+    {
+        $this->gateway
+            ->expects('findCatalogue')
+            ->with(TranslationCatalogueEnglishToGerman::ID)
+            ->andReturns($catalogue)
+        ;
+    }
+
+    /**
+     * @param $catalogue
+     * @param $translation
+     */
+    protected function expect_find_on_catalogue($catalogue, $translation): void
+    {
+        $catalogue->expects('find')->with(TranslationUntranslated::MSG_ID)->andReturns($translation);
+    }
+
+    /**
+     * @param $catalogue
+     */
+    protected function expect_save_on_gateway($catalogue): void
+    {
+        $this->gateway->expects('save')->with($catalogue);
     }
 }

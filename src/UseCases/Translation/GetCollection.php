@@ -10,8 +10,9 @@ namespace Tidy\UseCases\Translation;
 
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Gateways\ITranslationGateway;
+use Tidy\Domain\Requestors\Translation\IGetCollectionRequest;
+use Tidy\Domain\Responders\Translation\ICollectionResponseTransformer;
 use Tidy\UseCases\Translation\DTO\CollectionResponseTransformer;
-use Tidy\UseCases\Translation\DTO\GetCollectionRequestDTO;
 
 class GetCollection
 {
@@ -21,22 +22,24 @@ class GetCollection
     protected $gateway;
 
     /**
-     * @var CollectionResponseTransformer
+     * @var ICollectionResponseTransformer
      */
     private $transformer;
 
     /**
      * GetCollection constructor.
      *
-     * @param ITranslationGateway           $gateway
-     * @param CollectionResponseTransformer $transformer
+     * @param ITranslationGateway            $gateway
+     * @param ICollectionResponseTransformer $transformer
      */
-    public function __construct(ITranslationGateway $gateway, CollectionResponseTransformer $transformer = null) {
-        $this->gateway = $gateway;
+    public function __construct(ITranslationGateway $gateway, ICollectionResponseTransformer $transformer = null)
+    {
+        $this->gateway     = $gateway;
         $this->transformer = $transformer;
     }
 
-    public function execute(GetCollectionRequestDTO $request) {
+    public function execute(IGetCollectionRequest $request)
+    {
 
         $boundary = $request->boundary();
         $items    = $this->gateway->getCollection($boundary, $request->criteria());
@@ -47,8 +50,12 @@ class GetCollection
         return $this->transformer()->transform($collection);
     }
 
-    protected function transformer() {
-        if ( !$this->transformer ) $this->transformer = new CollectionResponseTransformer();
+    protected function transformer()
+    {
+        if (!$this->transformer) {
+            $this->transformer = new CollectionResponseTransformer();
+        }
+
         return $this->transformer;
     }
 

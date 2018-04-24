@@ -10,8 +10,9 @@ namespace Tidy\UseCases\Translation\DTO;
 
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Requestors\CollectionRequest;
+use Tidy\Domain\Requestors\Translation\IGetCollectionRequest;
 
-class GetCollectionRequestDTO extends CollectionRequest
+class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectionRequest
 {
 
     /**
@@ -30,7 +31,7 @@ class GetCollectionRequestDTO extends CollectionRequest
      * @param int $page
      * @param int $pageSize
      *
-     * @return static
+     * @return IGetCollectionRequest
      */
     public static function make($page = CollectionRequest::DEFAULT_PAGE, $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE)
     {
@@ -41,7 +42,7 @@ class GetCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetCollectionRequestDTO
+     * @return IGetCollectionRequest
      */
     public function withName(Comparison $comparison = null)
     {
@@ -52,7 +53,7 @@ class GetCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetCollectionRequestDTO
+     * @return IGetCollectionRequest
      */
     public function withSourceLanguage(Comparison $comparison = null) {
         return $this->useComparison('sourceLanguage', $comparison);
@@ -61,7 +62,7 @@ class GetCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetCollectionRequestDTO
+     * @return IGetCollectionRequest
      */
     public function withTargetLanguage(Comparison $comparison = null) {
         return $this->useComparison('targetLanguage', $comparison);
@@ -70,7 +71,7 @@ class GetCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetCollectionRequestDTO
+     * @return IGetCollectionRequest
      */
     public function withSourceCulture(Comparison $comparison = null) {
         return $this->useComparison('sourceCulture', $comparison);
@@ -79,7 +80,7 @@ class GetCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetCollectionRequestDTO
+     * @return IGetCollectionRequest
      */
     public function withTargetCulture(Comparison $comparison = null) {
         return $this->useComparison('targetCulture', $comparison);
@@ -88,7 +89,7 @@ class GetCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetCollectionRequestDTO
+     * @return IGetCollectionRequest
      */
     public function withId(Comparison $comparison = null) {
         return $this->useComparison('id', $comparison);
@@ -97,7 +98,7 @@ class GetCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetCollectionRequestDTO
+     * @return IGetCollectionRequest
      */
     public function withCanonical(Comparison $comparison = null) {
         return $this->useComparison('canonical', $comparison);
@@ -106,7 +107,7 @@ class GetCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetCollectionRequestDTO
+     * @return IGetCollectionRequest
      */
     public function withProject(Comparison $comparison = null) {
         return $this->useComparison('project', $comparison);
@@ -115,7 +116,7 @@ class GetCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetCollectionRequestDTO
+     * @return IGetCollectionRequest
      */
     public function withSourceString(Comparison $comparison = null) {
         return $this->useComparison('sourceString', $comparison);
@@ -124,7 +125,7 @@ class GetCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetCollectionRequestDTO
+     * @return IGetCollectionRequest
      */
     public function withLocaleString(Comparison $comparison = null) {
         return $this->useComparison('localeString', $comparison);
@@ -133,7 +134,7 @@ class GetCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetCollectionRequestDTO
+     * @return IGetCollectionRequest
      */
     public function withToken(Comparison $comparison = null) {
         return $this->useComparison('token', $comparison);
@@ -142,7 +143,7 @@ class GetCollectionRequestDTO extends CollectionRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return GetCollectionRequestDTO
+     * @return IGetCollectionRequest
      */
     public function withState(Comparison $comparison = null) {
         return $this->useComparison('state', $comparison);

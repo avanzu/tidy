@@ -10,7 +10,6 @@ namespace Tidy\Tests\Unit\UseCases\Translation;
 
 use Mockery\MockInterface;
 use Tidy\Domain\Entities\TranslationCatalogue;
-use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Translation\ICatalogueResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
@@ -60,16 +59,42 @@ class CreateCatalogueTest extends MockeryTestCase
             ->withProjectId(ProjectSilverTongue::ID)
         ;
 
+        $this->expectMakeCatalogueForProject();
+        $this->expectSave();
+
+        $response = $this->useCase->execute($request);
+        assertThat($response, is(anInstanceOf(CatalogueResponseDTO::class)));
+        assertThat($response->getId(), is(equalTo(2342)));
+    }
+
+    protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */
+    {
+        parent::setUp();
+        $this->gateway = mock(ITranslationGateway::class);
+        $this->useCase = new CreateCatalogue(
+            $this->gateway
+        );
+
+    }
+
+    protected function expectMakeCatalogueForProject(): void
+    {
         $this->gateway
             ->expects('makeCatalogueForProject')
             ->with(ProjectSilverTongue::ID)
-            ->andReturnUsing(function (){
-                $catalogue = new TranslationCatalogueImpl();
-                $catalogue->setProject(new ProjectSilverTongue());
-                return $catalogue;
-            })
-        ;
+            ->andReturnUsing(
+                function () {
+                    $catalogue = new TranslationCatalogueImpl();
+                    $catalogue->setProject(new ProjectSilverTongue());
 
+                    return $catalogue;
+                }
+            )
+        ;
+    }
+
+    protected function expectSave(): void
+    {
         $this->gateway->expects('save')->with(
             argumentThat(
                 function (TranslationCatalogue $catalogue) {
@@ -92,20 +117,6 @@ class CreateCatalogueTest extends MockeryTestCase
                           }
                       )
         ;
-
-        $response = $this->useCase->execute($request);
-        assertThat($response, is(anInstanceOf(CatalogueResponseDTO::class)));
-        assertThat($response->getId(), is(equalTo(2342)));
-    }
-
-    protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */
-    {
-        parent::setUp();
-        $this->gateway        = mock(ITranslationGateway::class);
-        $this->useCase        = new CreateCatalogue(
-            $this->gateway
-        );
-
     }
 
 

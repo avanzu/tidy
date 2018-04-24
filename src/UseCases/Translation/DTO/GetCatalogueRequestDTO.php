@@ -8,7 +8,9 @@
 
 namespace Tidy\UseCases\Translation\DTO;
 
-class GetCatalogueRequestDTO
+use Tidy\Domain\Requestors\Translation\IGetCatalogueRequest;
+
+class GetCatalogueRequestDTO implements IGetCatalogueRequest
 {
     public $id;
 
@@ -21,7 +23,7 @@ class GetCatalogueRequestDTO
     /**
      * @param $id
      *
-     * @return GetCatalogueRequestDTO
+     * @return IGetCatalogueRequest
      */
     public function withId($id)
     {

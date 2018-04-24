@@ -10,12 +10,12 @@ namespace Tidy\Tests\Unit\UseCases\Translation\DTO;
 
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Responders\CollectionResponse;
+use Tidy\Domain\Responders\Translation\ICatalogueResponse;
 use Tidy\Domain\Responders\Translation\ICatalogueResponseTransformer;
+use Tidy\Domain\Responders\Translation\ICollectionResponse;
+use Tidy\Domain\Responders\Translation\ICollectionResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
-use Tidy\UseCases\Translation\DTO\CatalogueResponseDTO;
-use Tidy\UseCases\Translation\DTO\CatalogueResponseTransformer;
-use Tidy\UseCases\Translation\DTO\CollectionResponseDTO;
 use Tidy\UseCases\Translation\DTO\CollectionResponseTransformer;
 
 class CollectionResponseTransformerTest extends MockeryTestCase
@@ -23,12 +23,12 @@ class CollectionResponseTransformerTest extends MockeryTestCase
     public function test_instantiation()
     {
         $transformer = new CollectionResponseTransformer();
-        assertThat($transformer, is(anInstanceOf(CollectionResponseTransformer::class)));
+        assertThat($transformer, is(anInstanceOf(ICollectionResponseTransformer::class)));
     }
 
     public function test_swapItemTransformer()
     {
-        $itemTransformer    = mock(CatalogueResponseTransformer::class);
+        $itemTransformer    = mock(ICatalogueResponseTransformer::class);
         $initialTransformer = mock(ICatalogueResponseTransformer::class);
         $transformer        = new CollectionResponseTransformer($initialTransformer);
         $return             = $transformer->swapItemTransformer($itemTransformer);
@@ -41,14 +41,14 @@ class CollectionResponseTransformerTest extends MockeryTestCase
         $collection  = new PagedCollection([new TranslationCatalogueEnglishToGerman()], 1, 1, 10);
         $transformer = new CollectionResponseTransformer();
         $result      = $transformer->transform($collection);
-        assertThat($result, is(anInstanceOf(CollectionResponseDTO::class)));
+        assertThat($result, is(anInstanceOf(ICollectionResponse::class)));
         assertThat($result, is(anInstanceOf(CollectionResponse::class)));
 
         assertThat(count($result), is(equalTo(1)));
-        assertThat(current($result->getItems()), is(anInstanceOf(CatalogueResponseDTO::class)));
+        assertThat(current($result->getItems()), is(anInstanceOf(ICatalogueResponse::class)));
 
         assertThat($result->currentPage(), is(equalTo(1)));
-        assertThat($result->pagesTotal(),is(equalTo(1)));
+        assertThat($result->pagesTotal(), is(equalTo(1)));
     }
 
     protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */

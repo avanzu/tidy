@@ -10,12 +10,12 @@ namespace Tidy\Tests\Unit\UseCases\Translation\DTO;
 
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Responders\CollectionResponse;
+use Tidy\Domain\Responders\Translation\ISubSetResponse;
+use Tidy\Domain\Responders\Translation\ITranslationResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationTranslated;
 use Tidy\Tests\Unit\Domain\Entities\TranslationUntranslated;
-use Tidy\UseCases\Translation\DTO\SubSetResponseDTO;
 use Tidy\UseCases\Translation\DTO\SubSetResponseTransformer;
-use Tidy\UseCases\Translation\DTO\TranslationResponseTransformer;
 
 class SubSetResponseTransformerTest extends MockeryTestCase
 {
@@ -23,7 +23,7 @@ class SubSetResponseTransformerTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $transformer = new SubSetResponseTransformer(mock(TranslationResponseTransformer::class));
+        $transformer = new SubSetResponseTransformer(mock(ITranslationResponseTransformer::class));
         assertThat($transformer, is(notNullValue()));
 
     }
@@ -39,9 +39,9 @@ class SubSetResponseTransformerTest extends MockeryTestCase
         );
         $transformer = new SubSetResponseTransformer();
         $result      = $transformer->transform($collection);
-        assertThat($result, is(anInstanceOf(SubSetResponseDTO::class)));
+        assertThat($result, is(anInstanceOf(ISubSetResponse::class)));
         assertThat($result, is(anInstanceOf(CollectionResponse::class)));
 
-        assertThat(count($result), is( 2));
+        assertThat(count($result), is(2));
     }
 }

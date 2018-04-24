@@ -8,13 +8,13 @@
 
 namespace Tidy\UseCases\Translation;
 
-use Tidy\UseCases\Translation\DTO\CreateCatalogueRequestDTO;
+use Tidy\Domain\Requestors\Translation\ICreateCatalogueRequest;
 
 class CreateCatalogue extends UseCase
 {
 
 
-    public function execute(CreateCatalogueRequestDTO $request)
+    public function execute(ICreateCatalogueRequest $request)
     {
 
         $catalogue = $this->gateway->makeCatalogueForProject($request->projectId());

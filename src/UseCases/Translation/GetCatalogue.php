@@ -9,13 +9,13 @@
 namespace Tidy\UseCases\Translation;
 
 use Tidy\Components\Exceptions\NotFound;
-use Tidy\UseCases\Translation\DTO\GetCatalogueRequestDTO;
+use Tidy\Domain\Requestors\Translation\IGetCatalogueRequest;
 use Tidy\UseCases\Translation\DTO\NestedCatalogueResponseTransformer;
 
 class GetCatalogue extends UseCase
 {
 
-    public function execute(GetCatalogueRequestDTO $request)
+    public function execute(IGetCatalogueRequest $request)
     {
         $catalogue = $this->gateway->findCatalogue($request->id());
 

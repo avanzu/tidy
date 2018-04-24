@@ -9,17 +9,19 @@
 namespace Tidy\UseCases\Translation\DTO;
 
 use Tidy\Domain\Responders\CollectionResponse;
+use Tidy\Domain\Responders\Translation\ICatalogueResponse;
+use Tidy\Domain\Responders\Translation\ICollectionResponse;
 
-class CollectionResponseDTO extends CollectionResponse
+class CollectionResponseDTO extends CollectionResponse implements ICollectionResponse
 {
 
     /**
-     * @var CatalogueResponseDTO[]
+     * @var ICatalogueResponse[]
      */
     public $items = [];
 
     /**
-     * @return CatalogueResponseDTO[]
+     * @return ICatalogueResponse[]
      */
     public function getItems()
     {

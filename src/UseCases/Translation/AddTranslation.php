@@ -13,13 +13,13 @@ use Tidy\Components\Audit\ChangeSet;
 use Tidy\Components\Exceptions\Duplicate;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\TranslationCatalogue;
-use Tidy\UseCases\Translation\DTO\AddTranslationRequestDTO;
+use Tidy\Domain\Requestors\Translation\IAddTranslationRequest;
 
 class AddTranslation extends PatchUseCase
 {
 
 
-    public function execute(AddTranslationRequestDTO $request)
+    public function execute(IAddTranslationRequest $request)
     {
         $catalogue = $this->lookUpCatalogue($request);
 
@@ -43,7 +43,12 @@ class AddTranslation extends PatchUseCase
         $result = ChangeSet::make();
         $result
             ->add(Change::test($request->catalogueId(), 'catalogueId'))
-            ->add(Change::add($translation->toArray(), sprintf('%s/%s', $catalogue->getCanonical(), $translation->getId())))
+            ->add(
+                Change::add(
+                    $translation->toArray(),
+                    sprintf('%s/%s', $catalogue->getCanonical(), $translation->getId())
+                )
+            )
         ;
 
         return $this->transformer()->transform($result);
@@ -51,11 +56,11 @@ class AddTranslation extends PatchUseCase
     }
 
     /**
-     * @param AddTranslationRequestDTO $request
+     * @param IAddTranslationRequest $request
      *
      * @return null|\Tidy\Domain\Entities\TranslationCatalogue
      */
-    protected function lookUpCatalogue(AddTranslationRequestDTO $request)
+    protected function lookUpCatalogue(IAddTranslationRequest $request)
     {
         $catalogue = $this->gateway->findCatalogue($request->catalogueId());
         if (!$catalogue) {
@@ -68,10 +73,10 @@ class AddTranslation extends PatchUseCase
     }
 
     /**
-     * @param AddTranslationRequestDTO $request
+     * @param IAddTranslationRequest $request
      * @param                          $catalogue
      */
-    protected function preserveUniqueness(AddTranslationRequestDTO $request, TranslationCatalogue $catalogue)
+    protected function preserveUniqueness(IAddTranslationRequest $request, TranslationCatalogue $catalogue)
     {
         if ($match = $catalogue->find($request->token())) {
             throw new Duplicate(

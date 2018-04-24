@@ -9,6 +9,7 @@
 namespace Tidy\Tests\Unit\UseCases\Translation;
 
 use Tidy\Domain\Responders\Project\IExcerptTransformer;
+use Tidy\Domain\Responders\Translation\ITranslationResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman as TestCatalogue;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueImpl;
@@ -32,7 +33,7 @@ class CatalogueResponseTransformerTest extends MockeryTestCase
 
         assertThat($old, is(sameInstance($excerpt)));
 
-        $transformer->useItemTransformer(mock(TranslationResponseTransformer::class));
+        $transformer->useItemTransformer(mock(ITranslationResponseTransformer::class));
     }
 
 

@@ -13,13 +13,13 @@ use Tidy\Components\Audit\ChangeSet;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
-use Tidy\UseCases\Translation\DTO\TranslateRequestDTO;
+use Tidy\Domain\Requestors\Translation\ITranslateRequest;
 
 class Translate extends PatchUseCase
 {
 
 
-    public function execute(TranslateRequestDTO $request)
+    public function execute(ITranslateRequest $request)
     {
 
         $catalogue   = $this->lookUpCatalogue($request);
@@ -38,12 +38,12 @@ class Translate extends PatchUseCase
 
 
     /**
-     * @param TranslateRequestDTO $request
-     * @param Translation         $translation
+     * @param ITranslateRequest $request
+     * @param Translation       $translation
      *
      * @return null|Change
      */
-    protected function replaceLocaleString(TranslateRequestDTO $request, Translation $translation)
+    protected function replaceLocaleString(ITranslateRequest $request, Translation $translation)
     {
         if (!$request->localeString()) {
             return null;
@@ -55,12 +55,12 @@ class Translate extends PatchUseCase
     }
 
     /**
-     * @param TranslateRequestDTO $request
-     * @param Translation         $translation
+     * @param ITranslateRequest $request
+     * @param Translation       $translation
      *
      * @return null|Change
      */
-    protected function replaceState(TranslateRequestDTO $request, Translation $translation)
+    protected function replaceState(ITranslateRequest $request, Translation $translation)
     {
         if (!$request->state()) {
             return null;
@@ -82,11 +82,11 @@ class Translate extends PatchUseCase
     }
 
     /**
-     * @param TranslateRequestDTO $request
+     * @param ITranslateRequest $request
      *
      * @return null|\Tidy\Domain\Entities\TranslationCatalogue
      */
-    protected function lookUpCatalogue(TranslateRequestDTO $request)
+    protected function lookUpCatalogue(ITranslateRequest $request)
     {
         $catalogue = $this->gateway->findCatalogue($request->catalogueId());
         if (!$catalogue) {
@@ -97,18 +97,24 @@ class Translate extends PatchUseCase
     }
 
     /**
-     * @param TranslateRequestDTO $request
+     * @param ITranslateRequest   $request
      * @param                     $catalogue
      *
      * @return mixed
      */
-    protected function lookUpTranslation(TranslateRequestDTO $request, TranslationCatalogue $catalogue)
+    protected function lookUpTranslation(ITranslateRequest $request, TranslationCatalogue $catalogue)
     {
         $translation = $catalogue->find($request->token());
-        if( ! $translation )
+        if (!$translation) {
             throw new NotFound(
-                sprintf('Unable to find translation identified by "%s" in catalogue "%s".', $request->token(), $catalogue->getName())
+                sprintf(
+                    'Unable to find translation identified by "%s" in catalogue "%s".',
+                    $request->token(),
+                    $catalogue->getName()
+                )
             );
+        }
+
         return $translation;
     }
 

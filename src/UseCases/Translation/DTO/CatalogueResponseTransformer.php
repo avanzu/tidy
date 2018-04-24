@@ -12,6 +12,8 @@ use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Responders\Project\IExcerptTransformer;
 use Tidy\Domain\Responders\Translation\ICatalogueResponseTransformer;
+use Tidy\Domain\Responders\Translation\ITranslationResponse;
+use Tidy\Domain\Responders\Translation\ITranslationResponseTransformer;
 use Tidy\UseCases\Project\DTO\ExcerptTransformer;
 
 class CatalogueResponseTransformer implements ICatalogueResponseTransformer
@@ -23,7 +25,7 @@ class CatalogueResponseTransformer implements ICatalogueResponseTransformer
     protected $excerptTransformer;
 
     /**
-     * @var TranslationResponseTransformer
+     * @var ITranslationResponseTransformer
      */
     protected $itemTransformer;
 
@@ -43,7 +45,7 @@ class CatalogueResponseTransformer implements ICatalogueResponseTransformer
         return $previous;
     }
 
-    public function useItemTransformer(TranslationResponseTransformer $itemTransformer) {
+    public function useItemTransformer(ITranslationResponseTransformer $itemTransformer) {
         $this->itemTransformer = $itemTransformer;
     }
 
@@ -84,7 +86,7 @@ class CatalogueResponseTransformer implements ICatalogueResponseTransformer
     /**
      * @param TranslationCatalogue $catalogue
      *
-     * @return TranslationResponseDTO[]
+     * @return ITranslationResponse[]
      */
     protected function transformTranslations(TranslationCatalogue $catalogue) {
         if( ! $this->itemTransformer() ) return [];

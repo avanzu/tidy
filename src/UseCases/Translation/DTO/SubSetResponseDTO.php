@@ -9,12 +9,14 @@
 namespace Tidy\UseCases\Translation\DTO;
 
 use Tidy\Domain\Responders\CollectionResponse;
+use Tidy\Domain\Responders\Translation\ISubSetResponse;
+use Tidy\Domain\Responders\Translation\ITranslationResponse;
 
-class SubSetResponseDTO extends CollectionResponse
+class SubSetResponseDTO extends CollectionResponse implements ISubSetResponse
 {
 
     /**
-     * @var TranslationResponseDTO[]
+     * @var ITranslationResponse[]
      */
     public $items = [];
 
@@ -34,7 +36,7 @@ class SubSetResponseDTO extends CollectionResponse
     }
 
     /**
-     * @return TranslationResponseDTO[]
+     * @return ITranslationResponse[]
      */
     public function items()
     {

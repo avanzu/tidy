@@ -10,7 +10,8 @@ namespace Tidy\UseCases\Translation;
 
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\UseCases\Translation\DTO\GetSubSetRequestDTO;
+use Tidy\Domain\Requestors\Translation\IGetSubSetRequest;
+use Tidy\Domain\Responders\Translation\ISubSetResponseTransformer;
 use Tidy\UseCases\Translation\DTO\SubSetResponseTransformer;
 
 class GetSubSet
@@ -21,23 +22,23 @@ class GetSubSet
     protected $gateway;
 
     /**
-     * @var SubSetResponseTransformer
+     * @var ISubSetResponseTransformer
      */
     private $transformer;
 
     /**
      * GetSubSet constructor.
      *
-     * @param ITranslationGateway            $gateway
-     * @param SubSetResponseTransformer|null $transformer
+     * @param ITranslationGateway             $gateway
+     * @param ISubSetResponseTransformer|null $transformer
      */
-    public function __construct(ITranslationGateway $gateway, SubSetResponseTransformer $transformer = null)
+    public function __construct(ITranslationGateway $gateway, ISubSetResponseTransformer $transformer = null)
     {
         $this->gateway     = $gateway;
         $this->transformer = $transformer;
     }
 
-    public function execute(GetSubSetRequestDTO $request)
+    public function execute(IGetSubSetRequest $request)
     {
 
         $boundary = $request->boundary();

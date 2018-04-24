@@ -71,34 +71,8 @@ class AddTranslationTest extends MockeryTestCase
             ->withToken('message.source_code')
         ;
 
-        $this->gateway
-            ->expects('findCatalogue')
-            ->with(TranslationCatalogueEnglishToGerman::ID)
-            ->andReturn(new TranslationCatalogueEnglishToGerman())
-        ;
-
-        $expected = new TranslationImpl();
-        $this->gateway->expects('makeTranslation')->andReturn($expected);
-        $this
-            ->gateway
-            ->expects('save')
-            ->with(
-                argumentThat(
-                    function (TranslationCatalogue $catalogue) use ($expected) {
-                        assertThat($catalogue->find('message.source_code'), is(sameInstance($expected)));
-
-                        return true;
-                    }
-                )
-            )
-            ->andReturnUsing(
-                function (TranslationCatalogue $catalogue) {
-                    identify($catalogue->find('message.source_code'), 47110815);
-
-                    return $catalogue;
-                }
-            )
-        ;;
+        $this->expectFindCatalogue();
+        $this->expectMakeTranslation();
 
         $result = $this->useCase->execute($request);
 
@@ -176,6 +150,46 @@ class AddTranslationTest extends MockeryTestCase
 
         $this->gateway = mock(ITranslationGateway::class);
         $this->useCase = new AddTranslation($this->gateway);
+    }
+
+    protected function expectFindCatalogue(): void
+    {
+        $this->gateway
+            ->expects('findCatalogue')
+            ->with(TranslationCatalogueEnglishToGerman::ID)
+            ->andReturn(new TranslationCatalogueEnglishToGerman())
+        ;
+    }
+
+    /**
+     * @return TranslationImpl
+     */
+    protected function expectMakeTranslation(): TranslationImpl
+    {
+        $expected = new TranslationImpl();
+        $this->gateway->expects('makeTranslation')->andReturn($expected);
+        $this
+            ->gateway
+            ->expects('save')
+            ->with(
+                argumentThat(
+                    function (TranslationCatalogue $catalogue) use ($expected) {
+                        assertThat($catalogue->find('message.source_code'), is(sameInstance($expected)));
+
+                        return true;
+                    }
+                )
+            )
+            ->andReturnUsing(
+                function (TranslationCatalogue $catalogue) {
+                    identify($catalogue->find('message.source_code'), 47110815);
+
+                    return $catalogue;
+                }
+            )
+        ;;
+
+        return $expected;
     }
 
 }
