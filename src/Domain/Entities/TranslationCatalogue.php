@@ -240,11 +240,16 @@ abstract class TranslationCatalogue
      *
      * @return $this
      */
-    public function addTranslation(Translation $translation)
+    public function add(Translation $translation)
     {
         $this->translations()->offsetSet($translation->getToken(), $translation);
 
         return $this;
+    }
+
+    public function remove(Translation $translation)
+    {
+        $this->translations()->offsetUnset($translation->getToken());
     }
 
     /**

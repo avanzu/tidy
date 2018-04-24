@@ -37,7 +37,7 @@ class AddTranslation extends ChangeResponder
             ->setToken($request->token())
         ;
 
-        $catalogue->addTranslation($translation);
+        $catalogue->add($translation);
 
         $this->gateway->save($catalogue);
 

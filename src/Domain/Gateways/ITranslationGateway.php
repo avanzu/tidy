@@ -73,4 +73,11 @@ interface ITranslationGateway
      * @return mixed
      */
     public function subSetTotal($catalogueId, array $criteria = []);
+
+    /**
+     * @param Translation $translation
+     *
+     * @return bool
+     */
+    public function removeTranslation($translation);
 }
