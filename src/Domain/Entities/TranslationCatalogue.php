@@ -247,9 +247,16 @@ abstract class TranslationCatalogue
         return $this;
     }
 
+    /**
+     * @param Translation $translation
+     *
+     * @return $this
+     */
     public function remove(Translation $translation)
     {
-        $this->translations()->offsetUnset($translation->getToken());
+        if($this->translations()->offsetExists($translation->getToken()))
+            $this->translations()->offsetUnset($translation->getToken());
+        return $this;
     }
 
     /**

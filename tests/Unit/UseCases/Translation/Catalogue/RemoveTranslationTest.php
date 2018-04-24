@@ -9,18 +9,23 @@
 namespace Tidy\Tests\Unit\UseCases\Translation\Catalogue;
 
 use Tidy\Components\Audit\Change;
+use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Audit\ChangeResponse;
 use Tidy\Domain\Responders\Translation\ChangeResponder;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
+use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman as Catalogue;
 use Tidy\Tests\Unit\Domain\Entities\TranslationUntranslated;
 use Tidy\UseCases\Translation\Catalogue\DTO\RemoveTranslationRequestDTO;
 use Tidy\UseCases\Translation\Catalogue\RemoveTranslation;
 
 class RemoveTranslationTest extends MockeryTestCase
 {
+
+    private $gateway;
+
+    private $useCase;
 
     public function test_instantiation()
     {
@@ -30,22 +35,29 @@ class RemoveTranslationTest extends MockeryTestCase
 
     public function test_remove()
     {
-        $gateway = mock(ITranslationGateway::class);
-        $useCase = new RemoveTranslation($gateway);
+
         $request = RemoveTranslationRequestDTO::make();
 
         $request
-            ->withCatalogueId(TranslationCatalogueEnglishToGerman::ID)
+            ->withCatalogueId(Catalogue::ID)
             ->withToken(TranslationUntranslated::MSG_ID)
         ;
 
-        $catalogue   = $this->expect_Gateway_findCatalogue($gateway);
-        $translation = $this->expect_Catalogue_find($catalogue);
+        $catalogue   = $this->expect_Gateway_findCatalogue(
+            mock(TranslationCatalogue::class),
+            Catalogue::ID
+        );
+        $translation = $this->expect_Catalogue_find(
+            $catalogue,
+            TranslationUntranslated::MSG_ID,
+            new TranslationUntranslated()
+        );
+        $this->expect_Catalogue_getCanonical($catalogue, Catalogue::CANONICAL);
 
-        $this->expect_Gateway_removeTranslation($gateway, $translation);
+        $this->expect_Gateway_removeTranslation($translation);
         $this->expect_Catalogue_removeTranslation($catalogue, $translation);
 
-        $result = $useCase->execute($request);
+        $result = $this->useCase->execute($request);
 
         assertThat($result, is(anInstanceOf(ChangeResponse::class)));
 
@@ -59,23 +71,70 @@ class RemoveTranslationTest extends MockeryTestCase
         $this->assertArraySubset($expected, $result->changes());
     }
 
+    public function test_remove_with_unknown_Catalogue_throws_NotFound()
+    {
+
+        $catalogueId = 100009999;
+        $this->expect_Gateway_findCatalogue(null, $catalogueId);
+
+        try {
+            $this->useCase->execute(RemoveTranslationRequestDTO::make()->withCatalogueId($catalogueId));
+            $this->fail('Failed to fail.');
+        } catch (\Exception $exception) {
+            assertThat($exception, is(anInstanceOf(NotFound::class)));
+            $this->assertStringMatchesFormat('Unable to find catalogue identified by "%d".', $exception->getMessage());
+        }
+    }
+
+    public function test_remove_with_unknown_token_throws_NotFound()
+    {
+
+        $catalogueId = 100009999;
+        $catalogue   = $this->expect_Gateway_findCatalogue(mock(TranslationCatalogue::class), $catalogueId);
+
+        $this->expect_Catalogue_find($catalogue, 'some_token', null);
+        $this->expect_Catalogue_getName($catalogue, 'The Catalogue');
+
+        try {
+            $this->useCase->execute(
+                RemoveTranslationRequestDTO::make()
+                                           ->withCatalogueId($catalogueId)
+                                           ->withToken('some_token')
+            );
+
+            $this->fail('Failed to fail.');
+        } catch (\Exception $exception) {
+            assertThat($exception, is(anInstanceOf(NotFound::class)));
+            $this->assertStringMatchesFormat(
+                'Unable to find translation identified by "%s" in catalogue "%s".',
+                $exception->getMessage()
+            );
+        }
+    }
+
+    protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */
+    {
+        parent::setUp();
+
+        $this->gateway = mock(ITranslationGateway::class);
+        $this->useCase = new RemoveTranslation($this->gateway);
+    }
+
     /**
-     * @param $gateway
+     * @param $catalogue
+     *
+     * @param $catalogueId
      *
      * @return mixed|\Mockery\MockInterface
      */
-    protected function expect_Gateway_findCatalogue($gateway)
+    protected function expect_Gateway_findCatalogue($catalogue, $catalogueId)
     {
-        $catalogue = mock(TranslationCatalogue::class);
-        $gateway
+        $this
+            ->gateway
             ->expects('findCatalogue')
-            ->with(TranslationCatalogueEnglishToGerman::ID)
+            ->with($catalogueId)
             ->andReturns($catalogue)
         ;
-
-        $catalogue
-            ->expects('getCanonical')
-            ->andReturn(TranslationCatalogueEnglishToGerman::CANONICAL);
 
         return $catalogue;
     }
@@ -83,13 +142,16 @@ class RemoveTranslationTest extends MockeryTestCase
     /**
      * @param $catalogue
      *
+     * @param $token
+     *
+     * @param $translation
+     *
      * @return TranslationUntranslated
      */
-    protected function expect_Catalogue_find($catalogue): TranslationUntranslated
+    protected function expect_Catalogue_find($catalogue, $token, $translation)
     {
-        $translation = new TranslationUntranslated();
         $catalogue->expects('find')
-                  ->with(TranslationUntranslated::MSG_ID)
+                  ->with($token)
                   ->andReturns($translation)
         ;
 
@@ -97,12 +159,11 @@ class RemoveTranslationTest extends MockeryTestCase
     }
 
     /**
-     * @param $gateway
      * @param $translation
      */
-    protected function expect_Gateway_removeTranslation($gateway, $translation): void
+    protected function expect_Gateway_removeTranslation($translation): void
     {
-        $gateway->expects('removeTranslation')->with($translation);
+        $this->gateway->expects('removeTranslation')->with($translation);
     }
 
     /**
@@ -112,6 +173,27 @@ class RemoveTranslationTest extends MockeryTestCase
     protected function expect_Catalogue_removeTranslation($catalogue, $translation): void
     {
         $catalogue->expects('remove')->with($translation);
+    }
+
+    /**
+     * @param $catalogue
+     * @param $canonical
+     */
+    protected function expect_Catalogue_getCanonical($catalogue, $canonical): void
+    {
+        $catalogue
+            ->expects('getCanonical')
+            ->andReturn($canonical)
+        ;
+    }
+
+    /**
+     * @param $catalogue
+     * @param $name
+     */
+    protected function expect_Catalogue_getName($catalogue, $name): void
+    {
+        $catalogue->expects('getName')->andreturns($name);
     }
 
 

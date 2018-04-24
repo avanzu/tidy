@@ -14,6 +14,19 @@ use Tidy\Tests\MockeryTestCase;
 class TranslationCatalogueTest extends MockeryTestCase
 {
 
+    public function test_trnanslation_handling()
+    {
+        $catalogue = new TranslationCatalogueImpl();
+        $translation = new TranslationUntranslated();
+
+        $catalogue->add($translation);
+        assertThat($catalogue->find($translation->getToken()), is($translation));
+        $catalogue->remove($translation);
+        assertThat($catalogue->find($translation->getToken()), is(nullValue()));
+
+        $catalogue->remove($translation);
+    }
+
     /**
      * @dataProvider provideLocales
      *
