@@ -11,7 +11,6 @@ use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\IResetPasswordRequest;
-use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
 use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Domain\Responders\User\ItemResponder;
 

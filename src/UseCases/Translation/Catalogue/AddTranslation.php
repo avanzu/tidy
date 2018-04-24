@@ -8,8 +8,6 @@
 
 namespace Tidy\UseCases\Translation\Catalogue;
 
-use Tidy\Components\Audit\Change;
-use Tidy\Components\Audit\ChangeSet;
 use Tidy\Components\Exceptions\Duplicate;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\TranslationCatalogue;
@@ -58,7 +56,10 @@ class AddTranslation extends ItemResponder
 
     protected function transformer()
     {
-        if( ! $this->transformer ) $this->transformer = new NestedCatalogueResponseTransformer();
+        if (!$this->transformer) {
+            $this->transformer = new NestedCatalogueResponseTransformer();
+        }
+
         return $this->transformer;
     }
 

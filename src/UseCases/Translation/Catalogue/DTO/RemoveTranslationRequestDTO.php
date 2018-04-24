@@ -46,11 +46,13 @@ class RemoveTranslationRequestDTO
         return $this;
     }
 
-    public function catalogueId() {
+    public function catalogueId()
+    {
         return $this->catalogueId;
     }
 
-    public function token() {
+    public function token()
+    {
         return $this->token;
     }
 }

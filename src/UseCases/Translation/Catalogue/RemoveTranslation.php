@@ -36,7 +36,10 @@ class RemoveTranslation extends ItemResponder
 
     protected function transformer()
     {
-        if( ! $this->transformer ) $this->transformer = new NestedCatalogueResponseTransformer();
+        if (!$this->transformer) {
+            $this->transformer = new NestedCatalogueResponseTransformer();
+        }
+
         return $this->transformer;
     }
 

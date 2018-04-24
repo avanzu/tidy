@@ -7,11 +7,8 @@
 namespace Tidy\Tests\Unit\UseCases\User;
 
 use Mockery\MockInterface;
-use Tidy\Components\Audit\Change;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Gateways\IUserGateway;
-use Tidy\Domain\Responders\Audit\ChangeResponse;
-use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
 use Tidy\Domain\Responders\User\IResponse;
 use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Domain\Responders\User\ItemResponder;
@@ -55,7 +52,6 @@ class RecoverTest extends MockeryTestCase
         ;
 
         $result = $this->useCase->execute($request);
-
 
         $this->assertInstanceOf(IResponse::class, $result);
         $this->assertEquals(TimmyUser::ID, $result->getId());

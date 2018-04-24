@@ -16,7 +16,7 @@ class TranslationCatalogueTest extends MockeryTestCase
 
     public function test_trnanslation_handling()
     {
-        $catalogue = new TranslationCatalogueImpl();
+        $catalogue   = new TranslationCatalogueImpl();
         $translation = new TranslationUntranslated();
 
         $catalogue->add($translation);

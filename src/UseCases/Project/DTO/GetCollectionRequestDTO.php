@@ -25,7 +25,7 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
         $page = CollectionRequest::DEFAULT_PAGE,
         $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE
     ) {
-        $this->page = $page;
+        $this->page     = $page;
         $this->pageSize = $pageSize;
     }
 

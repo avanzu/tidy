@@ -18,11 +18,6 @@ class ExcerptDTO implements IExcerpt
 
     public $id;
 
-    public function getName()
-    {
-        return $this->name;
-    }
-
     /**
      * @return mixed
      */
@@ -34,6 +29,11 @@ class ExcerptDTO implements IExcerpt
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 
 

@@ -9,11 +9,9 @@
 namespace Tidy\Tests\Unit\UseCases\Translation\Message;
 
 use Mockery\MockInterface;
-use Tidy\Components\Audit\Change;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\Domain\Responders\Audit\ChangeResponse;
 use Tidy\Domain\Responders\Translation\Message\ItemResponder;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 use Tidy\Tests\MockeryTestCase;

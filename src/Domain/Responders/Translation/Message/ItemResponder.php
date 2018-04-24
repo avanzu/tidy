@@ -27,7 +27,7 @@ abstract class ItemResponder
     /**
      * CreateCatalogue constructor.
      *
-     * @param ITranslationGateway           $gateway
+     * @param ITranslationGateway             $gateway
      * @param ITranslationResponseTransformer $transformer
      */
     public function __construct(ITranslationGateway $gateway, ITranslationResponseTransformer $transformer = null)

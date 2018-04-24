@@ -7,12 +7,8 @@
 namespace Tidy\Tests\Unit\UseCases\Project;
 
 use Mockery\MockInterface;
-use Tidy\Components\Audit\Change;
 use Tidy\Domain\Entities\Project;
 use Tidy\Domain\Gateways\IProjectGateway;
-use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
-use Tidy\Domain\Responders\Audit\IChangeResponse;
-use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
 use Tidy\Domain\Responders\Project\ChangeResponder;
 use Tidy\Domain\Responders\Project\IResponse;
 use Tidy\Domain\Responders\Project\IResponseTransformer;

@@ -254,8 +254,10 @@ abstract class TranslationCatalogue
      */
     public function remove(Translation $translation)
     {
-        if($this->translations()->offsetExists($translation->getToken()))
+        if ($this->translations()->offsetExists($translation->getToken())) {
             $this->translations()->offsetUnset($translation->getToken());
+        }
+
         return $this;
     }
 

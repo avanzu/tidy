@@ -8,9 +8,8 @@
 
 namespace Tidy\UseCases\Translation\Catalogue\DTO;
 
-use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse;
 use Tidy\Domain\Responders\Project\IExcerpt;
-use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
+use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse;
 
 class CatalogueResponseDTO implements \Countable, ICatalogueResponse
 {
@@ -96,6 +95,11 @@ class CatalogueResponseDTO implements \Countable, ICatalogueResponse
         return $this->targetLanguage;
     }
 
+    public function translations()
+    {
+        return $this->translations;
+    }
+
     /**
      * Count elements of an object
      *
@@ -109,11 +113,6 @@ class CatalogueResponseDTO implements \Countable, ICatalogueResponse
     public function count()
     {
         return count($this->translations);
-    }
-
-    public function translations()
-    {
-        return $this->translations;
     }
 
 
