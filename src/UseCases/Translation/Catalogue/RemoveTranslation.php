@@ -12,7 +12,6 @@ use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
-use Tidy\UseCases\Translation\Catalogue\DTO\NestedCatalogueResponseTransformer;
 use Tidy\UseCases\Translation\Catalogue\DTO\RemoveTranslationRequestDTO;
 use Tidy\UseCases\Translation\Catalogue\Traits\TNestedItemResponder;
 
@@ -49,15 +48,6 @@ class RemoveTranslation
         $catalogue->remove($translation);
 
         return $this->transformer()->transform($catalogue);
-    }
-
-    protected function transformer()
-    {
-        if (!$this->transformer) {
-            $this->transformer = new NestedCatalogueResponseTransformer();
-        }
-
-        return $this->transformer;
     }
 
 

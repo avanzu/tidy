@@ -15,7 +15,6 @@ use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Catalogue\IAddTranslationRequest;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
 use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
-use Tidy\UseCases\Translation\Catalogue\DTO\NestedCatalogueResponseTransformer;
 use Tidy\UseCases\Translation\Catalogue\Traits\TNestedItemResponder;
 
 class AddTranslation

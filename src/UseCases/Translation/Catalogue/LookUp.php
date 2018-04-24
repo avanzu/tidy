@@ -12,13 +12,12 @@ use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Catalogue\IGetCatalogueRequest;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
-use Tidy\UseCases\Translation\Catalogue\DTO\NestedCatalogueResponseTransformer;
-use Tidy\UseCases\Translation\Catalogue\Traits\TItemResponder;
+use Tidy\UseCases\Translation\Catalogue\Traits\TNestedItemResponder;
 
 class LookUp
 {
 
-    use TItemResponder;
+    use TNestedItemResponder;
 
     /**
      * CreateCatalogue constructor.
@@ -42,15 +41,6 @@ class LookUp
         }
 
         return $this->transformer()->transform($catalogue);
-    }
-
-    protected function transformer()
-    {
-        if (!$this->transformer) {
-            $this->transformer = new NestedCatalogueResponseTransformer();
-        }
-
-        return $this->transformer;
     }
 
 
