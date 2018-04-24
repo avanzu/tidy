@@ -1,6 +1,6 @@
 <?php
 /**
- * GetCollection.php
+ * GetCatalogueCollection.php
  * Tidy
  * Date: 19.04.18
  */
@@ -26,7 +26,7 @@ class GetCollection
     protected $transformer;
 
     /**
-     * GetCollection constructor.
+     * GetCatalogueCollection constructor.
      *
      * @param IProjectGateway                $gateway
      * @param ICollectionResponseTransformer $transformer

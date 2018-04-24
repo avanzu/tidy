@@ -26,9 +26,9 @@ use Tidy\UseCases\Translation\DTO\GetSubSetRequestDTO;
 use Tidy\UseCases\Translation\DTO\SubSetResponseDTO;
 use Tidy\UseCases\Translation\DTO\SubSetResponseTransformer;
 use Tidy\UseCases\Translation\DTO\TranslationResponseDTO;
-use Tidy\UseCases\Translation\GetSubSet;
+use Tidy\UseCases\Translation\GetTranslationSubSet;
 
-class GetSubSetTest extends MockeryTestCase
+class GetTranslationSubSetTest extends MockeryTestCase
 {
 
     /**
@@ -37,13 +37,13 @@ class GetSubSetTest extends MockeryTestCase
     protected $gateway;
 
     /**
-     * @var GetSubSet
+     * @var GetTranslationSubSet
      */
     protected $useCase;
 
     public function test_instantiation()
     {
-        $useCase = new GetSubSet(mock(ITranslationGateway::class), mock(SubSetResponseTransformer::class));
+        $useCase = new GetTranslationSubSet(mock(ITranslationGateway::class), mock(SubSetResponseTransformer::class));
         assertThat($useCase, is(notNullValue()));
 
     }
@@ -83,7 +83,7 @@ class GetSubSetTest extends MockeryTestCase
     {
         parent::setUp();
         $this->gateway = mock(ITranslationGateway::class);
-        $this->useCase = new GetSubSet($this->gateway);
+        $this->useCase = new GetTranslationSubSet($this->gateway);
     }
 
     /**

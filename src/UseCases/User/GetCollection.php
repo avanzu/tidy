@@ -1,6 +1,6 @@
 <?php
 /**
- * GetCollection.php
+ * GetCatalogueCollection.php
  * tidy
  * Date: 07.04.18
  */
@@ -15,7 +15,7 @@ use Tidy\Domain\Responders\User\ICollectionResponseTransformer;
 use Tidy\UseCases\User\DTO\CollectionResponseTransformer;
 
 /**
- * Class GetCollection
+ * Class GetCatalogueCollection
  */
 class GetCollection
 {
@@ -30,7 +30,7 @@ class GetCollection
     private $transformer;
 
     /**
-     * GetCollection constructor.
+     * GetCatalogueCollection constructor.
      *
      * @param IUserGateway                   $gateway
      * @param ICollectionResponseTransformer $transformer

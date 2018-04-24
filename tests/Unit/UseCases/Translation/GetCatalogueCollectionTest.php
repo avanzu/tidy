@@ -19,9 +19,9 @@ use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\UseCases\Translation\DTO\CollectionResponseDTO;
 use Tidy\UseCases\Translation\DTO\CollectionResponseTransformer;
 use Tidy\UseCases\Translation\DTO\GetCollectionRequestDTO;
-use Tidy\UseCases\Translation\GetCollection;
+use Tidy\UseCases\Translation\GetCatalogueCollection;
 
-class GetCollectionTest extends MockeryTestCase
+class GetCatalogueCollectionTest extends MockeryTestCase
 {
 
     /**
@@ -30,13 +30,13 @@ class GetCollectionTest extends MockeryTestCase
     protected $gateway;
 
     /**
-     * @var GetCollection
+     * @var GetCatalogueCollection
      */
     protected $useCase;
 
     public function test_instantiation()
     {
-        $useCase = new GetCollection(mock(ITranslationGateway::class), mock(CollectionResponseTransformer::class));
+        $useCase = new GetCatalogueCollection(mock(ITranslationGateway::class), mock(CollectionResponseTransformer::class));
         assertThat($useCase, is(notNullValue()));
     }
 
@@ -75,7 +75,7 @@ class GetCollectionTest extends MockeryTestCase
     {
         parent::setUp();
         $this->gateway = mock(ITranslationGateway::class);
-        $this->useCase = new GetCollection($this->gateway);
+        $this->useCase = new GetCatalogueCollection($this->gateway);
     }
 
     /**

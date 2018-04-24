@@ -1,6 +1,6 @@
 <?php
 /**
- * GetCollectionTest.phpy
+ * GetCatalogueCollectionTest.phpy
  * Date: 19.04.18
  */
 

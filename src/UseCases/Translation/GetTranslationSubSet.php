@@ -14,7 +14,7 @@ use Tidy\Domain\Requestors\Translation\IGetSubSetRequest;
 use Tidy\Domain\Responders\Translation\ISubSetResponseTransformer;
 use Tidy\UseCases\Translation\DTO\SubSetResponseTransformer;
 
-class GetSubSet
+class GetTranslationSubSet
 {
     /**
      * @var ITranslationGateway
@@ -27,7 +27,7 @@ class GetSubSet
     private $transformer;
 
     /**
-     * GetSubSet constructor.
+     * GetTranslationSubSet constructor.
      *
      * @param ITranslationGateway             $gateway
      * @param ISubSetResponseTransformer|null $transformer

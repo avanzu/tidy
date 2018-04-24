@@ -14,7 +14,7 @@ use Tidy\Domain\Requestors\Translation\IGetCollectionRequest;
 use Tidy\Domain\Responders\Translation\ICollectionResponseTransformer;
 use Tidy\UseCases\Translation\DTO\CollectionResponseTransformer;
 
-class GetCollection
+class GetCatalogueCollection
 {
     /**
      * @var ITranslationGateway
@@ -27,7 +27,7 @@ class GetCollection
     private $transformer;
 
     /**
-     * GetCollection constructor.
+     * GetCatalogueCollection constructor.
      *
      * @param ITranslationGateway            $gateway
      * @param ICollectionResponseTransformer $transformer

@@ -1,6 +1,6 @@
 <?php
 /**
- * GetCollectionTest
+ * GetCatalogueCollectionTest
  * tidy
  * Date: 07.04.18
  */
@@ -25,7 +25,7 @@ use Tidy\UseCases\User\DTO\CollectionResponseTransformer;
 use Tidy\UseCases\User\GetCollection;
 
 /**
- * Class GetCollectionTest
+ * Class GetCatalogueCollectionTest
  */
 class GetCollectionTest extends MockeryTestCase
 {
