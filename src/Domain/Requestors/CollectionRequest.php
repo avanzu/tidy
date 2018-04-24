@@ -86,6 +86,7 @@ abstract class CollectionRequest implements ICollectionRequest
     protected function useComparison($name, Comparison $comparison)
     {
         $this->criteria[$name] = $comparison;
+        return $this;
     }
 
     public function boundary()

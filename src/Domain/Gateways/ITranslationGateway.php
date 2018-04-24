@@ -8,6 +8,8 @@
 
 namespace Tidy\Domain\Gateways;
 
+use Tidy\Components\Collection\Boundary;
+use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
 
@@ -39,4 +41,19 @@ interface ITranslationGateway
      * @return mixed
      */
     public function save($catalogue);
+
+    /**
+     * @param Boundary     $boundary
+     * @param Comparison[] $criteria
+     *
+     * @return mixed
+     */
+    public function getCollection(Boundary $boundary, array $criteria = []);
+
+    /**
+     * @param Comparison[] $criteria
+     *
+     * @return int
+     */
+    public function total(array $criteria = []);
 }

@@ -8,6 +8,7 @@
 namespace Tidy\Domain\Gateways;
 
 
+use Tidy\Components\Collection\Boundary;
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Entities\UserProfile;
@@ -24,20 +25,19 @@ interface IUserGateway
     public function find($userId);
 
     /**
-     * @param              $page
-     * @param              $pageSize
+     * @param Boundary     $boundary
      * @param Comparison[] $criteria
      *
      * @return User[]
      */
-    public function fetchCollection($page, $pageSize, $criteria = []);
+    public function fetchCollection(Boundary $boundary, array $criteria = []);
 
     /**
-     * @param array $criteria
+     * @param Comparison[] $criteria
      *
      * @return int
      */
-    public function total($criteria = null);
+    public function total($criteria = []);
 
     /**
      * @param User $user

@@ -12,7 +12,6 @@ use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\ProjectSilverTongue;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\UseCases\Translation\DTO\CatalogueResponseDTO;
 use Tidy\UseCases\Translation\DTO\GetCatalogueRequestDTO;
@@ -46,17 +45,17 @@ class GetCatalogueTest extends MockeryTestCase
         assertThat($request, is(notNullValue()));
 
         $request
-            ->withId(TranslationCatalogueEnglishToGerman::ID)
-        ;
+            ->withId(TranslationCatalogueEnglishToGerman::ID);
 
         $this->gateway
             ->expects('findCatalogue')
             ->with(TranslationCatalogueEnglishToGerman::ID)
-            ->andReturns(new TranslationCatalogueEnglishToGerman());
+            ->andReturns(new TranslationCatalogueEnglishToGerman())
+        ;
 
         $result = $this->useCase->execute($request);
         assertThat($result, is(anInstanceOf(CatalogueResponseDTO::class)));
-        assertThat($result->getId(),is(equalTo(TranslationCatalogueEnglishToGerman::ID)));
+        assertThat($result->getId(), is(equalTo(TranslationCatalogueEnglishToGerman::ID)));
         assertThat($result->count(), is(2));
     }
 
@@ -69,7 +68,7 @@ class GetCatalogueTest extends MockeryTestCase
         try {
             $this->useCase->execute($request);
             $this->fail('Failed to fail...');
-        } catch(\Exception $exception){
+        } catch (\Exception $exception) {
             assertThat($exception, is(anInstanceOf(NotFound::class)));
             $this->assertStringMatchesFormat('Unable to find catalogue identified by "%d".', $exception->getMessage());
         }
