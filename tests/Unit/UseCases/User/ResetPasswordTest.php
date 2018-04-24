@@ -14,6 +14,8 @@ use Tidy\Domain\Entities\User;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Responders\Audit\ChangeResponse;
 use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
+use Tidy\Domain\Responders\User\IResponse;
+use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\UserStub2;
 use Tidy\UseCases\User\DTO\ResetPasswordRequestDTO;
@@ -43,7 +45,7 @@ class ResetPasswordTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $useCase = new ResetPassword($this->encoder, $this->gateway, mock(IChangeResponseTransformer::class));
+        $useCase = new ResetPassword($this->encoder, $this->gateway, mock(IResponseTransformer::class));
         $this->assertInstanceOf(ResetPassword::class, $useCase);
     }
 
@@ -59,20 +61,11 @@ class ResetPasswordTest extends MockeryTestCase
         $this->expectSaveWithEncodedPassword($hash);
 
         $result = $this->useCase->execute($request);
-        assertThat($result, is(anInstanceOf(ChangeResponse::class)));
 
-        $expected = [
-            ['op' => 'replace', 'value' => '**********', 'path' => 'password'],
-            ['op' => 'remove', 'path' => 'token'],
-        ];
-        assertThat($result->changes(), is(equalTo($expected)));
-
-        /*
         $this->assertInstanceOf(IResponse::class, $result);
         $this->assertEquals(UserStub2::ID, $result->getId(), 'User should match.');
         $this->assertEquals($hash, $result->getPassword(), 'Password should be the new hash.');
         $this->assertEmpty($result->getToken(), 'Token should be cleared.');
-        */
     }
 
 
