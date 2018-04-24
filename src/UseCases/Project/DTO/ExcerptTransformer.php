@@ -9,6 +9,7 @@
 namespace Tidy\UseCases\Project\DTO;
 
 use Tidy\Domain\Entities\Project;
+use Tidy\Domain\Responders\Project\IExcerpt;
 use Tidy\Domain\Responders\Project\IExcerptTransformer;
 
 class ExcerptTransformer implements IExcerptTransformer
@@ -17,7 +18,7 @@ class ExcerptTransformer implements IExcerptTransformer
     /**
      * @param Project $project
      *
-     * @return ExcerptDTO
+     * @return IExcerpt
      */
     public function excerpt(Project $project)
     {

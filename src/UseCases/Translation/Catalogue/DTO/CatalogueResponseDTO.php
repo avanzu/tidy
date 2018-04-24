@@ -9,7 +9,7 @@
 namespace Tidy\UseCases\Translation\Catalogue\DTO;
 
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse;
-use Tidy\UseCases\Translation\DTO\Excerpt;
+use Tidy\Domain\Responders\Project\IExcerpt;
 
 class CatalogueResponseDTO implements \Countable, ICatalogueResponse
 {
@@ -56,7 +56,7 @@ class CatalogueResponseDTO implements \Countable, ICatalogueResponse
     }
 
     /**
-     * @return Excerpt
+     * @return IExcerpt
      */
     public function getProject()
     {

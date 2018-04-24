@@ -10,6 +10,7 @@ namespace Tidy\UseCases\Translation\Catalogue\DTO;
 
 use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
+use Tidy\Domain\Responders\Project\IExcerpt;
 use Tidy\Domain\Responders\Project\IExcerptTransformer;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponseTransformer;
@@ -79,7 +80,7 @@ class CatalogueResponseTransformer implements ICatalogueResponseTransformer
     /**
      * @param TranslationCatalogue $catalogue
      *
-     * @return null|\Tidy\UseCases\Project\DTO\ExcerptDTO
+     * @return null|IExcerpt
      */
     protected function makeProjectExcerpt(TranslationCatalogue $catalogue)
     {

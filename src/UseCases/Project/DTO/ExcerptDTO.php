@@ -8,7 +8,9 @@
 
 namespace Tidy\UseCases\Project\DTO;
 
-class ExcerptDTO
+use Tidy\Domain\Responders\Project\IExcerpt;
+
+class ExcerptDTO implements IExcerpt
 {
     public $name;
 
