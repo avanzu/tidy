@@ -13,43 +13,11 @@ use Tidy\Components\Audit\ChangeSet;
 use Tidy\Components\Exceptions\Duplicate;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\TranslationCatalogue;
-use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
-use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
 use Tidy\UseCases\Translation\DTO\AddTranslationRequestDTO;
-use Tidy\UseCases\Translation\DTO\TranslationResponseTransformer;
 
-class AddTranslation
+class AddTranslation extends PatchUseCase
 {
-    /**
-     * @var ITranslationGateway
-     */
-    protected $gateway;
 
-    /**
-     * @var ChangeResponseTransformer
-     */
-    private $transformer;
-
-    /**
-     * AddTranslation constructor.
-     *
-     * @param ITranslationGateway        $gateway
-     * @param IChangeResponseTransformer $transformer
-     */
-    public function __construct(ITranslationGateway $gateway, IChangeResponseTransformer $transformer = null)
-    {
-        $this->gateway     = $gateway;
-        $this->transformer = $transformer;
-    }
-
-    public function swapTransformer(IChangeResponseTransformer $transformer)
-    {
-        $previous          = $this->transformer;
-        $this->transformer = $transformer;
-
-        return $previous;
-    }
 
     public function execute(AddTranslationRequestDTO $request)
     {
@@ -80,16 +48,6 @@ class AddTranslation
 
         return $this->transformer()->transform($result);
 
-    }
-
-
-    protected function transformer()
-    {
-        if (!$this->transformer) {
-            $this->transformer = new ChangeResponseTransformer();
-        }
-
-        return $this->transformer;
     }
 
     /**

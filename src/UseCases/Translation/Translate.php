@@ -11,34 +11,11 @@ namespace Tidy\UseCases\Translation;
 use Tidy\Components\Audit\Change;
 use Tidy\Components\Audit\ChangeSet;
 use Tidy\Domain\Entities\Translation;
-use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
-use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
 use Tidy\UseCases\Translation\DTO\TranslateRequestDTO;
 
-class Translate
+class Translate extends PatchUseCase
 {
-    /**
-     * @var ITranslationGateway
-     */
-    protected $gateway;
 
-    /**
-     * @var IChangeResponseTransformer
-     */
-    protected $transformer;
-
-    /**
-     * Translate constructor.
-     *
-     * @param ITranslationGateway             $gateway
-     * @param IChangeResponseTransformer|null $transformer
-     */
-    public function __construct(ITranslationGateway $gateway, IChangeResponseTransformer $transformer = null)
-    {
-        $this->gateway     = $gateway;
-        $this->transformer = $transformer;
-    }
 
     public function execute(TranslateRequestDTO $request)
     {
@@ -51,20 +28,13 @@ class Translate
                                 ->add($this->replaceState($request, $translation, $path))
         ;
 
-        if( count($changes)) $this->gateway->save($catalogue);
+        if (count($changes)) {
+            $this->gateway->save($catalogue);
+        }
 
         return $this->transformer()->transform($changes);
     }
 
-
-    protected function transformer()
-    {
-        if (!$this->transformer) {
-            $this->transformer = new ChangeResponseTransformer();
-        }
-
-        return $this->transformer;
-    }
 
     /**
      * @param TranslateRequestDTO $request
@@ -80,7 +50,8 @@ class Translate
         }
 
         $translation->setLocaleString($request->localeString());
-        return Change::replace($request->localeString(),$this->pathTo($translation, $path, 'localeString'));
+
+        return Change::replace($request->localeString(), $this->pathTo($translation, $path, 'localeString'));
     }
 
     /**
@@ -96,7 +67,8 @@ class Translate
             return null;
         }
         $translation->setState($request->state());
-        return Change::replace($request->state(),$this->pathTo($translation, $path, 'state'));
+
+        return Change::replace($request->state(), $this->pathTo($translation, $path, 'state'));
     }
 
     /**

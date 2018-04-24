@@ -8,43 +8,12 @@
 
 namespace Tidy\UseCases\Translation;
 
-use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\Domain\Responders\Translation\ICatalogueResponseTransformer;
-use Tidy\UseCases\Translation\DTO\CatalogueResponseTransformer;
 use Tidy\UseCases\Translation\DTO\CreateCatalogueRequestDTO;
 
-class CreateCatalogue
+class CreateCatalogue extends UseCase
 {
-    /**
-     * @var ITranslationGateway
-     */
-    protected $gateway;
 
-    /**
-     * @var ICatalogueResponseTransformer
-     */
-    private $transformer;
 
-    /**
-     * CreateCatalogue constructor.
-     *
-     * @param ITranslationGateway           $gateway
-     * @param ICatalogueResponseTransformer $transformer
-     */
-    public function __construct(ITranslationGateway $gateway, ICatalogueResponseTransformer $transformer = null)
-    {
-        $this->gateway     = $gateway;
-        $this->transformer = $transformer;
-    }
-
-    /**
-     * @return ICatalogueResponseTransformer
-     */
-    protected function transformer()
-    {
-        if( ! $this->transformer ) $this->transformer = new CatalogueResponseTransformer();
-        return $this->transformer;
-    }
     public function execute(CreateCatalogueRequestDTO $request)
     {
 
