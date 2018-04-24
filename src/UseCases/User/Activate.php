@@ -7,20 +7,17 @@
 
 namespace Tidy\UseCases\User;
 
-use Tidy\Components\Audit\Change;
-use Tidy\Components\Audit\ChangeSet;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Requestors\User\IActivateRequest;
-use Tidy\Domain\Responders\Audit\ChangeResponse;
-use Tidy\Domain\Responders\User\ChangeResponder;
+use Tidy\Domain\Responders\User\ItemResponder;
 
-class Activate extends ChangeResponder
+class Activate extends ItemResponder
 {
 
     /**
      * @param IActivateRequest $request
      *
-     * @return ChangeResponse
+     * @return \Tidy\Domain\Responders\User\IResponse
      */
     public function execute(IActivateRequest $request)
     {
@@ -34,12 +31,7 @@ class Activate extends ChangeResponder
         $user->setEnabled(true)->clearToken();
         $this->userGateway->save($user);
 
-        $result = ChangeSet::make(
-            Change::replace(true, 'enabled'),
-            Change::remove('token')
-        );
-
-        return $this->transformer()->transform($result);
+        return $this->transformer()->transform($user);
     }
 
 

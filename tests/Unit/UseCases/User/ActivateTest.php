@@ -7,17 +7,16 @@
 namespace Tidy\Tests\Unit\UseCases\User;
 
 use Mockery\MockInterface;
-use Tidy\Components\Audit\Change;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Gateways\IUserGateway;
-use Tidy\Domain\Responders\Audit\ChangeResponse;
-use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
-use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
+use Tidy\Domain\Responders\User\IResponse;
+use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\UserStub1;
 use Tidy\UseCases\User\Activate;
 use Tidy\UseCases\User\DTO\ActivateRequestDTO;
+use Tidy\UseCases\User\DTO\ResponseTransformer;
 
 class ActivateTest extends MockeryTestCase
 {
@@ -33,9 +32,9 @@ class ActivateTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $useCase = new Activate($this->gateway, mock(IChangeResponseTransformer::class));
+        $useCase = new Activate($this->gateway, mock(IResponseTransformer::class));
         $this->assertInstanceOf(Activate::class, $useCase);
-        $useCase->setTransformer(new ChangeResponseTransformer());
+        $useCase->setTransformer(new ResponseTransformer());
     }
 
     public function test_activation_with_matching_token()
@@ -57,26 +56,11 @@ class ActivateTest extends MockeryTestCase
 
         $result = $this->useCase->execute($request);
 
-        assertThat($result, is(anInstanceOf(ChangeResponse::class)));
-
-        $expected = [
-            [
-                'op'    => Change::OP_REPLACE,
-                'path'  => 'enabled',
-                'value' => true,
-            ],
-            [
-                'op'   => Change::OP_REMOVE,
-                'path' => 'token',
-            ],
-        ];
-        assertThat($result->changes(), is(equalTo($expected)));
-        /*
         $this->assertInstanceOf(IResponse::class, $result);
 
         $this->assertTrue($result->isEnabled(), 'user should be enabled.');
         $this->assertEmpty($result->getToken(), 'token should be removed.');
-        */
+
     }
 
     public function test_activation_with_undefined_token()
