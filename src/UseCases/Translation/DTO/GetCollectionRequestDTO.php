@@ -15,6 +15,30 @@ class GetCollectionRequestDTO extends CollectionRequest
 {
 
     /**
+     * CollectionRequest constructor.
+     *
+     * @param int $page
+     * @param int $pageSize
+     */
+    public function __construct($page = CollectionRequest::DEFAULT_PAGE, $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE)
+    {
+        $this->page     = $page;
+        $this->pageSize = $pageSize;
+    }
+
+    /**
+     * @param int $page
+     * @param int $pageSize
+     *
+     * @return static
+     */
+    public static function make($page = CollectionRequest::DEFAULT_PAGE, $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE)
+    {
+        return new static($page, $pageSize);
+    }
+
+
+    /**
      * @param Comparison|null $comparison
      *
      * @return GetCollectionRequestDTO

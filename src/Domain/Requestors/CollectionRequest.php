@@ -25,28 +25,7 @@ abstract class CollectionRequest implements ICollectionRequest
 
     public $criteria = [];
 
-    /**
-     * CollectionRequest constructor.
-     *
-     * @param int $page
-     * @param int $pageSize
-     */
-    public function __construct($page = CollectionRequest::DEFAULT_PAGE, $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE)
-    {
-        $this->page     = $page;
-        $this->pageSize = $pageSize;
-    }
 
-    /**
-     * @param int $page
-     * @param int $pageSize
-     *
-     * @return static
-     */
-    public static function make($page = CollectionRequest::DEFAULT_PAGE, $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE)
-    {
-        return new static($page, $pageSize);
-    }
 
     /**
      * @return int

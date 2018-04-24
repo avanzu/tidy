@@ -56,4 +56,21 @@ interface ITranslationGateway
      * @return int
      */
     public function total(array $criteria = []);
+
+    /**
+     * @param int          $catalogueId
+     * @param Boundary     $boundary
+     * @param Comparison[] $criteria
+     *
+     * @return mixed
+     */
+    public function getSubSet(int $catalogueId, Boundary $boundary, array $criteria = []);
+
+    /**
+     * @param       int    $catalogueId
+     * @param Comparison[] $criteria
+     *
+     * @return mixed
+     */
+    public function subSetTotal($catalogueId, array $criteria = []);
 }
