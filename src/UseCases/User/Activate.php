@@ -31,15 +31,13 @@ class Activate extends ChangeResponder
             throw new NotFound(sprintf('Unable to find user by token "%s".', $request->token()));
         }
 
-        $result = ChangeSet::make()
-                           ->add(Change::test($request->token(), 'token'))
-                           ->add(Change::replace(true, 'enabled'))
-                           ->add(Change::remove( 'token'))
-        ;
-
         $user->setEnabled(true)->clearToken();
-
         $this->userGateway->save($user);
+
+        $result = ChangeSet::make(
+            Change::replace(true, 'enabled'),
+            Change::remove( 'token')
+        );
 
         return $this->transformer()->transform($result);
     }

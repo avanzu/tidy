@@ -64,7 +64,6 @@ class ResetPasswordTest extends MockeryTestCase
 
 
         $expected = [
-            ['op' => 'test', 'value' => self::RESET_TOKEN, 'path' => 'token'],
             ['op' => 'replace', 'value' => '**********', 'path' => 'password'],
             ['op' => 'remove', 'path' => 'token'],
         ];

@@ -41,15 +41,10 @@ class AddTranslation extends ChangeResponder
 
         $this->gateway->save($catalogue);
 
-        $result = ChangeSet::make();
-        $result
-            ->add(
-                Change::add(
-                    $translation->toArray(),
-                    sprintf('%s/%s', $catalogue->getCanonical(), $translation->getId())
-                )
-            )
-        ;
+        $result = ChangeSet::make(
+            Change::add($translation->toArray(), $this->pathInCatalogue($catalogue, $translation))
+        );
+
 
         return $this->transformer()->transform($result);
 
@@ -83,6 +78,17 @@ class AddTranslation extends ChangeResponder
                 sprintf('Duplicate token "%s" in catalogue "%s".', $request->token, $catalogue->getName())
             );
         }
+    }
+
+    /**
+     * @param $catalogue
+     * @param $translation
+     *
+     * @return string
+     */
+    protected function pathInCatalogue($catalogue, $translation): string
+    {
+        return sprintf('%s/%s', $catalogue->getCanonical(), $translation->getId());
     }
 
 

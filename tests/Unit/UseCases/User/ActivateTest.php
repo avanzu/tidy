@@ -63,11 +63,6 @@ class ActivateTest extends MockeryTestCase
 
         $expected = [
             [
-                'op'    => Change::OP_TEST,
-                'path'  => 'token',
-                'value' => $token,
-            ],
-            [
                 'op'    => Change::OP_REPLACE,
                 'path'  => 'enabled',
                 'value' => true,

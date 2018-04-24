@@ -25,10 +25,7 @@ class Recover extends ChangeResponder
 
         $user->assignToken(uniqid());
         $this->userGateway->save($user);
-        $result = ChangeSet::make()
-                 ->add(Change::test($request->userName(), 'userName'))
-                 ->add(Change::add($user->getToken(), 'token'))
-            ;
+        $result = ChangeSet::make(Change::add($user->getToken(), 'token'));
 
         return $this->transformer()->transform($result);
     }

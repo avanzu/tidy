@@ -25,10 +25,11 @@ class Translate extends ChangeResponder
 
         $catalogue   = $this->lookUpCatalogue($request);
         $translation = $this->lookUpTranslation($request, $catalogue);
-        $changes     = ChangeSet::make()
-                                ->add($this->replaceLocaleString($request, $translation))
-                                ->add($this->replaceState($request, $translation))
-        ;
+        $changes     = ChangeSet::make(
+            $this->replaceLocaleString($request, $translation),
+            $this->replaceState($request, $translation)
+        );
+
 
         if (count($changes)) {
             $this->gateway->save($catalogue);

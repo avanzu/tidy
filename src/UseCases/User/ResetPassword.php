@@ -45,11 +45,11 @@ class ResetPassword extends ChangeResponder
         $user->setPassword($password)->clearToken();
         $this->userGateway->save($user);
 
-        $result = ChangeSet::make()
-                           ->add(Change::test($request->token(), 'token'))
-                           ->add(Change::replace('**********', 'password' ))
-                           ->add(Change::remove('token'))
-        ;
+        $result = ChangeSet::make(
+            Change::replace('**********', 'password' ),
+            Change::remove('token')
+        );
+
 
         return $this->transformer()->transform($result);
     }

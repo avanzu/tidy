@@ -26,9 +26,10 @@ class Rename extends ChangeResponder
 
         $this->gateway->save($project);
 
-        $result = ChangeSet::make()
-                           ->add(Change::replace($request->name(), 'name'))
-                           ->add(Change::replace($request->description(), 'description'))
+        $result = ChangeSet::make(
+            Change::replace($request->name(), 'name'),
+            Change::replace($request->description(), 'description')
+        )
         ;
 
         return $this->transformer()->transform($result);

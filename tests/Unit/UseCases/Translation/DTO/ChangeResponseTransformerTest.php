@@ -10,10 +10,9 @@ namespace Tidy\Tests\Unit\UseCases\Translation\DTO;
 
 use Tidy\Components\Audit\Change;
 use Tidy\Components\Audit\ChangeSet;
+use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
 use Tidy\Domain\Responders\Audit\IChangeResponse;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Domain\Responders\Audit\ChangeResponse;
-use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
 
 class ChangeResponseTransformerTest extends MockeryTestCase
 {
@@ -28,11 +27,11 @@ class ChangeResponseTransformerTest extends MockeryTestCase
     {
 
         $transformer = new ChangeResponseTransformer();
-        $changes     = ChangeSet::make()
-                                ->add(Change::replace('new value', 'password'))
-                                ->add(Change::remove('elements/10'))
-                                ->add(Change::add('100', '/elements/20'))
-        ;
+        $changes     = ChangeSet::make(
+            Change::replace('new value', 'password'),
+            Change::remove('elements/10'),
+            Change::add('100', '/elements/20')
+        );
 
         assertThat(count($changes), is(equalTo(3)));
 
