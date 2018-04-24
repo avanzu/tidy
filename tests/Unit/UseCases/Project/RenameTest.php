@@ -14,6 +14,9 @@ use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
 use Tidy\Domain\Responders\Audit\IChangeResponse;
 use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
 use Tidy\Domain\Responders\Project\ChangeResponder;
+use Tidy\Domain\Responders\Project\IResponse;
+use Tidy\Domain\Responders\Project\IResponseTransformer;
+use Tidy\Domain\Responders\Project\ItemResponder;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\ProjectSilverTongue;
 use Tidy\UseCases\Project\DTO\RenameRequestDTO;
@@ -33,10 +36,10 @@ class RenameTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $useCase = new Rename(mock(IProjectGateway::class), mock(IChangeResponseTransformer::class));
+        $useCase = new Rename(mock(IProjectGateway::class), mock(IResponseTransformer::class));
 
         assertThat($useCase, is(notNullValue()));
-        assertThat($useCase, is(anInstanceOf(ChangeResponder::class)));
+        assertThat($useCase, is(anInstanceOf(ItemResponder::class)));
     }
 
     public function test_rename()
@@ -56,20 +59,8 @@ class RenameTest extends MockeryTestCase
 
         $result = $this->useCase->execute($request);
 
-        $expected = [
-            [
-                'op'    => Change::OP_REPLACE,
-                'value' => $expectedName,
-                'path'  => 'name',
-            ],
-            [
-                'op'    => Change::OP_REPLACE,
-                'value' => $expectedDescription,
-                'path'  => 'description',
-            ],
-        ];
-        assertThat($result, is(anInstanceOf(IChangeResponse::class)));
-        assertThat($result->changes(), is(equalTo($expected)));
+        assertThat($result, is(anInstanceOf(IResponse::class)));
+        assertThat($result->getId(), is(equalTo(ProjectSilverTongue::ID)));
     }
 
 

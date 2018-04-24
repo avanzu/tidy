@@ -16,6 +16,7 @@ use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
 use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
+use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\Tests\Unit\Domain\Entities\TranslationImpl;
@@ -80,6 +81,7 @@ class AddTranslationTest extends MockeryTestCase
 
         assertThat($result, is(anInstanceOf(ICatalogueResponse::class)));
         assertThat(count($result), is(equalTo(3)));
+        $this->assertContainsOnlyInstancesOf(ITranslationResponse::class, $result->translations());
 
     }
 

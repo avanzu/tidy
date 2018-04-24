@@ -14,6 +14,8 @@ use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Audit\ChangeResponse;
+use Tidy\Domain\Responders\Translation\Message\ItemResponder;
+use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\Tests\Unit\Domain\Entities\TranslationUntranslated;
@@ -39,6 +41,7 @@ class TranslateTest extends MockeryTestCase
     {
         $useCase = new Translate(mock(ITranslationGateway::class));
         assertThat($useCase, is(notNullValue()));
+        assertThat($useCase, is(anInstanceOf(ItemResponder::class)));
     }
 
 
@@ -63,43 +66,11 @@ class TranslateTest extends MockeryTestCase
 
         $response = $this->useCase->execute($request);
 
-        $expected = [
-            [
-                'op'    => Change::OP_REPLACE,
-                'value' => self::LIPSUM,
-                'path'  => sprintf('%s/localeString', TranslationUntranslated::ID),
-            ],
-            [
-                'op'    => Change::OP_REPLACE,
-                'path'  => sprintf('%s/state', TranslationUntranslated::ID),
-                'value' => 'translated',
-            ],
-
-        ];
-
-        assertThat($response, is(anInstanceOf(ChangeResponse::class)));
-        assertThat($response->changes(), is(arrayContaining($expected)));
+        assertThat($response, is(anInstanceOf(ITranslationResponse::class)));
         assertThat($translation->getLocaleString(), is(equalTo(self::LIPSUM)));
         assertThat($translation->getState(), is(equalTo('translated')));
     }
 
-    public function test_no_changes()
-    {
-        $request = TranslateRequestDTO::make();
-        assertThat($request, is(notNullValue()));
-
-        $request
-            ->withCatalogueId(TranslationCatalogueEnglishToGerman::ID)
-            ->withToken(TranslationUntranslated::MSG_ID)
-        ;
-
-        $this->expect_findCatalogue_on_gateway(new TranslationCatalogueEnglishToGerman());
-        $this->gateway->shouldReceive('save')->never();
-
-        $result = $this->useCase->execute($request);
-        assertThat(count($result->changes()), is(equalTo(0)));
-
-    }
 
     public function test_execute_with_unknown_catalogue_throws_NotFound()
     {

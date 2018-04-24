@@ -7,12 +7,10 @@
 
 namespace Tidy\UseCases\Project;
 
-use Tidy\Components\Audit\Change;
-use Tidy\Components\Audit\ChangeSet;
 use Tidy\Domain\Requestors\Project\IRenameRequest;
-use Tidy\Domain\Responders\Project\ChangeResponder;
+use Tidy\Domain\Responders\Project\ItemResponder;
 
-class Rename extends ChangeResponder
+class Rename extends ItemResponder
 {
 
     public function execute(IRenameRequest $request)
@@ -26,11 +24,6 @@ class Rename extends ChangeResponder
 
         $this->gateway->save($project);
 
-        $result = ChangeSet::make(
-            Change::replace($request->name(), 'name'),
-            Change::replace($request->description(), 'description')
-        );
-
-        return $this->transformer()->transform($result);
+        return $this->transformer()->transform($project);
     }
 }
