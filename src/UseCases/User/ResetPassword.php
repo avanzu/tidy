@@ -12,22 +12,26 @@ use Tidy\Components\Security\Encoder\IPasswordEncoder;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\IResetPasswordRequest;
 use Tidy\Domain\Responders\User\IResponseTransformer;
-use Tidy\Domain\Responders\User\ItemResponder;
+use Tidy\UseCases\User\Traits\TItemResponder;
 
-class ResetPassword extends ItemResponder
+class ResetPassword
 {
+    use TItemResponder;
+
     /**
      * @var IPasswordEncoder
      */
     protected $encoder;
+
 
     public function __construct(
         IPasswordEncoder $encoder,
         IUserGateway $userGateway,
         IResponseTransformer $transformer = null
     ) {
-        parent::__construct($userGateway, $transformer);
-        $this->encoder = $encoder;
+        $this->transformer = $transformer;
+        $this->userGateway = $userGateway;
+        $this->encoder     = $encoder;
     }
 
 

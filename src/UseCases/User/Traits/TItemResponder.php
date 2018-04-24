@@ -1,18 +1,18 @@
 <?php
 /**
- * ItemResponder.php
- * Tidy
- * Date: 14.04.18
+ * This file is part of the "Tidy" Project.
+ *
+ * Created by avanzu on 25.04.18
+ *
  */
 
-namespace Tidy\Domain\Responders\User;
+namespace Tidy\UseCases\User\Traits;
 
-use Tidy\Domain\Gateways\IUserGateway;
+use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\UseCases\User\DTO\ResponseTransformer;
 
-abstract class ItemResponder
+trait TItemResponder
 {
-
     /**
      * @var IResponseTransformer
      */
@@ -22,19 +22,6 @@ abstract class ItemResponder
      * @var \Tidy\Domain\Gateways\IUserGateway
      */
     protected $userGateway;
-
-
-    /**
-     * ItemResponder constructor.
-     *
-     * @param IUserGateway         $userGateway
-     * @param IResponseTransformer $responseTransformer
-     */
-    public function __construct(IUserGateway $userGateway, IResponseTransformer $responseTransformer = null)
-    {
-        $this->userGateway = $userGateway;
-        $this->transformer = $responseTransformer;
-    }
 
     public function setUserGateway($userGateway)
     {
@@ -58,4 +45,5 @@ abstract class ItemResponder
 
         return $this->transformer;
     }
+
 }

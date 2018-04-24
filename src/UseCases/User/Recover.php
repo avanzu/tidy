@@ -8,11 +8,30 @@
 namespace Tidy\UseCases\User;
 
 use Tidy\Components\Exceptions\NotFound;
+use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\IRecoverRequest;
+use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Domain\Responders\User\ItemResponder;
+use Tidy\UseCases\User\Traits\TItemResponder;
 
-class Recover extends ItemResponder
+class Recover
 {
+
+    use TItemResponder;
+
+    /**
+     * ItemResponder constructor.
+     *
+     * @param IUserGateway         $userGateway
+     * @param IResponseTransformer $responseTransformer
+     */
+    public function __construct(IUserGateway $userGateway, IResponseTransformer $responseTransformer = null)
+    {
+        $this->userGateway = $userGateway;
+        $this->transformer = $responseTransformer;
+    }
+
+
     public function execute(IRecoverRequest $request)
     {
         $user = $this->userGateway->findByUserName($request->userName());

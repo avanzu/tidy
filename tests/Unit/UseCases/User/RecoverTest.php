@@ -33,7 +33,7 @@ class RecoverTest extends MockeryTestCase
     public function test_instantiation()
     {
         $useCase = new Recover(mock(IUserGateway::class), mock(IResponseTransformer::class));
-        $this->assertInstanceOf(ItemResponder::class, $useCase);
+        assertThat($useCase, is(notNullValue()));
     }
 
     public function test_recover_success()

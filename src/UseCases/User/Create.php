@@ -14,10 +14,12 @@ use Tidy\Domain\Entities\UserProfile;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\ICreateRequest;
 use Tidy\Domain\Responders\User\IResponseTransformer;
-use Tidy\Domain\Responders\User\ItemResponder;
+use Tidy\UseCases\User\Traits\TItemResponder;
 
-class Create extends ItemResponder
+class Create
 {
+    use TItemResponder;
+
     /**
      * @var ITextNormaliser
      */
@@ -34,7 +36,8 @@ class Create extends ItemResponder
         ITextNormaliser $normaliser = null,
         IResponseTransformer $responseTransformer = null
     ) {
-        parent::__construct($userGateway, $responseTransformer);
+        $this->userGateway     = $userGateway;
+        $this->transformer     = $responseTransformer;
         $this->passwordEncoder = $encoder;
         $this->normalizer      = $normaliser;
     }
