@@ -79,11 +79,7 @@ class AddTranslationTest extends MockeryTestCase
         assertThat($result, is(anInstanceOf(ChangeResponse::class)));
 
         $expected = [
-            [
-                'op'    => 'test',
-                'value' => 4711,
-                'path'  => 'catalogueId',
-            ],
+
             [
                 'op'    => 'add',
                 'value' =>

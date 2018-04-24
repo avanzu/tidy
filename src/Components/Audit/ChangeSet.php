@@ -14,9 +14,25 @@ class ChangeSet implements \Countable, \IteratorAggregate
 {
     public $changes = [];
 
-    public static function make()
+    /**
+     * ChangeSet constructor.
+     * @param array $changes
+     */
+    public function __construct(array $changes = []) {
+        foreach ($changes as $change) {
+            $this->add($change);
+        }
+    }
+
+
+    /**
+     * @param mixed ...$changes
+     *
+     * @return static
+     */
+    public static function make(...$changes)
     {
-        return new static;
+        return new static($changes);
     }
 
     /**

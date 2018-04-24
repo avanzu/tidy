@@ -27,7 +27,6 @@ class Rename extends ChangeResponder
         $this->gateway->save($project);
 
         $result = ChangeSet::make()
-                            ->add(Change::test($request->projectId(), 'id'))
                            ->add(Change::replace($request->name(), 'name'))
                            ->add(Change::replace($request->description(), 'description'))
         ;

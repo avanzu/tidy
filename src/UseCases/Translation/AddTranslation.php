@@ -43,7 +43,6 @@ class AddTranslation extends ChangeResponder
 
         $result = ChangeSet::make();
         $result
-            ->add(Change::test($request->catalogueId(), 'catalogueId'))
             ->add(
                 Change::add(
                     $translation->toArray(),

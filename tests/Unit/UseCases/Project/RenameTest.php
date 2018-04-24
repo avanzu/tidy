@@ -58,11 +58,6 @@ class RenameTest extends MockeryTestCase
 
         $expected = [
             [
-                'op'    => Change::OP_TEST,
-                'value' => ProjectSilverTongue::ID,
-                'path'  => 'id',
-            ],
-            [
                 'op'    => Change::OP_REPLACE,
                 'value' => $expectedName,
                 'path'  => 'name',
