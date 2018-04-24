@@ -11,20 +11,44 @@ namespace Tidy\Domain\Entities;
 use ArrayObject;
 use Tidy\Components\Exceptions\LanguageIsEmpty;
 
+/**
+ * Class TranslationCatalogue
+ */
 abstract class TranslationCatalogue
 {
+    /**
+     * @var string
+     */
     protected $sourceLanguage;
 
+    /**
+     * @var string
+     */
     protected $sourceCulture;
 
+    /**
+     * @var string
+     */
     protected $targetLanguage;
 
+    /**
+     * @var string
+     */
     protected $targetCulture;
 
+    /**
+     * @var string
+     */
     protected $name;
 
+    /**
+     * @var int
+     */
     protected $id;
 
+    /**
+     * @var string
+     */
     protected $canonical;
 
     /**
@@ -187,6 +211,9 @@ abstract class TranslationCatalogue
     }
 
 
+    /**
+     * @return string
+     */
     public function sourceLocale()
     {
         if (empty($this->getSourceLanguage())) {
@@ -196,6 +223,9 @@ abstract class TranslationCatalogue
         return implode('-', array_filter([$this->getSourceLanguage(), $this->getSourceCulture()]));
     }
 
+    /**
+     * @return string
+     */
     public function targetLocale()
     {
         if (empty($this->getTargetLanguage())) {
@@ -205,6 +235,11 @@ abstract class TranslationCatalogue
         return implode('-', array_filter([$this->getTargetLanguage(), $this->getTargetCulture()]));
     }
 
+    /**
+     * @param Translation $translation
+     *
+     * @return $this
+     */
     public function addTranslation(Translation $translation)
     {
         $this->translations()->offsetSet($translation->getToken(), $translation);
@@ -236,6 +271,9 @@ abstract class TranslationCatalogue
         return array_map($callback, $this->translations()->getArrayCopy());
     }
 
+    /**
+     * @return ArrayObject|Translation[]
+     */
     protected function translations()
     {
         if (!$this->translations) {
