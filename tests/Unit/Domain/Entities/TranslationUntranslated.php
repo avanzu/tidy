@@ -18,8 +18,9 @@ class TranslationUntranslated extends Translation
     const MSG_TARGET  = 'Integer quis  ';
     const MSG_SOURCE  = 'Integer quis ';
     const MSG_ID      = 'message.lorem_ipsum';
+    const ID      = 220418;
 
-    protected $id           = self::MSG_ID;
+    protected $id           = self::ID;
 
     protected $token        = self::MSG_ID;
 

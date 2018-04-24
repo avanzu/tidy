@@ -9,6 +9,7 @@
 namespace Tidy\Domain\Entities;
 
 use ArrayObject;
+use Tidy\Components\Exceptions\LanguageIsEmpty;
 
 abstract class TranslationCatalogue
 {
@@ -52,6 +53,7 @@ abstract class TranslationCatalogue
     public function setProject($project)
     {
         $this->project = $project;
+
         return $this;
     }
 
@@ -61,7 +63,7 @@ abstract class TranslationCatalogue
      */
     public function getSourceLanguage()
     {
-        return $this->sourceLanguage;
+        return strtolower($this->sourceLanguage);
     }
 
     /**
@@ -81,7 +83,7 @@ abstract class TranslationCatalogue
      */
     public function getSourceCulture()
     {
-        return $this->sourceCulture;
+        return strtoupper($this->sourceCulture);
     }
 
     /**
@@ -101,7 +103,7 @@ abstract class TranslationCatalogue
      */
     public function getTargetLanguage()
     {
-        return $this->targetLanguage;
+        return strtolower($this->targetLanguage);
     }
 
     /**
@@ -121,7 +123,7 @@ abstract class TranslationCatalogue
      */
     public function getTargetCulture()
     {
-        return $this->targetCulture;
+        return strtoupper($this->targetCulture);
     }
 
     /**
@@ -184,26 +186,23 @@ abstract class TranslationCatalogue
         return $this;
     }
 
-    public function path() {
-        return implode('/', [$this->project->path(), $this->getCanonical(), $this->sourceLocale(), $this->targetLocale()]);
-    }
 
-    public function sourceLocale() {
-        return implode('-', array_filter([$this->sourceLanguage, $this->sourceCulture]));
+    public function sourceLocale()
+    {
+        if (empty($this->getSourceLanguage())) {
+            throw new LanguageIsEmpty('Source language is not defined.');
+        }
+
+        return implode('-', array_filter([$this->getSourceLanguage(), $this->getSourceCulture()]));
     }
 
     public function targetLocale()
     {
-        return implode('-', array_filter([$this->targetLanguage, $this->targetCulture]));
-    }
-
-    protected function translations()
-    {
-        if (!$this->translations) {
-            $this->translations = new ArrayObject();
+        if (empty($this->getTargetLanguage())) {
+            throw new LanguageIsEmpty('Target language is not defined.');
         }
 
-        return $this->translations;
+        return implode('-', array_filter([$this->getTargetLanguage(), $this->getTargetCulture()]));
     }
 
     public function addTranslation(Translation $translation)
@@ -235,6 +234,15 @@ abstract class TranslationCatalogue
     public function map(callable $callback)
     {
         return array_map($callback, $this->translations()->getArrayCopy());
+    }
+
+    protected function translations()
+    {
+        if (!$this->translations) {
+            $this->translations = new ArrayObject();
+        }
+
+        return $this->translations;
     }
 
 

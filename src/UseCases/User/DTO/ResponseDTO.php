@@ -42,8 +42,6 @@ class ResponseDTO implements IResponse
 
     public $lastName;
 
-    public $path;
-
     /**
      * @return mixed
      */
@@ -98,11 +96,5 @@ class ResponseDTO implements IResponse
     {
         return $this->enabled;
     }
-
-    public function path()
-    {
-        return $this->path;
-    }
-
 
 }

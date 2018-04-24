@@ -122,7 +122,7 @@ class AddTranslationTest extends MockeryTestCase
                         'notes'        => self::NOTES,
                         'state'        => 'translated',
                     ],
-                'path'  => '/projects/silver-tongue/messages/en-US/de-DE/47110815',
+                'path'  => 'messages/47110815',
             ],
         ];
 

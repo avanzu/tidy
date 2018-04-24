@@ -28,7 +28,7 @@ class TranslationResponseTransformerTest extends MockeryTestCase
         $result = $transformer->transform(new TranslationTranslated());
         assertThat($result, is(anInstanceOf(TranslationResponseDTO::class)));
 
-        assertThat($result->getId(), is(equalTo(TranslationTranslated::MSG_ID)));
+        assertThat($result->getId(), is(equalTo(TranslationTranslated::ID)));
         assertThat($result->getSourceString(), is(equalTo(TranslationTranslated::MSG_SOURCE)));
         assertThat($result->getLocaleString(), is(equalTo(TranslationTranslated::MSG_TARGET)));
         assertThat($result->getMeaning(), is(equalTo(TranslationTranslated::MSG_MEANING)));

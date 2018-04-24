@@ -92,10 +92,6 @@ abstract class User implements IClaimant
         return $this;
     }
 
-    public function path() {
-        return sprintf('/%s/%s', static::PREFIX, $this->canonical);
-    }
-
     /**
      * @param $canonical
      *

@@ -54,7 +54,6 @@ class TranslateTest extends MockeryTestCase
             ->commitStateTo('translated')
         ;
 
-        $path = (new TranslationCatalogueEnglishToGerman())->path();
 
         $catalogue   = mock(TranslationCatalogueEnglishToGerman::class);
         $translation = new TranslationUntranslated();
@@ -65,7 +64,7 @@ class TranslateTest extends MockeryTestCase
             ->andReturns($catalogue)
         ;
 
-        $catalogue->expects('path')->andReturn($path);
+
         $catalogue->expects('find')->with(TranslationUntranslated::MSG_ID)->andReturns($translation);
 
         $this->gateway->expects('save')->with($catalogue);
@@ -76,11 +75,11 @@ class TranslateTest extends MockeryTestCase
             [
                 'op'    => Change::OP_REPLACE,
                 'value' => self::LIPSUM,
-                'path'  => sprintf('%s/%s/localeString', $path, TranslationUntranslated::MSG_ID),
+                'path'  => sprintf('%s/localeString', TranslationUntranslated::ID),
             ],
             [
                 'op'    => Change::OP_REPLACE,
-                'path'  => sprintf('%s/%s/state', $path, TranslationUntranslated::MSG_ID),
+                'path'  => sprintf('%s/state',  TranslationUntranslated::ID),
                 'value' => 'translated',
             ],
 

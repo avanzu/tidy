@@ -43,7 +43,7 @@ class AddTranslation extends PatchUseCase
         $result = ChangeSet::make();
         $result
             ->add(Change::test($request->catalogueId(), 'catalogueId'))
-            ->add(Change::add($translation->toArray(), sprintf('%s/%s', $catalogue->path(), $translation->getId())))
+            ->add(Change::add($translation->toArray(), sprintf('%s/%s', $catalogue->getCanonical(), $translation->getId())))
         ;
 
         return $this->transformer()->transform($result);

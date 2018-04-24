@@ -18,8 +18,9 @@ class TranslationTranslated extends Translation
     const MSG_TARGET  = 'Hallo Welt! ';
     const MSG_SOURCE  = 'Hello World! ';
     const MSG_ID      = 'message.hello';
+    const ID          = 2507;
 
-    protected $id           = self::MSG_ID;
+    protected $id           = self::ID;
 
     protected $token        = self::MSG_ID;
 

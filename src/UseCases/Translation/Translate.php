@@ -24,10 +24,9 @@ class Translate extends PatchUseCase
 
         $catalogue   = $this->lookUpCatalogue($request);
         $translation = $this->lookUpTranslation($request, $catalogue);
-        $path        = $catalogue->path();
         $changes     = ChangeSet::make()
-                                ->add($this->replaceLocaleString($request, $translation, $path))
-                                ->add($this->replaceState($request, $translation, $path))
+                                ->add($this->replaceLocaleString($request, $translation))
+                                ->add($this->replaceState($request, $translation))
         ;
 
         if (count($changes)) {
@@ -41,11 +40,10 @@ class Translate extends PatchUseCase
     /**
      * @param TranslateRequestDTO $request
      * @param Translation         $translation
-     * @param                     $path
      *
      * @return null|Change
      */
-    protected function replaceLocaleString(TranslateRequestDTO $request, Translation $translation, $path)
+    protected function replaceLocaleString(TranslateRequestDTO $request, Translation $translation)
     {
         if (!$request->localeString()) {
             return null;
@@ -53,37 +51,34 @@ class Translate extends PatchUseCase
 
         $translation->setLocaleString($request->localeString());
 
-        return Change::replace($request->localeString(), $this->pathTo($translation, $path, 'localeString'));
+        return Change::replace($request->localeString(), $this->pathTo($translation, 'localeString'));
     }
 
     /**
      * @param TranslateRequestDTO $request
      * @param Translation         $translation
-     * @param                     $path
      *
      * @return null|Change
      */
-    protected function replaceState(TranslateRequestDTO $request, Translation $translation, $path)
+    protected function replaceState(TranslateRequestDTO $request, Translation $translation)
     {
         if (!$request->state()) {
             return null;
         }
         $translation->setState($request->state());
 
-        return Change::replace($request->state(), $this->pathTo($translation, $path, 'state'));
+        return Change::replace($request->state(), $this->pathTo($translation, 'state'));
     }
 
     /**
      * @param Translation $translation
-     * @param             $path
-     *
      * @param             $attribute
      *
      * @return string
      */
-    protected function pathTo(Translation $translation, $path, $attribute)
+    protected function pathTo(Translation $translation, $attribute)
     {
-        return sprintf('%s/%s/%s', $path, $translation->getToken(), $attribute);
+        return sprintf('%s/%s', $translation->getId(), $attribute);
     }
 
     /**
