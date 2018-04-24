@@ -8,11 +8,26 @@
 
 namespace Tidy\UseCases\Translation\Catalogue;
 
+use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest;
-use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
+use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
+use Tidy\UseCases\Translation\Catalogue\Traits\TItemResponder;
 
-class CreateCatalogue extends ItemResponder
+class CreateCatalogue
 {
+    use TItemResponder;
+
+    /**
+     * CreateCatalogue constructor.
+     *
+     * @param ITranslationGateway           $gateway
+     * @param ICatalogueResponseTransformer $transformer
+     */
+    public function __construct(ITranslationGateway $gateway, ICatalogueResponseTransformer $transformer = null)
+    {
+        $this->gateway     = $gateway;
+        $this->transformer = $transformer;
+    }
 
 
     public function execute(ICreateCatalogueRequest $request)

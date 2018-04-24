@@ -2,17 +2,19 @@
 /**
  * This file is part of the "Tidy" Project.
  *
- * Created by avanzu on 24.04.18
+ * Created by avanzu on 25.04.18
  *
  */
 
-namespace Tidy\Domain\Responders\Translation\Catalogue;
+namespace Tidy\UseCases\Translation\Catalogue\Traits;
 
 use Tidy\Domain\Gateways\ITranslationGateway;
+use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
 use Tidy\UseCases\Translation\Catalogue\DTO\CatalogueResponseTransformer;
 
-abstract class ItemResponder
+trait TItemResponder
 {
+
     /**
      * @var ICatalogueResponseTransformer
      */
@@ -22,18 +24,6 @@ abstract class ItemResponder
      * @var ITranslationGateway
      */
     protected $gateway;
-
-    /**
-     * CreateCatalogue constructor.
-     *
-     * @param ITranslationGateway           $gateway
-     * @param ICatalogueResponseTransformer $transformer
-     */
-    public function __construct(ITranslationGateway $gateway, ICatalogueResponseTransformer $transformer = null)
-    {
-        $this->gateway     = $gateway;
-        $this->transformer = $transformer;
-    }
 
     /**
      * @return ICatalogueResponseTransformer
@@ -46,6 +36,4 @@ abstract class ItemResponder
 
         return $this->transformer;
     }
-
-
 }

@@ -10,12 +10,29 @@ namespace Tidy\UseCases\Translation\Catalogue;
 
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\TranslationCatalogue;
-use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
+use Tidy\Domain\Gateways\ITranslationGateway;
+use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
 use Tidy\UseCases\Translation\Catalogue\DTO\NestedCatalogueResponseTransformer;
 use Tidy\UseCases\Translation\Catalogue\DTO\RemoveTranslationRequestDTO;
+use Tidy\UseCases\Translation\Catalogue\Traits\TNestedItemResponder;
 
-class RemoveTranslation extends ItemResponder
+class RemoveTranslation
 {
+
+    use TNestedItemResponder;
+
+    /**
+     * CreateCatalogue constructor.
+     *
+     * @param ITranslationGateway           $gateway
+     * @param ICatalogueResponseTransformer $transformer
+     */
+    public function __construct(ITranslationGateway $gateway, ICatalogueResponseTransformer $transformer = null)
+    {
+        $this->gateway     = $gateway;
+        $this->transformer = $transformer;
+    }
+
 
     /**
      * @param RemoveTranslationRequestDTO $request

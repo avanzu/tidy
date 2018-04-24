@@ -30,7 +30,7 @@ class RemoveTranslationTest extends MockeryTestCase
     public function test_instantiation()
     {
         $useCase = new RemoveTranslation(mock(ITranslationGateway::class));
-        assertThat($useCase, is(anInstanceOf(ItemResponder::class)));
+        assertThat($useCase, is(notNullValue()));
     }
 
     public function test_remove()

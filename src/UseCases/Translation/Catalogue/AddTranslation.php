@@ -11,13 +11,29 @@ namespace Tidy\UseCases\Translation\Catalogue;
 use Tidy\Components\Exceptions\Duplicate;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\TranslationCatalogue;
+use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Catalogue\IAddTranslationRequest;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
 use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
 use Tidy\UseCases\Translation\Catalogue\DTO\NestedCatalogueResponseTransformer;
+use Tidy\UseCases\Translation\Catalogue\Traits\TNestedItemResponder;
 
-class AddTranslation extends ItemResponder
+class AddTranslation
 {
+
+    use TNestedItemResponder;
+
+    /**
+     * CreateCatalogue constructor.
+     *
+     * @param ITranslationGateway           $gateway
+     * @param ICatalogueResponseTransformer $transformer
+     */
+    public function __construct(ITranslationGateway $gateway, ICatalogueResponseTransformer $transformer = null)
+    {
+        $this->gateway     = $gateway;
+        $this->transformer = $transformer;
+    }
 
 
     public function execute(IAddTranslationRequest $request)
@@ -52,15 +68,6 @@ class AddTranslation extends ItemResponder
 
         return $previous;
 
-    }
-
-    protected function transformer()
-    {
-        if (!$this->transformer) {
-            $this->transformer = new NestedCatalogueResponseTransformer();
-        }
-
-        return $this->transformer;
     }
 
     /**

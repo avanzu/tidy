@@ -35,7 +35,7 @@ class LookUpTest extends MockeryTestCase
     {
 
         $useCase = new LookUp(mock(ITranslationGateway::class));
-        assertThat($useCase, is(anInstanceOf(ItemResponder::class)));
+        assertThat($useCase, is(notNullValue()));
 
     }
 
