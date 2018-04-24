@@ -22,7 +22,7 @@ use Tidy\Tests\Unit\Domain\Entities\UserStub2;
 use Tidy\UseCases\User\DTO\GetCollectionRequestDTO;
 use Tidy\UseCases\User\DTO\CollectionResponseDTO;
 use Tidy\UseCases\User\DTO\CollectionResponseTransformer;
-use Tidy\UseCases\User\GetUserCollection;
+use Tidy\UseCases\User\GetCollection;
 
 /**
  * Class GetCollectionTest
@@ -34,7 +34,7 @@ class GetCollectionTest extends MockeryTestCase
      */
     protected $gateway;
     /**
-     * @var GetUserCollection
+     * @var GetCollection
      */
     private $useCase;
 
@@ -43,7 +43,11 @@ class GetCollectionTest extends MockeryTestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf(GetUserCollection::class, $this->useCase);
+        $this->assertInstanceOf(GetCollection::class, $this->useCase);
+        $this->useCase->setUserGateway($this->gateway);
+        $this->useCase->setResponseTransformer(
+            new CollectionResponseTransformer()
+        );
     }
 
 
@@ -153,13 +157,8 @@ class GetCollectionTest extends MockeryTestCase
      */
     protected function setUp()
     {
-        $this->useCase = new GetUserCollection();
         $this->gateway = mock(IUserGateway::class);
-
-        $this->useCase->setUserGateway($this->gateway);
-        $this->useCase->setResponseTransformer(
-            new CollectionResponseTransformer()
-        );
+        $this->useCase = new GetCollection($this->gateway);
     }
 
     private function setupFetchCollection(...$elements)

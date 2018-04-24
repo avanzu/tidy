@@ -12,7 +12,7 @@ use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Responders\Audit\ChangeResponseTransformer;
 use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
 
-class UseCasePatch
+abstract class UseCasePatch
 {
 
     /**

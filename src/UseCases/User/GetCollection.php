@@ -1,13 +1,12 @@
 <?php
 /**
- * GetUserCollection.php
+ * GetCollection.php
  * tidy
  * Date: 07.04.18
  */
 
 namespace Tidy\UseCases\User;
 
-use Tidy\Components\Collection\Boundary;
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\IGetCollectionRequest;
@@ -16,9 +15,9 @@ use Tidy\Domain\Responders\User\ICollectionResponseTransformer;
 use Tidy\UseCases\User\DTO\CollectionResponseTransformer;
 
 /**
- * Class GetUserCollection
+ * Class GetCollection
  */
-class GetUserCollection
+class GetCollection
 {
     /**
      * @var \Tidy\Domain\Gateways\IUserGateway
@@ -31,6 +30,19 @@ class GetUserCollection
     private $transformer;
 
     /**
+     * GetCollection constructor.
+     *
+     * @param IUserGateway                   $gateway
+     * @param ICollectionResponseTransformer $transformer
+     */
+    public function __construct(IUserGateway $gateway, ICollectionResponseTransformer $transformer = null)
+    {
+        $this->gateway     = $gateway;
+        $this->transformer = $transformer;
+    }
+
+
+    /**
      * @param IGetCollectionRequest $request
      *
      * @return ICollectionResponse
@@ -40,17 +52,11 @@ class GetUserCollection
         $boundary   = $request->boundary();
         $items      = $this->gateway->fetchCollection($boundary, $request->criteria());
         $total      = $this->gateway->total($request->criteria());
-        $collection = new PagedCollection($items,$total,$boundary->page,$boundary->pageSize);
+        $collection = new PagedCollection($items, $total, $boundary->page, $boundary->pageSize);
 
         $response = $this->transformer()->transform($collection);
 
         return $response;
-    }
-
-    protected function transformer()
-    {
-        if( ! $this->transformer ) $this->transformer = new CollectionResponseTransformer();
-        return $this->transformer;
     }
 
     /**
@@ -67,6 +73,15 @@ class GetUserCollection
     public function setResponseTransformer(ICollectionResponseTransformer $transformer)
     {
         $this->transformer = $transformer;
+    }
+
+    protected function transformer()
+    {
+        if (!$this->transformer) {
+            $this->transformer = new CollectionResponseTransformer();
+        }
+
+        return $this->transformer;
     }
 
 

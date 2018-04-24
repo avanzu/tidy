@@ -17,14 +17,14 @@ use Tidy\UseCases\Project\DTO\CollectionResponseDTO;
 use Tidy\UseCases\Project\DTO\CollectionResponseTransformer;
 use Tidy\UseCases\Project\DTO\GetCollectionRequestDTO;
 use Tidy\UseCases\Project\DTO\ResponseDTO;
-use Tidy\UseCases\Project\GetProjectCollection;
+use Tidy\UseCases\Project\GetCollection;
 
 class GetCollectionTest extends MockeryTestCase
 {
 
 
     /**
-     * @var GetProjectCollection
+     * @var GetCollection
      */
     protected $useCase;
 
@@ -35,8 +35,8 @@ class GetCollectionTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $useCase = new GetProjectCollection(mock(IProjectGateway::class), mock(CollectionResponseTransformer::class));
-        $this->assertInstanceOf(GetProjectCollection::class, $useCase);
+        $useCase = new GetCollection(mock(IProjectGateway::class), mock(CollectionResponseTransformer::class));
+        $this->assertInstanceOf(GetCollection::class, $useCase);
     }
 
     public function test_GetProjectCollection_with_comparison()
@@ -72,7 +72,7 @@ class GetCollectionTest extends MockeryTestCase
         parent::setUp();
 
         $this->gateway = mock(IProjectGateway::class);
-        $this->useCase = new GetProjectCollection($this->gateway, new CollectionResponseTransformer());
+        $this->useCase = new GetCollection($this->gateway);
     }
 
     /**

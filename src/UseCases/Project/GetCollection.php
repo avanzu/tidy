@@ -1,20 +1,19 @@
 <?php
 /**
- * GetProjectCollection.php
+ * GetCollection.php
  * Tidy
  * Date: 19.04.18
  */
 
 namespace Tidy\UseCases\Project;
 
-use Tidy\Components\Collection\Boundary;
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\IGetCollectionRequest;
 use Tidy\Domain\Responders\Project\ICollectionResponseTransformer;
 use Tidy\UseCases\Project\DTO\CollectionResponseTransformer;
 
-class GetProjectCollection
+class GetCollection
 {
     /**
      * @var IProjectGateway
@@ -27,7 +26,7 @@ class GetProjectCollection
     protected $transformer;
 
     /**
-     * GetProjectCollection constructor.
+     * GetCollection constructor.
      *
      * @param IProjectGateway                $gateway
      * @param ICollectionResponseTransformer $transformer
@@ -36,13 +35,6 @@ class GetProjectCollection
     {
         $this->gateway     = $gateway;
         $this->transformer = $transformer;
-    }
-
-    protected function transformer()
-    {
-        if(! $this->transformer) $this->transformer = new CollectionResponseTransformer();
-        return $this->transformer;
-
     }
 
     public function execute(IGetCollectionRequest $request)
@@ -54,6 +46,16 @@ class GetProjectCollection
         $collection = new PagedCollection($items, $total, $boundary->page, $boundary->pageSize);
 
         return $this->transformer()->transform($collection);
+    }
+
+    protected function transformer()
+    {
+        if (!$this->transformer) {
+            $this->transformer = new CollectionResponseTransformer();
+        }
+
+        return $this->transformer;
+
     }
 
 
