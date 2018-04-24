@@ -39,7 +39,6 @@ class TranslateTest extends MockeryTestCase
     {
         $useCase = new Translate(mock(ITranslationGateway::class));
         assertThat($useCase, is(notNullValue()));
-        assertThat($useCase, is(anInstanceOf(ItemResponder::class)));
     }
 
 

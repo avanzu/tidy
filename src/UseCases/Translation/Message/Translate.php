@@ -11,12 +11,28 @@ namespace Tidy\UseCases\Translation\Message;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
+use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Message\ITranslateRequest;
 use Tidy\Domain\Responders\Translation\Message\ItemResponder;
+use Tidy\Domain\Responders\Translation\Message\ITranslationResponseTransformer;
+use Tidy\UseCases\Translation\Message\Traits\TItemResponder;
 
-class Translate extends ItemResponder
+class Translate
 {
 
+    use TItemResponder;
+
+    /**
+     * CreateCatalogue constructor.
+     *
+     * @param ITranslationGateway             $gateway
+     * @param ITranslationResponseTransformer $transformer
+     */
+    public function __construct(ITranslationGateway $gateway, ITranslationResponseTransformer $transformer = null)
+    {
+        $this->gateway     = $gateway;
+        $this->transformer = $transformer;
+    }
 
     public function execute(ITranslateRequest $request)
     {
