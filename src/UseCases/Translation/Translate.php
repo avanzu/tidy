@@ -10,7 +10,9 @@ namespace Tidy\UseCases\Translation;
 
 use Tidy\Components\Audit\Change;
 use Tidy\Components\Audit\ChangeSet;
+use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\Translation;
+use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\UseCases\Translation\DTO\TranslateRequestDTO;
 
 class Translate extends PatchUseCase
@@ -20,8 +22,8 @@ class Translate extends PatchUseCase
     public function execute(TranslateRequestDTO $request)
     {
 
-        $catalogue   = $this->gateway->findCatalogue($request->catalogueId());
-        $translation = $catalogue->find($request->token());
+        $catalogue   = $this->lookUpCatalogue($request);
+        $translation = $this->lookUpTranslation($request, $catalogue);
         $path        = $catalogue->path();
         $changes     = ChangeSet::make()
                                 ->add($this->replaceLocaleString($request, $translation, $path))
@@ -82,6 +84,37 @@ class Translate extends PatchUseCase
     protected function pathTo(Translation $translation, $path, $attribute)
     {
         return sprintf('%s/%s/%s', $path, $translation->getToken(), $attribute);
+    }
+
+    /**
+     * @param TranslateRequestDTO $request
+     *
+     * @return null|\Tidy\Domain\Entities\TranslationCatalogue
+     */
+    protected function lookUpCatalogue(TranslateRequestDTO $request)
+    {
+        $catalogue = $this->gateway->findCatalogue($request->catalogueId());
+        if (!$catalogue) {
+            throw new NotFound(sprintf('Unable to find catalogue identified by "%d".', $request->catalogueId()));
+        }
+
+        return $catalogue;
+    }
+
+    /**
+     * @param TranslateRequestDTO $request
+     * @param                     $catalogue
+     *
+     * @return mixed
+     */
+    protected function lookUpTranslation(TranslateRequestDTO $request, TranslationCatalogue $catalogue)
+    {
+        $translation = $catalogue->find($request->token());
+        if( ! $translation )
+            throw new NotFound(
+                sprintf('Unable to find translation identified by "%s" in catalogue "%s".', $request->token(), $catalogue->getName())
+            );
+        return $translation;
     }
 
 }

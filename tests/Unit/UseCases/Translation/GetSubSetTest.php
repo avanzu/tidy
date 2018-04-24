@@ -24,7 +24,7 @@ use Tidy\UseCases\Translation\DTO\SubSetResponseTransformer;
 use Tidy\UseCases\Translation\DTO\TranslationResponseDTO;
 use Tidy\UseCases\Translation\GetSubSet;
 
-class GetTranslationSubSetTest extends MockeryTestCase
+class GetSubSetTest extends MockeryTestCase
 {
 
     /**

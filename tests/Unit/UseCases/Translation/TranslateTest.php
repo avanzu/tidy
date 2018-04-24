@@ -10,6 +10,8 @@ namespace Tidy\Tests\Unit\UseCases\Translation;
 
 use Mockery\MockInterface;
 use Tidy\Components\Audit\Change;
+use Tidy\Components\Exceptions\NotFound;
+use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
@@ -105,6 +107,41 @@ class TranslateTest extends MockeryTestCase
 
         $result = $this->useCase->execute($request);
         assertThat(count($result->changes()), is(equalTo(0)));
+
+    }
+
+    public function test_execute_with_unknown_catalogue_throws_NotFound()
+    {
+        $this->gateway->expects('findCatalogue')->andReturns(null);
+
+        try {
+
+            $this->useCase->execute(TranslateRequestDTO::make()->withCatalogueId(1234876543));
+
+            $this->fail('failed to fail.');
+        } catch(\Exception $exception) {
+            assertThat($exception, is(anInstanceOf(NotFound::class)));
+            $this->assertStringMatchesFormat('Unable to find catalogue identified by "%d".', $exception->getMessage());
+        }
+    }
+
+    public function test_execute_with_unknown_token_throws_NotFound()
+    {
+
+        $catalogue = mock(TranslationCatalogue::class);
+        $this->gateway->expects('findCatalogue')->andReturns($catalogue);
+        $catalogue->expects('find')->with('token.unknown')->andReturns(null);
+        $catalogue->expects('getName')->andReturns('Some Catalogue');
+
+        try {
+
+            $this->useCase->execute(TranslateRequestDTO::make()->withCatalogueId(1234876543)->withToken('token.unknown'));
+
+            $this->fail('failed to fail.');
+        } catch(\Exception $exception) {
+            assertThat($exception, is(anInstanceOf(NotFound::class)));
+            $this->assertStringMatchesFormat('Unable to find translation identified by "%s" in catalogue "%s".', $exception->getMessage());
+        }
 
     }
 
