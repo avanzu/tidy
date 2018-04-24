@@ -7,13 +7,11 @@
 
 namespace Tidy\UseCases\User;
 
-use Tidy\Components\Audit\Change;
-use Tidy\Components\Audit\ChangeSet;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Requestors\User\IRecoverRequest;
-use Tidy\Domain\Responders\User\ChangeResponder;
+use Tidy\Domain\Responders\User\ItemResponder;
 
-class Recover extends ChangeResponder
+class Recover extends ItemResponder
 {
     public function execute(IRecoverRequest $request)
     {
@@ -24,8 +22,7 @@ class Recover extends ChangeResponder
 
         $user->assignToken(uniqid());
         $this->userGateway->save($user);
-        $result = ChangeSet::make(Change::add($user->getToken(), 'token'));
 
-        return $this->transformer()->transform($result);
+        return $this->transformer()->transform($user);
     }
 }

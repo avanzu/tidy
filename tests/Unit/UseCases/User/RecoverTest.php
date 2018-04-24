@@ -12,6 +12,9 @@ use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Responders\Audit\ChangeResponse;
 use Tidy\Domain\Responders\Audit\IChangeResponseTransformer;
+use Tidy\Domain\Responders\User\IResponse;
+use Tidy\Domain\Responders\User\IResponseTransformer;
+use Tidy\Domain\Responders\User\ItemResponder;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TimmyUser;
 use Tidy\UseCases\User\DTO\RecoverRequestDTO;
@@ -32,8 +35,8 @@ class RecoverTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $useCase = new Recover(mock(IUserGateway::class), mock(IChangeResponseTransformer::class));
-        $this->assertInstanceOf(\Tidy\Domain\Responders\User\ChangeResponder::class, $useCase);
+        $useCase = new Recover(mock(IUserGateway::class), mock(IResponseTransformer::class));
+        $this->assertInstanceOf(ItemResponder::class, $useCase);
     }
 
     public function test_recover_success()
@@ -53,17 +56,10 @@ class RecoverTest extends MockeryTestCase
 
         $result = $this->useCase->execute($request);
 
-        $expected = [
-            ['op' => Change::OP_ADD, 'path' => 'token'],
-        ];
-        assertThat($result, is(anInstanceOf(ChangeResponse::class)));
-        $this->assertArraySubset($expected, $result->changes());
 
-        /*
         $this->assertInstanceOf(IResponse::class, $result);
         $this->assertEquals(TimmyUser::ID, $result->getId());
         $this->assertNotEmpty($result->getToken());
-        */
     }
 
     public function test_recover_failure()
