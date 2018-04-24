@@ -16,9 +16,9 @@ use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\UseCases\Translation\Catalogue\DTO\CatalogueResponseDTO;
 use Tidy\UseCases\Translation\Catalogue\DTO\GetCatalogueRequestDTO;
-use Tidy\UseCases\Translation\Catalogue\GetCatalogue;
+use Tidy\UseCases\Translation\Catalogue\LookUp;
 
-class GetCatalogueTest extends MockeryTestCase
+class LookUpTest extends MockeryTestCase
 {
 
     /**
@@ -27,14 +27,14 @@ class GetCatalogueTest extends MockeryTestCase
     protected $gateway;
 
     /**
-     * @var GetCatalogue
+     * @var LookUp
      */
     protected $useCase;
 
     public function test_instantiation()
     {
 
-        $useCase = new GetCatalogue(mock(ITranslationGateway::class));
+        $useCase = new LookUp(mock(ITranslationGateway::class));
         assertThat($useCase, is(anInstanceOf(ItemResponder::class)));
 
     }
@@ -74,7 +74,7 @@ class GetCatalogueTest extends MockeryTestCase
     {
         parent::setUp();
         $this->gateway = mock(ITranslationGateway::class);
-        $this->useCase = new GetCatalogue($this->gateway);
+        $this->useCase = new LookUp($this->gateway);
     }
 
     protected function expectFindCatalogue(): void

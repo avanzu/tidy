@@ -13,7 +13,7 @@ use Tidy\Domain\Requestors\Translation\Catalogue\IGetCatalogueRequest;
 use Tidy\Domain\Responders\Translation\ItemResponder;
 use Tidy\UseCases\Translation\Catalogue\DTO\NestedCatalogueResponseTransformer;
 
-class GetCatalogue extends ItemResponder
+class LookUp extends ItemResponder
 {
 
     public function execute(IGetCatalogueRequest $request)
