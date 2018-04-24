@@ -7,11 +7,26 @@
 
 namespace Tidy\UseCases\Project;
 
+use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\IRenameRequest;
+use Tidy\Domain\Responders\Project\IResponseTransformer;
 use Tidy\Domain\Responders\Project\ItemResponder;
+use Tidy\UseCases\Project\Traits\TItemResponder;
 
-class Rename extends ItemResponder
+class Rename
 {
+    use TItemResponder;
+    /**
+     * ItemResponder constructor.
+     *
+     * @param IProjectGateway      $projectGateway
+     * @param IResponseTransformer $transformer
+     */
+    public function __construct(IProjectGateway $projectGateway, IResponseTransformer $transformer = null)
+    {
+        $this->transformer = $transformer;
+        $this->gateway     = $projectGateway;
+    }
 
     public function execute(IRenameRequest $request)
     {

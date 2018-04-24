@@ -13,10 +13,11 @@ use Tidy\Domain\Requestors\Project\ICreateRequest;
 use Tidy\Domain\Responders\Project\IResponse;
 use Tidy\Domain\Responders\Project\IResponseTransformer;
 use Tidy\Domain\Responders\Project\ItemResponder;
+use Tidy\UseCases\Project\Traits\TItemResponder;
 
-class Create extends ItemResponder
+class Create
 {
-
+    use TItemResponder;
     /**
      * @var ITextNormaliser
      */
@@ -35,7 +36,8 @@ class Create extends ItemResponder
         ITextNormaliser $normaliser,
         IResponseTransformer $transformer = null
     ) {
-        parent::__construct($projectGateway, $transformer);
+        $this->gateway  =$projectGateway;
+        $this->transformer = $transformer;
         $this->normaliser = $normaliser;
     }
 

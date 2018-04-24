@@ -33,9 +33,7 @@ class RenameTest extends MockeryTestCase
     public function test_instantiation()
     {
         $useCase = new Rename(mock(IProjectGateway::class), mock(IResponseTransformer::class));
-
         assertThat($useCase, is(notNullValue()));
-        assertThat($useCase, is(anInstanceOf(ItemResponder::class)));
     }
 
     public function test_rename()

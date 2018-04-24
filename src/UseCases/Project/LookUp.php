@@ -8,13 +8,28 @@
 namespace Tidy\UseCases\Project;
 
 use Tidy\Components\Exceptions\NotFound;
+use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\ILookUpRequest;
 use Tidy\Domain\Responders\Project\IResponse;
-use Tidy\Domain\Responders\Project\ItemResponder;
+use Tidy\Domain\Responders\Project\IResponseTransformer;
+use Tidy\UseCases\Project\Traits\TItemResponder;
 
-class LookUp extends ItemResponder
+class LookUp
 {
 
+    use TItemResponder;
+
+    /**
+     * ItemResponder constructor.
+     *
+     * @param IProjectGateway      $projectGateway
+     * @param IResponseTransformer $transformer
+     */
+    public function __construct(IProjectGateway $projectGateway, IResponseTransformer $transformer = null)
+    {
+        $this->transformer = $transformer;
+        $this->gateway     = $projectGateway;
+    }
 
     /**
      * @param ILookUpRequest $request
