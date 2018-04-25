@@ -18,45 +18,67 @@ class CreateCatalogueRequestDTO implements ICreateCatalogueRequest
     /**
      * @var string
      */
-    public $name;
+    protected $name;
 
     /**
      * @var string
      */
-    public $sourceLanguage;
+    protected $sourceLanguage;
 
     /**
      * @var string
      */
-    public $sourceCulture;
+    protected $sourceCulture;
 
     /**
      * @var string
      */
-    public $targetLanguage;
+    protected $targetLanguage;
 
     /**
      * @var string
      */
-    public $targetCulture;
+    protected $targetCulture;
 
     /**
      * @var int
      */
-    public $projectId;
+    protected $projectId;
 
     /**
      * @var string
      */
-    public $canonical;
+    protected $canonical;
 
     /**
-     * @return \Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest
+     * CreateCatalogueRequestDTO constructor.
+     *
+     * @param string $name
+     * @param string $sourceLanguage
+     * @param string $sourceCulture
+     * @param string $targetLanguage
+     * @param string $targetCulture
+     * @param int    $projectId
+     * @param string $canonical
      */
-    public static function make()
-    {
-        return new self();
+    public function __construct(
+        $name,
+        $sourceLanguage,
+        $sourceCulture,
+        $targetLanguage,
+        $targetCulture,
+        $projectId,
+        $canonical
+    ) {
+        $this->name           = $name;
+        $this->sourceLanguage = $sourceLanguage;
+        $this->sourceCulture  = $sourceCulture;
+        $this->targetLanguage = $targetLanguage;
+        $this->targetCulture  = $targetCulture;
+        $this->projectId      = $projectId;
+        $this->canonical      = $canonical;
     }
+
 
     /**
      * @return string
@@ -114,69 +136,5 @@ class CreateCatalogueRequestDTO implements ICreateCatalogueRequest
         return $this->targetLanguage;
     }
 
-    /**
-     * @param $string
-     *
-     * @return \Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest
-     */
-    public function withCanonical($string)
-    {
-        $this->canonical = $string;
-
-        return $this;
-    }
-
-    /**
-     * @param $name
-     *
-     * @return \Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest
-     */
-    public function withName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @param $projectId
-     *
-     * @return \Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest
-     */
-    public function withProjectId($projectId)
-    {
-        $this->projectId = $projectId;
-
-        return $this;
-    }
-
-    /**
-     * @param      $language
-     * @param null $culture
-     *
-     * @return \Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest
-     */
-    public function withSourceLocale($language, $culture = null)
-    {
-        $this->sourceLanguage = $language;
-        $this->sourceCulture  = $culture;
-
-        return $this;
-
-    }
-
-    /**
-     * @param      $language
-     * @param null $culture
-     *
-     * @return ICreateCatalogueRequest
-     */
-    public function withTargetLocale($language, $culture = null)
-    {
-        $this->targetLanguage = $language;
-        $this->targetCulture  = $culture;
-
-        return $this;
-    }
 
 }

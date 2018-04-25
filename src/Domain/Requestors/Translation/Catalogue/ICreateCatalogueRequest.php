@@ -12,47 +12,11 @@ namespace Tidy\Domain\Requestors\Translation\Catalogue;
  */
 interface ICreateCatalogueRequest
 {
-    /**
-     * @param $name
-     *
-     * @return ICreateCatalogueRequest
-     */
-    public function withName($name);
-
-    /**
-     * @param      $language
-     * @param null $culture
-     *
-     * @return ICreateCatalogueRequest
-     */
-    public function withSourceLocale($language, $culture = null);
-
-    /**
-     * @param      $language
-     * @param null $culture
-     *
-     * @return ICreateCatalogueRequest
-     */
-    public function withTargetLocale($language, $culture = null);
-
-    /**
-     * @param $projectId
-     *
-     * @return ICreateCatalogueRequest
-     */
-    public function withProjectId($projectId);
 
     /**
      * @return string
      */
     public function name();
-
-    /**
-     * @param $string
-     *
-     * @return ICreateCatalogueRequest
-     */
-    public function withCanonical($string);
 
     /**
      * @return string

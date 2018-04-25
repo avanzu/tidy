@@ -11,17 +11,19 @@ namespace Tidy\Tests\Unit\UseCases\Translation\Catalogue;
 use Mockery\MockInterface;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
+use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\ProjectSilverTongue;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueImpl;
 use Tidy\UseCases\Translation\Catalogue\CreateCatalogue;
 use Tidy\UseCases\Translation\Catalogue\DTO\CatalogueResponseDTO;
+use Tidy\UseCases\Translation\Catalogue\DTO\CreateCatalogueRequestBuilder;
 use Tidy\UseCases\Translation\Catalogue\DTO\CreateCatalogueRequestDTO;
 
 class CreateCatalogueTest extends MockeryTestCase
 {
     /**
-     * @var MockInterface|\Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer
+     * @var MockInterface|ICatalogueResponseTransformer
      */
     protected $transformer;
 
@@ -39,7 +41,7 @@ class CreateCatalogueTest extends MockeryTestCase
     {
         $useCase = new CreateCatalogue(
             mock(ITranslationGateway::class),
-            mock(\Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer::class)
+            mock(ICatalogueResponseTransformer::class)
         );
 
         assertThat($useCase, is(notNullValue()));
@@ -47,15 +49,13 @@ class CreateCatalogueTest extends MockeryTestCase
 
     public function test_execute()
     {
-        $request = CreateCatalogueRequestDTO::make();
-        assertThat($request, is(notNullValue()));
-
-        $request
+        $request = (new CreateCatalogueRequestBuilder())
             ->withName('Error messages')
             ->withCanonical('errors')
             ->withSourceLocale('en', 'US')
             ->withTargetLocale('de', 'DE')
             ->withProjectId(ProjectSilverTongue::ID)
+            ->build()
         ;
 
         $this->expectMakeCatalogueForProject();
