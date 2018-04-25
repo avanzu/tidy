@@ -12,12 +12,11 @@ use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\Domain\Responders\Translation\Message\ItemResponder;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\Tests\Unit\Domain\Entities\TranslationUntranslated;
-use Tidy\UseCases\Translation\Message\DTO\TranslateRequestDTO;
+use Tidy\UseCases\Translation\Message\DTO\TranslateRequestBuilder;
 use Tidy\UseCases\Translation\Message\Translate;
 
 class TranslateTest extends MockeryTestCase
@@ -31,7 +30,7 @@ class TranslateTest extends MockeryTestCase
     protected $gateway;
 
     /**
-     * @var \Tidy\UseCases\Translation\Message\Translate
+     * @var Translate
      */
     protected $useCase;
 
@@ -44,14 +43,12 @@ class TranslateTest extends MockeryTestCase
 
     public function test_execute_success()
     {
-        $request = TranslateRequestDTO::make();
-        assertThat($request, is(notNullValue()));
-
-        $request
+        $request = (new TranslateRequestBuilder())
             ->withCatalogueId(TranslationCatalogueEnglishToGerman::ID)
             ->withToken(TranslationUntranslated::MSG_ID)
             ->translateAs(self::LIPSUM)
             ->commitStateTo('translated')
+            ->build()
         ;
 
         $catalogue   = mock(TranslationCatalogueEnglishToGerman::class);
@@ -75,7 +72,9 @@ class TranslateTest extends MockeryTestCase
 
         try {
 
-            $this->useCase->execute(TranslateRequestDTO::make()->withCatalogueId(1234876543));
+            $this->useCase->execute(
+                (new TranslateRequestBuilder())->withCatalogueId(1234876543)->build()
+            );
 
             $this->fail('failed to fail.');
         } catch (\Exception $exception) {
@@ -95,7 +94,7 @@ class TranslateTest extends MockeryTestCase
         try {
 
             $this->useCase->execute(
-                TranslateRequestDTO::make()->withCatalogueId(1234876543)->withToken('token.unknown')
+                (new TranslateRequestBuilder())->withCatalogueId(1234876543)->withToken('token.unknown')->build()
             );
 
             $this->fail('failed to fail.');
@@ -114,7 +113,7 @@ class TranslateTest extends MockeryTestCase
     {
         parent::setUp();
         $this->gateway = mock(ITranslationGateway::class);
-        $this->useCase = new \Tidy\UseCases\Translation\Message\Translate($this->gateway);
+        $this->useCase = new Translate($this->gateway);
     }
 
     /**

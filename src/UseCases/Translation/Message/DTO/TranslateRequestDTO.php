@@ -12,35 +12,37 @@ use Tidy\Domain\Requestors\Translation\Message\ITranslateRequest;
 
 class TranslateRequestDTO implements ITranslateRequest
 {
-    public $catalogueId;
+    protected $catalogueId;
 
-    public $token;
+    protected $token;
 
-    public $localeString;
+    protected $localeString;
 
-    public $state;
+    protected $state;
 
-    public static function make()
+    /**
+     * TranslateRequestDTO constructor.
+     *
+     * @param $catalogueId
+     * @param $token
+     * @param $localeString
+     * @param $state
+     */
+    public function __construct($catalogueId, $token, $localeString, $state = null)
     {
-        return new static;
+        $this->catalogueId  = $catalogueId;
+        $this->token        = $token;
+        $this->localeString = $localeString;
+        $this->state        = $state;
     }
+
 
     public function catalogueId()
     {
         return $this->catalogueId;
     }
 
-    /**
-     * @param $string
-     *
-     * @return ITranslateRequest
-     */
-    public function commitStateTo($string)
-    {
-        $this->state = $string;
 
-        return $this;
-    }
 
     public function localeString()
     {
@@ -57,39 +59,5 @@ class TranslateRequestDTO implements ITranslateRequest
         return $this->token;
     }
 
-    /**
-     * @param $localeString
-     *
-     * @return \Tidy\Domain\Requestors\Translation\Message\ITranslateRequest
-     */
-    public function translateAs($localeString)
-    {
-        $this->localeString = $localeString;
 
-        return $this;
-    }
-
-    /**
-     * @param $id
-     *
-     * @return \Tidy\Domain\Requestors\Translation\Message\ITranslateRequest
-     */
-    public function withCatalogueId($id)
-    {
-        $this->catalogueId = $id;
-
-        return $this;
-    }
-
-    /**
-     * @param $token
-     *
-     * @return ITranslateRequest
-     */
-    public function withToken($token)
-    {
-        $this->token = $token;
-
-        return $this;
-    }
 }
