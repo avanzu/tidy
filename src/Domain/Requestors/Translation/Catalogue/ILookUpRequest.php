@@ -7,14 +7,7 @@
  */
 namespace Tidy\Domain\Requestors\Translation\Catalogue;
 
-interface IGetCatalogueRequest
+interface ILookUpRequest
 {
-    /**
-     * @param $id
-     *
-     * @return IGetCatalogueRequest
-     */
-    public function withId($id);
-
     public function id();
 }

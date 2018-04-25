@@ -11,11 +11,10 @@ namespace Tidy\Tests\Unit\UseCases\Translation\Catalogue;
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\UseCases\Translation\Catalogue\DTO\CatalogueResponseDTO;
-use Tidy\UseCases\Translation\Catalogue\DTO\GetCatalogueRequestDTO;
+use Tidy\UseCases\Translation\Catalogue\DTO\LookUpRequestBuilder;
 use Tidy\UseCases\Translation\Catalogue\LookUp;
 
 class LookUpTest extends MockeryTestCase
@@ -41,11 +40,10 @@ class LookUpTest extends MockeryTestCase
 
     public function test_execute()
     {
-        $request = GetCatalogueRequestDTO::make();
-        assertThat($request, is(notNullValue()));
-
-        $request
-            ->withId(TranslationCatalogueEnglishToGerman::ID);
+        $request = (new LookUpRequestBuilder())
+            ->withId(TranslationCatalogueEnglishToGerman::ID)
+            ->build()
+        ;
 
         $this->expectFindCatalogue();
 
@@ -58,8 +56,7 @@ class LookUpTest extends MockeryTestCase
 
     public function test_execute_notfound()
     {
-        $request = GetCatalogueRequestDTO::make();
-        $request->withId(99999);
+        $request = (new LookUpRequestBuilder())->withId(99999)->build();
         $this->gateway->expects('findCatalogue')->andReturns(null);
         try {
             $this->useCase->execute($request);

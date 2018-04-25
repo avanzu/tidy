@@ -10,7 +10,7 @@ namespace Tidy\UseCases\Translation\Catalogue;
 
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\Domain\Requestors\Translation\Catalogue\IGetCatalogueRequest;
+use Tidy\Domain\Requestors\Translation\Catalogue\ILookUpRequest;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
 use Tidy\UseCases\Translation\Catalogue\Traits\TNestedItemResponder;
 
@@ -32,7 +32,7 @@ class LookUp
     }
 
 
-    public function execute(IGetCatalogueRequest $request)
+    public function execute(ILookUpRequest $request)
     {
         $catalogue = $this->gateway->findCatalogue($request->id());
 
