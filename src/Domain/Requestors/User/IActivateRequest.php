@@ -9,7 +9,5 @@ namespace Tidy\Domain\Requestors\User;
 
 interface IActivateRequest
 {
-    public function withToken($token);
-
     public function token();
 }

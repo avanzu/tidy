@@ -12,22 +12,19 @@ use Tidy\Domain\Requestors\User\IActivateRequest;
 class ActivateRequestDTO implements IActivateRequest
 {
 
-    public $token;
+    protected  $token;
 
-    public static function make()
-    {
-        return new self;
+    /**
+     * ActivateRequestDTO constructor.
+     *
+     * @param $token
+     */
+    public function __construct($token) {
+        $this->token = $token;
     }
 
     public function token()
     {
         return $this->token;
-    }
-
-    public function withToken($token)
-    {
-        $this->token = $token;
-
-        return $this;
     }
 }

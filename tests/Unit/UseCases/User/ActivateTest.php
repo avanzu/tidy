@@ -15,6 +15,7 @@ use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\UserStub1;
 use Tidy\UseCases\User\Activate;
+use Tidy\UseCases\User\DTO\ActivateRequestBuilder;
 use Tidy\UseCases\User\DTO\ActivateRequestDTO;
 use Tidy\UseCases\User\DTO\ResponseTransformer;
 
@@ -51,9 +52,11 @@ class ActivateTest extends MockeryTestCase
 
         $this->expectFindAndSaveWith($token, $stub1, $argumentThat);
 
-        $request = ActivateRequestDTO::make();
+        $request = (new ActivateRequestBuilder())->withToken($token)->build();
+        /*
+        ActivateRequestDTO::make();
         $request->withToken($token);
-
+        */
         $result = $this->useCase->execute($request);
 
         $this->assertInstanceOf(IResponse::class, $result);
@@ -69,7 +72,7 @@ class ActivateTest extends MockeryTestCase
         $this->expectFindReturning($token, null);
 
         $this->expectException(NotFound::class);
-        $this->useCase->execute(ActivateRequestDTO::make()->withToken($token));
+        $this->useCase->execute((new ActivateRequestBuilder())->withToken($token)->build());
 
     }
 
