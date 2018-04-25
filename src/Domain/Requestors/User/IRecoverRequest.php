@@ -9,7 +9,6 @@ namespace Tidy\Domain\Requestors\User;
 
 interface IRecoverRequest
 {
-    public function withUserName($userName);
 
     public function userName();
 }

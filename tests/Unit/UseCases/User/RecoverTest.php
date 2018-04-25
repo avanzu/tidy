@@ -14,6 +14,7 @@ use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Domain\Responders\User\ItemResponder;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TimmyUser;
+use Tidy\UseCases\User\DTO\RecoverRequestBuilder;
 use Tidy\UseCases\User\DTO\RecoverRequestDTO;
 use Tidy\UseCases\User\Recover;
 
@@ -38,8 +39,7 @@ class RecoverTest extends MockeryTestCase
 
     public function test_recover_success()
     {
-        $request = RecoverRequestDTO::make();
-        $request->withUserName(TimmyUser::USERNAME);
+        $request = (new RecoverRequestBuilder())->withUserName(TimmyUser::USERNAME)->build();
 
         $this->gateway->expects('findByUserName')->with(TimmyUser::USERNAME)->andReturn(new TimmyUser());
         $this->gateway->expects('save')->with(
@@ -60,8 +60,7 @@ class RecoverTest extends MockeryTestCase
 
     public function test_recover_failure()
     {
-        $request = RecoverRequestDTO::make();
-        $request->withUserName('anonymous');
+        $request = (new RecoverRequestBuilder())->withUserName('anonymous')->build();
         $this->gateway->expects('findByUserName')->with('anonymous')->andReturn(null);
 
         $this->expectException(NotFound::class);

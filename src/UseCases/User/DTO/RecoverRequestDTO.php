@@ -11,23 +11,19 @@ use Tidy\Domain\Requestors\User\IRecoverRequest;
 
 class RecoverRequestDTO implements IRecoverRequest
 {
-    public $userName;
+    protected  $userName;
 
-    public static function make()
-    {
-        return new static;
-    }
+    /**
+     * RecoverRequestDTO constructor.
+     *
+     * @param $userName
+     */
+    public function __construct($userName) { $this->userName = $userName; }
+
 
     public function userName()
     {
         return $this->userName;
-    }
-
-    public function withUserName($userName)
-    {
-        $this->userName = $userName;
-
-        return $this;
     }
 
 }
