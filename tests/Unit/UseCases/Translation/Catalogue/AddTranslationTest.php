@@ -22,7 +22,7 @@ use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\Tests\Unit\Domain\Entities\TranslationImpl;
 use Tidy\Tests\Unit\Domain\Entities\TranslationTranslated;
 use Tidy\UseCases\Translation\Catalogue\AddTranslation;
-use Tidy\UseCases\Translation\Catalogue\DTO\AddTranslationRequestDTO;
+use Tidy\UseCases\Translation\Catalogue\DTO\AddTranslationRequestBuilder;
 
 class AddTranslationTest extends MockeryTestCase
 {
@@ -62,8 +62,7 @@ class AddTranslationTest extends MockeryTestCase
 
     public function test_execute_success()
     {
-        $request = AddTranslationRequestDTO::make();
-        $request
+        $request = (new AddTranslationRequestBuilder())
             ->withCatalogueId(TranslationCatalogueEnglishToGerman::ID)
             ->withSourceString('source code')
             ->withLocaleString('Quelltext')
@@ -71,6 +70,7 @@ class AddTranslationTest extends MockeryTestCase
             ->withNotes(self::NOTES)
             ->withState('translated')
             ->withToken('message.source_code')
+            ->build()
         ;
 
         $this->expectFindCatalogue();
@@ -86,10 +86,8 @@ class AddTranslationTest extends MockeryTestCase
 
     public function test_execute_fails_on_unknown_catalogue()
     {
-        $request = AddTranslationRequestDTO::make();
         $wrongId = 12345678909876543;
-        $request
-            ->withCatalogueId($wrongId);
+        $request = (new AddTranslationRequestBuilder())->withCatalogueId($wrongId)->build();
 
         $this->gateway->expects('findCatalogue')->with($wrongId)->andReturnNull();
 
@@ -106,9 +104,10 @@ class AddTranslationTest extends MockeryTestCase
 
     public function test_execute_fails_on_duplicate_token()
     {
-        $request = AddTranslationRequestDTO::make();
-        $request->withCatalogueId(TranslationCatalogueEnglishToGerman::ID)
-                ->withToken(TranslationTranslated::MSG_ID)
+        $request = (new AddTranslationRequestBuilder())
+            ->withCatalogueId(TranslationCatalogueEnglishToGerman::ID)
+            ->withToken(TranslationTranslated::MSG_ID)
+            ->build()
         ;
 
         $this->gateway->expects('findCatalogue')->andReturns(new TranslationCatalogueEnglishToGerman());

@@ -94,7 +94,7 @@ class AddTranslation
     {
         if ($match = $catalogue->find($request->token())) {
             throw new Duplicate(
-                sprintf('Duplicate token "%s" in catalogue "%s".', $request->token, $catalogue->getName())
+                sprintf('Duplicate token "%s" in catalogue "%s".', $request->token(), $catalogue->getName())
             );
         }
     }

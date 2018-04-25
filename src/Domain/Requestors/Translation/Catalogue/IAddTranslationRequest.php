@@ -9,47 +9,6 @@ namespace Tidy\Domain\Requestors\Translation\Catalogue;
 
 interface IAddTranslationRequest
 {
-    /**
-     * @param $string
-     *
-     * @return IAddTranslationRequest
-     */
-    public function withSourceString($string);
-
-    /**
-     * @param $string
-     *
-     * @return IAddTranslationRequest
-     */
-    public function withLocaleString($string);
-
-    /**
-     * @param $ID
-     *
-     * @return IAddTranslationRequest
-     */
-    public function withCatalogueId($ID);
-
-    /**
-     * @param $string
-     *
-     * @return IAddTranslationRequest
-     */
-    public function withMeaning($string);
-
-    /**
-     * @param $string
-     *
-     * @return IAddTranslationRequest
-     */
-    public function withNotes($string);
-
-    /**
-     * @param $state
-     *
-     * @return IAddTranslationRequest
-     */
-    public function withState($state);
 
     public function catalogueId();
 
@@ -62,13 +21,6 @@ interface IAddTranslationRequest
     public function notes();
 
     public function state();
-
-    /**
-     * @param $token
-     *
-     * @return IAddTranslationRequest
-     */
-    public function withToken($token);
 
     public function token();
 }

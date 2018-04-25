@@ -12,24 +12,42 @@ use Tidy\Domain\Requestors\Translation\Catalogue\IAddTranslationRequest;
 
 class AddTranslationRequestDTO implements IAddTranslationRequest
 {
-    public $sourceString;
+    protected $sourceString;
 
-    public $localeString;
+    protected $localeString;
 
-    public $catalogueId;
+    protected $catalogueId;
 
-    public $meaning;
+    protected $meaning;
 
-    public $notes;
+    protected $notes;
 
-    public $state;
+    protected $state;
 
-    public $token;
+    protected $token;
 
-    public static function make()
+    /**
+     * AddTranslationRequestDTO constructor.
+     *
+     * @param $catalogueId
+     * @param $token
+     * @param $sourceString
+     * @param $localeString
+     * @param $state
+     * @param $meaning
+     * @param $notes
+     */
+    public function __construct($catalogueId, $token, $sourceString, $localeString, $state, $meaning, $notes)
     {
-        return new self();
+        $this->sourceString = $sourceString;
+        $this->localeString = $localeString;
+        $this->catalogueId  = $catalogueId;
+        $this->meaning      = $meaning;
+        $this->notes        = $notes;
+        $this->state        = $state;
+        $this->token        = $token;
     }
+
 
     public function catalogueId()
     {
@@ -66,87 +84,4 @@ class AddTranslationRequestDTO implements IAddTranslationRequest
         return $this->token;
     }
 
-    /**
-     * @param $ID
-     *
-     * @return \Tidy\Domain\Requestors\Translation\Catalogue\IAddTranslationRequest
-     */
-    public function withCatalogueId($ID)
-    {
-        $this->catalogueId = $ID;
-
-        return $this;
-    }
-
-    /**
-     * @param $string
-     *
-     * @return \Tidy\Domain\Requestors\Translation\Catalogue\IAddTranslationRequest
-     */
-    public function withLocaleString($string)
-    {
-        $this->localeString = $string;
-
-        return $this;
-    }
-
-    /**
-     * @param $string
-     *
-     * @return IAddTranslationRequest
-     */
-    public function withMeaning($string)
-    {
-        $this->meaning = $string;
-
-        return $this;
-    }
-
-    /**
-     * @param $string
-     *
-     * @return IAddTranslationRequest
-     */
-    public function withNotes($string)
-    {
-        $this->notes = $string;
-
-        return $this;
-    }
-
-    /**
-     * @param $string
-     *
-     * @return IAddTranslationRequest
-     */
-    public function withSourceString($string)
-    {
-        $this->sourceString = $string;
-
-        return $this;
-    }
-
-    /**
-     * @param $state
-     *
-     * @return IAddTranslationRequest
-     */
-    public function withState($state)
-    {
-        $this->state = $state;
-
-        return $this;
-    }
-
-    /**
-     * @param $token
-     *
-     * @return \Tidy\Domain\Requestors\Translation\Catalogue\IAddTranslationRequest
-     */
-    public function withToken($token)
-    {
-        $this->token = $token;
-
-        return $this;
-    }
 }
