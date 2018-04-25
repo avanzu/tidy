@@ -10,41 +10,22 @@ namespace Tidy\UseCases\Translation\Catalogue\DTO;
 
 class RemoveTranslationRequestDTO
 {
-    public $catalogueId;
+    protected $catalogueId;
 
-    public $token;
-
-    /**
-     * @return RemoveTranslationRequestDTO
-     */
-    public static function make()
-    {
-        return new static;
-    }
+    protected $token;
 
     /**
-     * @param $catalogueId
+     * RemoveTranslationRequestDTO constructor.
      *
-     * @return RemoveTranslationRequestDTO
+     * @param $catalogueId
+     * @param $token
      */
-    public function withCatalogueId($catalogueId)
+    public function __construct($catalogueId, $token)
     {
         $this->catalogueId = $catalogueId;
-
-        return $this;
+        $this->token       = $token;
     }
 
-    /**
-     * @param $token
-     *
-     * @return RemoveTranslationRequestDTO
-     */
-    public function withToken($token)
-    {
-        $this->token = $token;
-
-        return $this;
-    }
 
     public function catalogueId()
     {

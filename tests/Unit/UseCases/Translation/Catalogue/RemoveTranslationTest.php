@@ -13,18 +13,24 @@ use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse;
-use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman as Catalogue;
 use Tidy\Tests\Unit\Domain\Entities\TranslationUntranslated;
-use Tidy\UseCases\Translation\Catalogue\DTO\RemoveTranslationRequestDTO;
+use Tidy\UseCases\Translation\Catalogue\DTO\RemoveTranslationRequestBuilder;
 use Tidy\UseCases\Translation\Catalogue\RemoveTranslation;
 
 class RemoveTranslationTest extends MockeryTestCase
 {
 
+    /**
+     * @var ITranslationGateway
+     */
     private $gateway;
 
+    /**
+     * @var RemoveTranslation
+     *
+     */
     private $useCase;
 
     public function test_instantiation()
@@ -36,12 +42,11 @@ class RemoveTranslationTest extends MockeryTestCase
     public function test_remove()
     {
 
-        $request = RemoveTranslationRequestDTO::make();
-
-        $request
+        $request = (new RemoveTranslationRequestBuilder)
             ->withCatalogueId(Catalogue::ID)
             ->withToken(TranslationUntranslated::MSG_ID)
-        ;
+            ->build()
+        ;;
 
         $this->expect_Gateway_findCatalogue(new Catalogue(), Catalogue::ID);
         $this->expect_Gateway_removeTranslation(TranslationUntranslated::ID);
@@ -61,7 +66,7 @@ class RemoveTranslationTest extends MockeryTestCase
         $this->expect_Gateway_findCatalogue(null, $catalogueId);
 
         try {
-            $this->useCase->execute(RemoveTranslationRequestDTO::make()->withCatalogueId($catalogueId));
+            $this->useCase->execute((new RemoveTranslationRequestBuilder())->withCatalogueId($catalogueId)->build());
             $this->fail('Failed to fail.');
         } catch (\Exception $exception) {
             assertThat($exception, is(anInstanceOf(NotFound::class)));
@@ -80,9 +85,10 @@ class RemoveTranslationTest extends MockeryTestCase
 
         try {
             $this->useCase->execute(
-                RemoveTranslationRequestDTO::make()
-                                           ->withCatalogueId($catalogueId)
-                                           ->withToken('some_token')
+                (new RemoveTranslationRequestBuilder())
+                    ->withCatalogueId($catalogueId)
+                    ->withToken('some_token')
+                    ->build()
             );
 
             $this->fail('Failed to fail.');
