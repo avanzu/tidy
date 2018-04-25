@@ -13,6 +13,7 @@ use Tidy\Components\DataAccess\Comparison;
 use Tidy\Components\Exceptions\OutOfBounds;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\CollectionRequest;
+use Tidy\Domain\Requestors\CollectionRequestBuilder;
 use Tidy\Domain\Responders\User\ICollectionResponse;
 use Tidy\Domain\Responders\User\IResponse;
 use Tidy\Tests\MockeryTestCase;
@@ -55,7 +56,7 @@ class GetCollectionTest extends MockeryTestCase
     {
         $this->setupFetchCollection(new UserStub1());
 
-        $request = GetCollectionRequestDTO::make()->fromPage(1)->withPageSize(10);
+        $request = (new CollectionRequestBuilder())->fromPage(1)->withPageSize(10)->build();
 
         $result = $this->useCase->execute($request);
         $this->assertInstanceOf(CollectionResponseDTO::class, $result);
@@ -68,7 +69,7 @@ class GetCollectionTest extends MockeryTestCase
     {
         $this->setupFetchCollection(new UserStub1());
 
-        $request = GetCollectionRequestDTO::make()->fromPage(1)->withPageSize(10);
+        $request = (new CollectionRequestBuilder())->fromPage(1)->withPageSize(10)->build();
 
         $result = $this->useCase->execute($request);
 
@@ -87,7 +88,7 @@ class GetCollectionTest extends MockeryTestCase
 
         $this->setupFetchCollection(new UserStub1(), new UserStub2());
 
-        $request = GetCollectionRequestDTO::make()->fromPage(1)->withPageSize(10);
+        $request = (new CollectionRequestBuilder())->fromPage(1)->withPageSize(10)->build();
 
         $result = $this->useCase->execute($request);
 
@@ -107,7 +108,7 @@ class GetCollectionTest extends MockeryTestCase
     {
         $this->gateway->shouldReceive('fetchCollection')->andThrow(new OutOfBounds());
 
-        $request = GetCollectionRequestDTO::make()->fromPage(10)->withPageSize(20);
+        $request = (new CollectionRequestBuilder())->fromPage(10)->withPageSize(20)->build();
         $this->expectException(OutOfBounds::class);
         $this->useCase->execute($request);
     }
@@ -118,14 +119,17 @@ class GetCollectionTest extends MockeryTestCase
         $page     = CollectionRequest::DEFAULT_PAGE;
         $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE;
 
-        $request = GetCollectionRequestDTO::make($page, $pageSize);
-        $request
+        $request =
+            (new CollectionRequestBuilder())
+            ->fromPage($page)
+            ->withPageSize($pageSize)
             ->withUserName(Comparison::equalTo('some username'))
             ->withEMail(Comparison::containing('example.com'))
             ->withAccess(Comparison::isTrue())
             ->withToken(Comparison::isEmpty())
             ->withLastName(Comparison::startsWith('Tim'))
             ->withFirstName(Comparison::endsWith('my'))
+            ->build()
         ;
 
         $criteriaCheck = function ($argument) {

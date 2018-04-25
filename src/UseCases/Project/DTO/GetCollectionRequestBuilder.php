@@ -1,51 +1,22 @@
 <?php
 /**
- * GetCollectionRequestDTO.php
- * Tidy
- * Date: 19.04.18
+ * This file is part of the "Tidy" Project.
+ *
+ * Created by avanzu on 25.04.18
+ *
  */
 
 namespace Tidy\UseCases\Project\DTO;
 
 use Tidy\Components\DataAccess\Comparison;
-use Tidy\Domain\Requestors\CollectionRequest;
-use Tidy\Domain\Requestors\Project\IGetCollectionRequest;
+use Tidy\Domain\Requestors\CollectionRequestBuilder;
 
-class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectionRequest
+class GetCollectionRequestBuilder extends CollectionRequestBuilder
 {
-    public $name;
-
-    /**
-     * CollectionRequest constructor.
-     *
-     * @param int $page
-     * @param int $pageSize
-     */
-    public function __construct(
-        $page = CollectionRequest::DEFAULT_PAGE,
-        $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE
-    ) {
-        $this->page     = $page;
-        $this->pageSize = $pageSize;
-    }
-
-    /**
-     * @param int $page
-     * @param int $pageSize
-     *
-     * @return static
-     */
-    public static function make(
-        $page = CollectionRequest::DEFAULT_PAGE,
-        $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE
-    ) {
-        return new static($page, $pageSize);
-    }
-
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return GetCollectionRequestBuilder
      */
     public function withCanonical(Comparison $comparison = null)
     {
@@ -57,7 +28,7 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return GetCollectionRequestBuilder
      */
     public function withDescription(Comparison $comparison = null)
     {
@@ -69,7 +40,7 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return $this
      */
     public function withId(Comparison $comparison = null)
     {
@@ -81,7 +52,7 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return $this
      */
     public function withName(Comparison $comparison = null)
     {
@@ -93,7 +64,7 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return $this
      */
     public function withOwner(Comparison $comparison = null)
     {
@@ -101,4 +72,6 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
 
         return $this;
     }
+
+
 }

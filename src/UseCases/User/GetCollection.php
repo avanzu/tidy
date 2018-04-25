@@ -9,6 +9,7 @@ namespace Tidy\UseCases\User;
 
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Gateways\IUserGateway;
+use Tidy\Domain\Requestors\ICollectionRequest;
 use Tidy\Domain\Requestors\User\IGetCollectionRequest;
 use Tidy\Domain\Responders\User\ICollectionResponse;
 use Tidy\Domain\Responders\User\ICollectionResponseTransformer;
@@ -43,11 +44,11 @@ class GetCollection
 
 
     /**
-     * @param IGetCollectionRequest $request
+     * @param ICollectionRequest $request
      *
      * @return ICollectionResponse
      */
-    public function execute(IGetCollectionRequest $request)
+    public function execute(ICollectionRequest $request)
     {
         $boundary   = $request->boundary();
         $items      = $this->gateway->fetchCollection($boundary, $request->criteria());

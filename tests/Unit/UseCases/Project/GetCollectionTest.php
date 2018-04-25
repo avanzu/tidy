@@ -11,10 +11,12 @@ use Tidy\Components\Collection\Boundary;
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\CollectionRequest;
+use Tidy\Domain\Requestors\CollectionRequestBuilder;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\ProjectSilverTongue;
 use Tidy\UseCases\Project\DTO\CollectionResponseDTO;
 use Tidy\UseCases\Project\DTO\CollectionResponseTransformer;
+use Tidy\UseCases\Project\DTO\GetCollectionRequestBuilder;
 use Tidy\UseCases\Project\DTO\GetCollectionRequestDTO;
 use Tidy\UseCases\Project\DTO\ResponseDTO;
 use Tidy\UseCases\Project\GetCollection;
@@ -43,15 +45,15 @@ class GetCollectionTest extends MockeryTestCase
     {
         $page     = 2;
         $pageSize = 15;
-        $request  = GetCollectionRequestDTO::make($page, $pageSize);
-        $this->assertInstanceOf(CollectionRequest::class, $request);
-
-        $request
+        $request  = (new GetCollectionRequestBuilder())
+            ->withPageSize($pageSize)
+            ->fromPage($page)
             ->withName(Comparison::equalTo(ProjectSilverTongue::NAME))
             ->withDescription(Comparison::containing(ProjectSilverTongue::DESCRIPTION))
             ->withCanonical(Comparison::startsWith(ProjectSilverTongue::CANONICAL))
             ->withId(Comparison::greaterOrEqualTo(ProjectSilverTongue::ID))
             ->withOwner(Comparison::in(1, 2, 3))
+            ->build()
         ;
 
         $this->expectGatewayFetchCollection(new Boundary($page, $pageSize));

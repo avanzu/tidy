@@ -1,47 +1,50 @@
 <?php
 /**
- * GetCollectionRequestDTO.php
- * tidy
- * Date: 07.04.18
+ * This file is part of the "Tidy" Project.
+ *
+ * Created by avanzu on 25.04.18
+ *
  */
 
-namespace Tidy\UseCases\User\DTO;
+namespace Tidy\Domain\Requestors;
 
 use Tidy\Components\DataAccess\Comparison;
-use Tidy\Domain\Requestors\CollectionRequest;
-use Tidy\Domain\Requestors\User\IGetCollectionRequest;
 
-/**
- * Class GetCollectionRequestDTO
- */
-class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectionRequest
+class CollectionRequestBuilder
 {
 
     /**
-     * CollectionRequest constructor.
-     *
-     * @param int $page
-     * @param int $pageSize
+     * @var int
      */
-    public function __construct(
-        $page = CollectionRequest::DEFAULT_PAGE,
-        $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE
-    ) {
-        $this->page     = $page;
-        $this->pageSize = $pageSize;
-    }
+    protected $page;
 
     /**
-     * @param int $page
-     * @param int $pageSize
-     *
-     * @return static
+     * @var int
      */
-    public static function make(
-        $page = CollectionRequest::DEFAULT_PAGE,
-        $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE
-    ) {
-        return new static($page, $pageSize);
+    protected $pageSize;
+
+
+    protected $criteria = [];
+
+    protected function useComparison($name, Comparison $comparison)
+    {
+        $this->criteria[$name] = $comparison;
+
+        return $this;
+    }
+
+    public function fromPage($page)
+    {
+        $this->page = $page;
+
+        return $this;
+    }
+
+    public function withPageSize($pageSize)
+    {
+        $this->pageSize = $pageSize;
+
+        return $this;
     }
 
     /**
@@ -92,5 +95,9 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
         return $this;
     }
 
+    public function build()
+    {
+        return new CollectionRequest($this->page, $this->pageSize, array_filter($this->criteria));
+    }
 
 }
