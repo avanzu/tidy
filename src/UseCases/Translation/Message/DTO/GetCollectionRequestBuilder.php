@@ -2,61 +2,35 @@
 /**
  * This file is part of the "Tidy" Project.
  *
- * Created by avanzu on 24.04.18
+ * Created by avanzu on 25.04.18
  *
  */
 
 namespace Tidy\UseCases\Translation\Message\DTO;
 
 use Tidy\Components\DataAccess\Comparison;
-use Tidy\Domain\Requestors\CollectionRequest;
-use Tidy\Domain\Requestors\Translation\Message\IGetSubSetRequest;
+use Tidy\Domain\Requestors\CollectionRequestBuilder;
 
-class GetSubSetRequestDTO extends CollectionRequest implements IGetSubSetRequest
+class GetCollectionRequestBuilder extends CollectionRequestBuilder
 {
-    public $catalogueId;
+
+    protected $catalogueId;
 
     /**
-     * CollectionRequest constructor.
+     * GetCollectionRequestBuilder constructor.
      *
-     * @param     $catalogueId
-     * @param int $page
-     * @param int $pageSize
+     * @param $catalogueId
      */
-    public function __construct(
-        $catalogueId,
-        $page = CollectionRequest::DEFAULT_PAGE,
-        $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE
-    ) {
-        $this->catalogueId = $catalogueId;
-        $this->page        = $page;
-        $this->pageSize    = $pageSize;
-    }
-
-    /**
-     * @param     $catalogueId
-     * @param int $page
-     * @param int $pageSize
-     *
-     * @return IGetSubSetRequest
-     */
-    public static function make(
-        $catalogueId,
-        $page = CollectionRequest::DEFAULT_PAGE,
-        $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE
-    ) {
-        return new static($catalogueId, $page, $pageSize);
-    }
-
-    public function catalogueId()
+    public function __construct($catalogueId)
     {
-        return $this->catalogueId;
+        $this->catalogueId = $catalogueId;
     }
+
 
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetSubSetRequest
+     * @return $this
      */
     public function withId(Comparison $comparison = null)
     {
@@ -66,7 +40,7 @@ class GetSubSetRequestDTO extends CollectionRequest implements IGetSubSetRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetSubSetRequest
+     * @return $this
      */
     public function withLocaleString(Comparison $comparison = null)
     {
@@ -76,7 +50,7 @@ class GetSubSetRequestDTO extends CollectionRequest implements IGetSubSetRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetSubSetRequest
+     * @return $this
      */
     public function withMeaning(Comparison $comparison = null)
     {
@@ -86,7 +60,7 @@ class GetSubSetRequestDTO extends CollectionRequest implements IGetSubSetRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return \Tidy\Domain\Requestors\Translation\Message\IGetSubSetRequest
+     * @return $this
      */
     public function withNotes(Comparison $comparison = null)
     {
@@ -96,7 +70,7 @@ class GetSubSetRequestDTO extends CollectionRequest implements IGetSubSetRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetSubSetRequest
+     * @return $this
      */
     public function withSourceString(Comparison $comparison = null)
     {
@@ -106,21 +80,32 @@ class GetSubSetRequestDTO extends CollectionRequest implements IGetSubSetRequest
     /**
      * @param Comparison|null $comparison
      *
-     * @return \Tidy\Domain\Requestors\Translation\Message\IGetSubSetRequest
+     * @return $this
      */
     public function withState(Comparison $comparison = null)
     {
         return $this->useComparison('state', $comparison);
     }
 
+    public function build()
+    {
+        return new GetCollectionRequestDTO(
+            $this->page,
+            $this->pageSize,
+            array_filter($this->criteria),
+            $this->catalogueId
+        );
+    }
+
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetSubSetRequest
+     * @return $this
      */
     public function withToken(Comparison $comparison = null)
     {
         return $this->useComparison('token', $comparison);
     }
+
 
 }

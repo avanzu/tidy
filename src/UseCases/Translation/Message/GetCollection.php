@@ -11,10 +11,10 @@ namespace Tidy\UseCases\Translation\Message;
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Message\IGetSubSetRequest;
-use Tidy\Domain\Responders\Translation\Message\ISubSetResponseTransformer;
-use Tidy\UseCases\Translation\Message\DTO\SubSetResponseTransformer;
+use Tidy\Domain\Responders\Translation\Message\ICollectionResponseTransformer;
+use Tidy\UseCases\Translation\Message\DTO\CollectionResponseTransformer;
 
-class GetTranslationSubSet
+class GetCollection
 {
     /**
      * @var ITranslationGateway
@@ -22,17 +22,17 @@ class GetTranslationSubSet
     protected $gateway;
 
     /**
-     * @var \Tidy\Domain\Responders\Translation\Message\ISubSetResponseTransformer
+     * @var ICollectionResponseTransformer
      */
     private $transformer;
 
     /**
-     * GetTranslationSubSet constructor.
+     * GetCollection constructor.
      *
-     * @param ITranslationGateway                                                         $gateway
-     * @param \Tidy\Domain\Responders\Translation\Message\ISubSetResponseTransformer|null $transformer
+     * @param ITranslationGateway                 $gateway
+     * @param ICollectionResponseTransformer|null $transformer
      */
-    public function __construct(ITranslationGateway $gateway, ISubSetResponseTransformer $transformer = null)
+    public function __construct(ITranslationGateway $gateway, ICollectionResponseTransformer $transformer = null)
     {
         $this->gateway     = $gateway;
         $this->transformer = $transformer;
@@ -54,7 +54,7 @@ class GetTranslationSubSet
     private function transformer()
     {
         if (!$this->transformer) {
-            $this->transformer = new SubSetResponseTransformer();
+            $this->transformer = new CollectionResponseTransformer();
         }
 
         return $this->transformer;

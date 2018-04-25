@@ -10,20 +10,20 @@ namespace Tidy\UseCases\Translation\Message\DTO;
 
 use Tidy\Components\Collection\IPagedCollection;
 use Tidy\Domain\Entities\Translation;
-use Tidy\Domain\Responders\Translation\Message\ISubSetResponseTransformer;
+use Tidy\Domain\Responders\Translation\Message\ICollectionResponseTransformer;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponseTransformer;
 
-class SubSetResponseTransformer implements ISubSetResponseTransformer
+class CollectionResponseTransformer implements ICollectionResponseTransformer
 {
     /**
-     * @var \Tidy\Domain\Responders\Translation\Message\ITranslationResponseTransformer
+     * @var ITranslationResponseTransformer
      */
     protected $itemTransformer;
 
     /**
-     * SubSetResponseTransformer constructor.
+     * CollectionResponseTransformer constructor.
      *
-     * @param \Tidy\Domain\Responders\Translation\Message\ITranslationResponseTransformer $itemTransformer
+     * @param ITranslationResponseTransformer $itemTransformer
      */
     public function __construct(ITranslationResponseTransformer $itemTransformer = null)
     {
@@ -33,7 +33,7 @@ class SubSetResponseTransformer implements ISubSetResponseTransformer
 
     public function transform(IPagedCollection $collection)
     {
-        $response = new SubSetResponseDTO();
+        $response = new CollectionResponseDTO();
         $response->pickBoundaries($collection);
         $response->items = $collection->map(
             function (Translation $translation) { return $this->itemTransformer()->transform($translation); }

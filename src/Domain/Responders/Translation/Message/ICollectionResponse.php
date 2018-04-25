@@ -7,9 +7,9 @@
  */
 namespace Tidy\Domain\Responders\Translation\Message;
 
-use Tidy\Domain\Responders\ICollectionResponse;
+use Tidy\Domain\Responders\ICollectionResponse as BaseCollectionResponse;
 
-interface ISubSetResponse extends ICollectionResponse
+interface ICollectionResponse extends BaseCollectionResponse
 {
     /**
      * Count elements of an object

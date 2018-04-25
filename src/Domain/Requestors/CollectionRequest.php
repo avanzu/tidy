@@ -40,31 +40,6 @@ class CollectionRequest implements ICollectionRequest
     }
 
 
-    /**
-     * @param $page
-     *
-     * @return $this
-     * @deprecated
-     */
-    public function fromPage($page)
-    {
-        $this->page = $page;
-
-        return $this;
-    }
-
-    /**
-     * @param $pageSize
-     *
-     * @return $this
-     * @deprecated
-     */
-    public function withPageSize($pageSize)
-    {
-        $this->pageSize = $pageSize;
-
-        return $this;
-    }
 
     public function boundary()
     {
@@ -90,13 +65,6 @@ class CollectionRequest implements ICollectionRequest
     public function pageSize()
     {
         return $this->pageSize;
-    }
-
-    protected function useComparison($name, Comparison $comparison)
-    {
-        $this->criteria[$name] = $comparison;
-
-        return $this;
     }
 
 

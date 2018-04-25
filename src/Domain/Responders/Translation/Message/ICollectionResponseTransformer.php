@@ -9,7 +9,7 @@ namespace Tidy\Domain\Responders\Translation\Message;
 
 use Tidy\Components\Collection\IPagedCollection;
 
-interface ISubSetResponseTransformer
+interface ICollectionResponseTransformer
 {
     public function transform(IPagedCollection $collection);
 }

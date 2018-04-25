@@ -9,9 +9,9 @@
 namespace Tidy\UseCases\Translation\Message\DTO;
 
 use Tidy\Domain\Responders\CollectionResponse;
-use Tidy\Domain\Responders\Translation\Message\ISubSetResponse;
+use Tidy\Domain\Responders\Translation\Message\ICollectionResponse;
 
-class SubSetResponseDTO extends CollectionResponse implements ISubSetResponse
+class CollectionResponseDTO extends CollectionResponse implements ICollectionResponse
 {
 
     /**

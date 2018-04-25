@@ -13,17 +13,18 @@ use Tidy\Components\Collection\Boundary;
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\ICollectionRequest;
-use Tidy\Domain\Responders\Translation\Message\ISubSetResponse;
+use Tidy\Domain\Responders\Translation\Message\ICollectionResponse;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\Tests\Unit\Domain\Entities\TranslationTranslated;
 use Tidy\Tests\Unit\Domain\Entities\TranslationUntranslated;
-use Tidy\UseCases\Translation\Message\DTO\GetSubSetRequestDTO;
-use Tidy\UseCases\Translation\Message\DTO\SubSetResponseTransformer;
-use Tidy\UseCases\Translation\Message\GetTranslationSubSet;
+use Tidy\UseCases\Translation\Message\DTO\GetCollectionRequestBuilder;
+use Tidy\UseCases\Translation\Message\DTO\GetCollectionRequestDTO;
+use Tidy\UseCases\Translation\Message\DTO\CollectionResponseTransformer;
+use Tidy\UseCases\Translation\Message\GetCollection;
 
-class GetTranslationSubSetTest extends MockeryTestCase
+class GetCollectionTest extends MockeryTestCase
 {
 
     /**
@@ -32,13 +33,13 @@ class GetTranslationSubSetTest extends MockeryTestCase
     protected $gateway;
 
     /**
-     * @var GetTranslationSubSet
+     * @var GetCollection
      */
     protected $useCase;
 
     public function test_instantiation()
     {
-        $useCase = new GetTranslationSubSet(mock(ITranslationGateway::class), mock(SubSetResponseTransformer::class));
+        $useCase = new GetCollection(mock(ITranslationGateway::class), mock(CollectionResponseTransformer::class));
         assertThat($useCase, is(notNullValue()));
 
     }
@@ -46,13 +47,7 @@ class GetTranslationSubSetTest extends MockeryTestCase
 
     public function test_execute()
     {
-        $request = GetSubSetRequestDTO::make(TranslationCatalogueEnglishToGerman::ID);
-        assertThat($request, is(anInstanceOf(\Tidy\Domain\Requestors\Translation\Message\IGetSubSetRequest::class)));
-        assertThat($request, is(anInstanceOf(ICollectionRequest::class)));
-
-        assertThat($request->catalogueId(), is(equalTo(TranslationCatalogueEnglishToGerman::ID)));
-
-        $request
+        $request = (new GetCollectionRequestBuilder(TranslationCatalogueEnglishToGerman::ID))
             ->withId(Comparison::in(1, 2, 3, 4))
             ->withToken(Comparison::startsWith('label.'))
             ->withSourceString(Comparison::endsWith('world!'))
@@ -62,13 +57,14 @@ class GetTranslationSubSetTest extends MockeryTestCase
             ->withNotes(Comparison::isEmpty())
             ->fromPage(3)
             ->withPageSize(15)
+            ->build()
         ;
 
         $this->expectGetSubSet($request);
         $this->expectSubSetTotal($request);
 
         $result = $this->useCase->execute($request);
-        assertThat($result, is(anInstanceOf(ISubSetResponse::class)));
+        assertThat($result, is(anInstanceOf(ICollectionResponse::class)));
         assertThat(count($result), is(2));
         $this->assertContainsOnlyInstancesOf(ITranslationResponse::class, $result->items());
 
@@ -78,7 +74,7 @@ class GetTranslationSubSetTest extends MockeryTestCase
     {
         parent::setUp();
         $this->gateway = mock(ITranslationGateway::class);
-        $this->useCase = new GetTranslationSubSet($this->gateway);
+        $this->useCase = new GetCollection($this->gateway);
     }
 
     /**
