@@ -16,7 +16,9 @@ use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\UseCases\Translation\Catalogue\DTO\CollectionResponseDTO;
 use Tidy\UseCases\Translation\Catalogue\DTO\CollectionResponseTransformer;
+use Tidy\UseCases\Translation\Catalogue\DTO\GetCollectionRequestBuilder;
 use Tidy\UseCases\Translation\Catalogue\DTO\GetCollectionRequestDTO;
+use Tidy\UseCases\Translation\Catalogue\GetCatalogueCollection;
 
 class GetCatalogueCollectionTest extends MockeryTestCase
 {
@@ -27,13 +29,13 @@ class GetCatalogueCollectionTest extends MockeryTestCase
     protected $gateway;
 
     /**
-     * @var \Tidy\UseCases\Translation\Catalogue\GetCatalogueCollection
+     * @var GetCatalogueCollection
      */
     protected $useCase;
 
     public function test_instantiation()
     {
-        $useCase = new \Tidy\UseCases\Translation\Catalogue\GetCatalogueCollection(
+        $useCase = new GetCatalogueCollection(
             mock(ITranslationGateway::class),
             mock(CollectionResponseTransformer::class)
         );
@@ -42,13 +44,7 @@ class GetCatalogueCollectionTest extends MockeryTestCase
 
     public function test_execute()
     {
-        $request = GetCollectionRequestDTO::make();
-        assertThat(
-            $request,
-            is(anInstanceOf(\Tidy\Domain\Requestors\Translation\Catalogue\IGetCollectionRequest::class))
-        );
-
-        $request
+        $request = (new GetCollectionRequestBuilder())
             ->withName(Comparison::equalTo('some name'))
             ->withSourceLanguage(Comparison::equalTo('de'))
             ->withTargetLanguage(Comparison::equalTo('en'))
@@ -61,7 +57,7 @@ class GetCatalogueCollectionTest extends MockeryTestCase
             ->withLocaleString(Comparison::endsWith('ipsum'))
             ->withToken(Comparison::containing('label'))
             ->withState(Comparison::in('new', 'needs-translation'))
-        ;
+            ->build();
 
         $this->expectGetCollectionWithBoundaryAndCriteria($request);
         $this->expectTotalWithCriteria($request);
@@ -77,7 +73,7 @@ class GetCatalogueCollectionTest extends MockeryTestCase
     {
         parent::setUp();
         $this->gateway = mock(ITranslationGateway::class);
-        $this->useCase = new \Tidy\UseCases\Translation\Catalogue\GetCatalogueCollection($this->gateway);
+        $this->useCase = new GetCatalogueCollection($this->gateway);
     }
 
     /**

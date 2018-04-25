@@ -10,6 +10,7 @@ namespace Tidy\UseCases\Translation\Catalogue;
 
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Gateways\ITranslationGateway;
+use Tidy\Domain\Requestors\ICollectionRequest;
 use Tidy\Domain\Requestors\Translation\Catalogue\IGetCollectionRequest;
 use Tidy\Domain\Responders\Translation\Catalogue\ICollectionResponseTransformer;
 use Tidy\UseCases\Translation\Catalogue\DTO\CollectionResponseTransformer;
@@ -38,7 +39,7 @@ class GetCatalogueCollection
         $this->transformer = $transformer;
     }
 
-    public function execute(IGetCollectionRequest $request)
+    public function execute(ICollectionRequest $request)
     {
 
         $boundary = $request->boundary();

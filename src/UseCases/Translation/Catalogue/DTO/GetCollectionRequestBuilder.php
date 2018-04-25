@@ -2,50 +2,23 @@
 /**
  * This file is part of the "Tidy" Project.
  *
- * Created by avanzu on 24.04.18
+ * Created by avanzu on 25.04.18
  *
  */
 
 namespace Tidy\UseCases\Translation\Catalogue\DTO;
 
 use Tidy\Components\DataAccess\Comparison;
-use Tidy\Domain\Requestors\CollectionRequest;
-use Tidy\Domain\Requestors\Translation\Catalogue\IGetCollectionRequest;
+use Tidy\Domain\Requestors\CollectionRequestBuilder;
 
-class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectionRequest
+class GetCollectionRequestBuilder extends CollectionRequestBuilder
 {
 
-    /**
-     * CollectionRequest constructor.
-     *
-     * @param int $page
-     * @param int $pageSize
-     */
-    public function __construct(
-        $page = CollectionRequest::DEFAULT_PAGE,
-        $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE
-    ) {
-        $this->page     = $page;
-        $this->pageSize = $pageSize;
-    }
-
-    /**
-     * @param int $page
-     * @param int $pageSize
-     *
-     * @return IGetCollectionRequest
-     */
-    public static function make(
-        $page = CollectionRequest::DEFAULT_PAGE,
-        $pageSize = CollectionRequest::DEFAULT_PAGE_SIZE
-    ) {
-        return new static($page, $pageSize);
-    }
 
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return $this
      */
     public function withCanonical(Comparison $comparison = null)
     {
@@ -55,7 +28,7 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return $this
      */
     public function withId(Comparison $comparison = null)
     {
@@ -65,7 +38,7 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return $this
      */
     public function withLocaleString(Comparison $comparison = null)
     {
@@ -75,7 +48,7 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return $this
      */
     public function withName(Comparison $comparison = null)
     {
@@ -86,7 +59,7 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return $this
      */
     public function withProject(Comparison $comparison = null)
     {
@@ -96,7 +69,7 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return $this
      */
     public function withSourceCulture(Comparison $comparison = null)
     {
@@ -106,7 +79,7 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return $this
      */
     public function withSourceLanguage(Comparison $comparison = null)
     {
@@ -116,7 +89,7 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return $this
      */
     public function withSourceString(Comparison $comparison = null)
     {
@@ -126,7 +99,7 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return $this
      */
     public function withState(Comparison $comparison = null)
     {
@@ -136,7 +109,7 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return $this
      */
     public function withTargetCulture(Comparison $comparison = null)
     {
@@ -146,7 +119,7 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return $this
      */
     public function withTargetLanguage(Comparison $comparison = null)
     {
@@ -156,7 +129,7 @@ class GetCollectionRequestDTO extends CollectionRequest implements IGetCollectio
     /**
      * @param Comparison|null $comparison
      *
-     * @return IGetCollectionRequest
+     * @return $this
      */
     public function withToken(Comparison $comparison = null)
     {

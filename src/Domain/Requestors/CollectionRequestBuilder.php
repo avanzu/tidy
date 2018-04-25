@@ -16,12 +16,12 @@ class CollectionRequestBuilder
     /**
      * @var int
      */
-    protected $page;
+    protected $page = ICollectionRequest::DEFAULT_PAGE;
 
     /**
      * @var int
      */
-    protected $pageSize;
+    protected $pageSize = ICollectionRequest::DEFAULT_PAGE_SIZE;
 
 
     protected $criteria = [];
