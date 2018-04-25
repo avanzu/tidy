@@ -11,25 +11,38 @@ use Tidy\Domain\Requestors\User\ICreateRequest;
 
 class CreateRequestDTO implements ICreateRequest
 {
-    public $userName;
+    protected $userName;
 
-    public $plainPassword;
+    protected $plainPassword;
 
-    public $eMail;
+    protected $eMail;
 
-    public $enabled = false;
+    protected $enabled = false;
 
-    public $firstName;
+    protected $firstName;
 
-    public $lastName;
+    protected $lastName;
 
     /**
-     * @return ICreateRequest
+     * CreateRequestDTO constructor.
+     *
+     * @param      $userName
+     * @param      $plainPassword
+     * @param      $eMail
+     * @param bool $enabled
+     * @param      $firstName
+     * @param      $lastName
      */
-    public static function make()
+    public function __construct($userName, $plainPassword, $eMail, $enabled, $firstName, $lastName)
     {
-        return new static;
+        $this->userName      = $userName;
+        $this->plainPassword = $plainPassword;
+        $this->eMail         = $eMail;
+        $this->enabled       = $enabled;
+        $this->firstName     = $firstName;
+        $this->lastName      = $lastName;
     }
+
 
     public function eMail()
     {
@@ -46,13 +59,6 @@ class CreateRequestDTO implements ICreateRequest
         return $this->userName;
     }
 
-    public function grantImmediateAccess()
-    {
-        $this->enabled = true;
-
-        return $this;
-    }
-
     public function isAccessGranted()
     {
         return (bool)$this->enabled;
@@ -67,41 +73,5 @@ class CreateRequestDTO implements ICreateRequest
     {
         return $this->plainPassword;
     }
-
-    public function witFirstName($firstName)
-    {
-        $this->firstName = $firstName;
-
-        return $this;
-    }
-
-    public function withEMail($eMail)
-    {
-        $this->eMail = $eMail;
-
-        return $this;
-    }
-
-    public function withLastName($lastName)
-    {
-        $this->lastName = $lastName;
-
-        return $this;
-    }
-
-    public function withPlainPassword($plainPassword)
-    {
-        $this->plainPassword = $plainPassword;
-
-        return $this;
-    }
-
-    public function withUserName($username)
-    {
-        $this->userName = $username;
-
-        return $this;
-    }
-
 
 }

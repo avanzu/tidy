@@ -12,7 +12,7 @@ use Tidy\Domain\Responders\ICollectionResponse as Response;
 /**
  * Class CollectionResponseDTO
  */
-interface ICollectionResponse extends Response
+interface ICollectionResponse extends Response, \Countable
 {
 
     /**

@@ -18,7 +18,7 @@ use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\UserImpl;
 use Tidy\Tests\Unit\Domain\Entities\UserProfileImpl;
 use Tidy\UseCases\User\Create;
-use Tidy\UseCases\User\DTO\CreateRequestDTO;
+use Tidy\UseCases\User\DTO\CreateRequestBuilder;
 use Tidy\UseCases\User\DTO\ResponseDTO;
 use Tidy\UseCases\User\DTO\ResponseTransformer;
 
@@ -120,9 +120,7 @@ class CreateTest extends MockeryTestCase
         $this->expectPasswordEncoderCall($plainPass);
         $this->expectNormaliserCall($username);
 
-        $request = $this->makeRequestDTO($username, $plainPass, $eMail, $firstName, $lastName);
-
-        $request->grantImmediateAccess();
+        $request = $this->makeRequestDTOWithImmediateAccess($username, $plainPass, $eMail, $firstName, $lastName);
 
         $result = $this->useCase->execute($request);
 
@@ -138,7 +136,7 @@ class CreateTest extends MockeryTestCase
         $this->gateway->expects('save')->andThrows(new PersistenceFailed());
 
         $this->expectException(PersistenceFailed::class);
-        $this->useCase->execute(CreateRequestDTO::make());
+        $this->useCase->execute($this->makeRequestDTO('', '', '', '', ''));
     }
 
     protected function setUp()
@@ -218,16 +216,43 @@ class CreateTest extends MockeryTestCase
      */
     private function makeRequestDTO($username, $plainPass, $eMail, $firstName, $lastName)
     {
-        $request = CreateRequestDTO::make();
-        $request->withUserName($username)
-                ->withPlainPassword($plainPass)
-                ->withEMail($eMail)
-                ->witFirstName($firstName)
-                ->withLastName($lastName)
-        ;
 
-        return $request;
+        return (new CreateRequestBuilder())
+            ->withUserName($username)
+            ->withPlainPassword($plainPass)
+            ->withEMail($eMail)
+            ->witFirstName($firstName)
+            ->withLastName($lastName)
+            ->build()
+            ;
+
     }
+
+    /**
+     * @param $username
+     * @param $plainPass
+     * @param $eMail
+     *
+     * @param $firstName
+     * @param $lastName
+     *
+     * @return ICreateRequest
+     */
+    private function makeRequestDTOWithImmediateAccess($username, $plainPass, $eMail, $firstName, $lastName)
+    {
+
+        return (new CreateRequestBuilder())
+            ->withUserName($username)
+            ->withPlainPassword($plainPass)
+            ->withEMail($eMail)
+            ->witFirstName($firstName)
+            ->withLastName($lastName)
+            ->grantImmediateAccess()
+            ->build()
+            ;
+
+    }
+
 
     private function expectNormaliserCall($username)
     {
