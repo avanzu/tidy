@@ -18,7 +18,15 @@ class LookUpRequestDTO implements ILookUpRequest
     /**
      * @var
      */
-    public $userId;
+    protected $userId;
+
+    /**
+     * LookUpRequestDTO constructor.
+     *
+     * @param $userId
+     */
+    public function __construct($userId) { $this->userId = $userId; }
+
 
     /**
      * @return int
@@ -26,25 +34,5 @@ class LookUpRequestDTO implements ILookUpRequest
     public function userId()
     {
         return $this->userId;
-    }
-
-    /**
-     * @return LookUpRequestDTO
-     */
-    public static function make()
-    {
-        return new static;
-    }
-
-    /**
-     * @param $userId
-     *
-     * @return $this
-     */
-    public function withUserId($userId)
-    {
-        $this->userId = $userId;
-
-        return $this;
     }
 }

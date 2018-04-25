@@ -12,6 +12,7 @@ use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\UserStub1;
+use Tidy\UseCases\User\DTO\LookUpRequestBuilder;
 use Tidy\UseCases\User\DTO\LookUpRequestDTO;
 use Tidy\UseCases\User\DTO\ResponseDTO;
 use Tidy\UseCases\User\DTO\ResponseTransformer;
@@ -51,7 +52,7 @@ class LookUpTest extends MockeryTestCase
     public function test_GetExistingUser_InvalidUserId_throws_UserNotFound()
     {
         $this->gateway->expects('find')->with(444)->andReturn(null);
-        $request = LookUpRequestDTO::make()->withUserId(444);
+        $request = (new LookUpRequestBuilder())->withUserId(444)->build();
 
         $this->expectException(NotFound::class);
         $this->useCase->execute($request);
@@ -65,7 +66,7 @@ class LookUpTest extends MockeryTestCase
     {
 
         $this->gateway->expects('find')->with(UserStub1::ID)->andReturn(new UserStub1());
-        $request = LookUpRequestDTO::make()->withUserId(UserStub1::ID);
+        $request = (new LookUpRequestBuilder())->withUserId(UserStub1::ID)->build();
 
         $response = $this->useCase->execute($request);
         $this->assertInstanceOf(ResponseDTO::class, $response);
