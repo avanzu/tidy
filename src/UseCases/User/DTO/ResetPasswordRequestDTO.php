@@ -11,14 +11,22 @@ use Tidy\Domain\Requestors\User\IResetPasswordRequest;
 
 class ResetPasswordRequestDTO implements IResetPasswordRequest
 {
-    public $token;
+    protected $token;
 
-    public $plainPassword;
+    protected $plainPassword;
 
-    public static function make()
+    /**
+     * ResetPasswordRequestDTO constructor.
+     *
+     * @param $token
+     * @param $plainPassword
+     */
+    public function __construct($token, $plainPassword)
     {
-        return new self;
+        $this->token         = $token;
+        $this->plainPassword = $plainPassword;
     }
+
 
     public function plainPassword()
     {
@@ -30,18 +38,6 @@ class ResetPasswordRequestDTO implements IResetPasswordRequest
         return $this->token;
     }
 
-    public function withPlainPassword($password)
-    {
-        $this->plainPassword = $password;
 
-        return $this;
-    }
-
-    public function withToken($token)
-    {
-        $this->token = $token;
-
-        return $this;
-    }
 
 }

@@ -16,6 +16,7 @@ use Tidy\Domain\Responders\User\IResponse;
 use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\UserStub2;
+use Tidy\UseCases\User\DTO\ResetPasswordRequestBuilder;
 use Tidy\UseCases\User\DTO\ResetPasswordRequestDTO;
 use Tidy\UseCases\User\ResetPassword;
 
@@ -51,8 +52,10 @@ class ResetPasswordTest extends MockeryTestCase
     {
         $hash = password_hash(self::PLAIN_PASS, PASSWORD_BCRYPT);
 
-        $request = ResetPasswordRequestDTO::make();
-        $request->withToken(self::RESET_TOKEN)->withPlainPassword(self::PLAIN_PASS);
+        $request = (new ResetPasswordRequestBuilder())
+            ->withToken(self::RESET_TOKEN)
+            ->withPlainPassword(self::PLAIN_PASS)
+            ->build();
 
         $this->expectFindByToken(self::RESET_TOKEN, new UserStub2());
         $this->expectEncode($hash);
@@ -69,8 +72,11 @@ class ResetPasswordTest extends MockeryTestCase
 
     public function test_reset_failure()
     {
-        $request = ResetPasswordRequestDTO::make();
-        $request->withToken(self::INVALID_TOKEN)->withPlainPassword(self::PLAIN_PASS);
+
+        $request = (new ResetPasswordRequestBuilder())
+            ->withToken(self::INVALID_TOKEN)
+            ->withPlainPassword(self::PLAIN_PASS)
+            ->build();
 
         $this->expectFindByToken(self::INVALID_TOKEN, null);
         $this->expectException(NotFound::class);
