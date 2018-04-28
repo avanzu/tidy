@@ -15,6 +15,7 @@ use Tidy\Domain\Responders\Project\IResponseTransformer;
 use Tidy\Domain\Responders\Project\ItemResponder;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\ProjectSilverTongue;
+use Tidy\UseCases\Project\DTO\RenameRequestBuilder;
 use Tidy\UseCases\Project\DTO\RenameRequestDTO;
 use Tidy\UseCases\Project\Rename;
 
@@ -38,15 +39,16 @@ class RenameTest extends MockeryTestCase
 
     public function test_rename()
     {
-        $request = RenameRequestDTO::make();
-        assertThat($request, is(anInstanceOf(RenameRequestDTO::class)));
         $expectedName        = ProjectSilverTongue::NAME.' Renamed';
         $expectedDescription = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
-        $request
+        $request = (new RenameRequestBuilder())
             ->withProjectId(ProjectSilverTongue::ID)
             ->renameTo($expectedName)
             ->describeAs($expectedDescription)
+            ->build()
         ;
+
+        assertThat($request, is(anInstanceOf(RenameRequestDTO::class)));
 
         $this->expectProjectLookUp(ProjectSilverTongue::ID, new ProjectSilverTongue());
         $this->expectSave($expectedName, $expectedDescription);

@@ -12,28 +12,26 @@ use Tidy\Domain\Requestors\Project\IRenameRequest;
 
 class RenameRequestDTO implements IRenameRequest
 {
-    public $projectId;
+    protected $projectId;
 
-    public $name;
+    protected $name;
 
-    public $description;
-
-    public static function make()
-    {
-        return new self();
-    }
+    protected $description;
 
     /**
-     * @param $description
+     * RenameRequestDTO constructor.
      *
-     * @return IRenameRequest
+     * @param $projectId
+     * @param $name
+     * @param $description
      */
-    public function describeAs($description)
+    public function __construct($projectId, $name, $description)
     {
+        $this->projectId   = $projectId;
+        $this->name        = $name;
         $this->description = $description;
-
-        return $this;
     }
+
 
     public function description()
     {
@@ -50,29 +48,7 @@ class RenameRequestDTO implements IRenameRequest
         return $this->projectId;
     }
 
-    /**
-     * @param $name
-     *
-     * @return IRenameRequest
-     */
-    public function renameTo($name)
-    {
-        $this->name = $name;
 
-        return $this;
-    }
-
-    /**
-     * @param $id
-     *
-     * @return IRenameRequest
-     */
-    public function withProjectId($id)
-    {
-        $this->projectId = $id;
-
-        return $this;
-    }
 
 
 }

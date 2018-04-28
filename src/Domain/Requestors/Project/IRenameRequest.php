@@ -9,26 +9,7 @@ namespace Tidy\Domain\Requestors\Project;
 
 interface IRenameRequest
 {
-    /**
-     * @param $id
-     *
-     * @return IRenameRequest
-     */
-    public function withProjectId($id);
 
-    /**
-     * @param $name
-     *
-     * @return IRenameRequest
-     */
-    public function renameTo($name);
-
-    /**
-     * @param $description
-     *
-     * @return IRenameRequest
-     */
-    public function describeAs($description);
 
     public function projectId();
 
