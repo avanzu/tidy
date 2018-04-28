@@ -11,19 +11,26 @@ use Tidy\Domain\Requestors\Project\ICreateRequest;
 
 class CreateRequestDTO implements ICreateRequest
 {
-    public $name;
+    protected $name;
 
-    public $description;
+    protected $description;
 
-    public $ownerId;
+    protected $ownerId;
 
     /**
-     * @return ICreateRequest
+     * CreateRequestDTO constructor.
+     *
+     * @param $name
+     * @param $description
+     * @param $ownerId
      */
-    public static function make()
+    public function __construct($name, $description, $ownerId)
     {
-        return new static;
+        $this->name        = $name;
+        $this->description = $description;
+        $this->ownerId     = $ownerId;
     }
+
 
     /**
      * @return mixed
@@ -43,40 +50,5 @@ class CreateRequestDTO implements ICreateRequest
         return $this->ownerId;
     }
 
-    /**
-     * @param $description
-     *
-     * @return ICreateRequest
-     */
-    public function withDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @param $name
-     *
-     * @return ICreateRequest
-     */
-    public function withName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @param $owner
-     *
-     * @return ICreateRequest
-     */
-    public function withOwnerId($owner)
-    {
-        $this->ownerId = $owner;
-
-        return $this;
-    }
 
 }

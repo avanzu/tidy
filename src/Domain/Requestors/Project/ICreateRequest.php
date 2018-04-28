@@ -9,20 +9,11 @@ namespace Tidy\Domain\Requestors\Project;
 
 interface ICreateRequest
 {
-    /**
-     * @param $name
-     *
-     * @return ICreateRequest
-     */
-    public function withName($name);
+
 
     /**
-     * @param $description
-     *
-     * @return ICreateRequest
+     * @return mixed
      */
-    public function withDescription($description);
-
     public function name();
 
     /**
@@ -31,11 +22,7 @@ interface ICreateRequest
     public function description();
 
     /**
-     * @param $owner
-     *
-     * @return ICreateRequest
+     * @return mixed
      */
-    public function withOwnerId($owner);
-
     public function ownerId();
 }

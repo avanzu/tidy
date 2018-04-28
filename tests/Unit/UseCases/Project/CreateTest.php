@@ -21,6 +21,7 @@ use Tidy\Tests\Unit\Domain\Entities\UserStub1;
 use Tidy\Tests\Unit\Domain\Entities\UserStub2;
 use Tidy\UseCases\AccessControl\DTO\OwnerExcerptTransformer;
 use Tidy\UseCases\Project\Create;
+use Tidy\UseCases\Project\DTO\CreateRequestBuilder;
 use Tidy\UseCases\Project\DTO\CreateRequestDTO;
 use Tidy\UseCases\Project\DTO\ResponseDTO;
 use Tidy\UseCases\Project\DTO\ResponseTransformer;
@@ -65,10 +66,11 @@ class CreateTest extends MockeryTestCase
      */
     public function test_create_success($name, $description, $id, $canonical, User $owner)
     {
-        $request = CreateRequestDTO::make();
-        $request->withName($name)
+        $request = (new CreateRequestBuilder())
+                ->withName($name)
                 ->withDescription($description)
                 ->withOwnerId($owner->getId())
+                ->build()
         ;
 
         $project = new ProjectImpl();
