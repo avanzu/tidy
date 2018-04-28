@@ -8,12 +8,6 @@ namespace Tidy\Domain\Requestors\Project;
 
 interface ILookUpRequest
 {
-    /**
-     * @param $id
-     *
-     * @return $this
-     */
-    public function withProjectId($id);
 
     /**
      * @return int

@@ -11,15 +11,15 @@ use Tidy\Domain\Requestors\Project\ILookUpRequest;
 
 class LookUpRequestDTO implements ILookUpRequest
 {
-    public $projectId;
+    protected $projectId;
 
     /**
-     * @return ILookUpRequest
+     * LookUpRequestDTO constructor.
+     *
+     * @param $projectId
      */
-    public static function make()
-    {
-        return new self;
-    }
+    public function __construct($projectId) { $this->projectId = $projectId; }
+
 
     /**
      * @return int
@@ -29,15 +29,5 @@ class LookUpRequestDTO implements ILookUpRequest
         return $this->projectId;
     }
 
-    /**
-     * @param $id
-     *
-     * @return ILookUpRequest
-     */
-    public function withProjectId($id)
-    {
-        $this->projectId = $id;
 
-        return $this;
-    }
 }

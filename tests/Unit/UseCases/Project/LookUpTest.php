@@ -13,6 +13,7 @@ use Tidy\Domain\Responders\Project\IResponse;
 use Tidy\Domain\Responders\Project\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Domain\Entities\ProjectSilverTongue;
+use Tidy\UseCases\Project\DTO\LookUpRequestBuilder;
 use Tidy\UseCases\Project\DTO\LookUpRequestDTO;
 use Tidy\UseCases\Project\LookUp;
 
@@ -38,8 +39,9 @@ class LookUpTest extends MockeryTestCase
     public function test_GetProject_success()
     {
         $project = new ProjectSilverTongue();
-        $request = LookUpRequestDTO::make();
-        $request->withProjectId(ProjectSilverTongue::ID);
+        $request = (new LookUpRequestBuilder())
+            ->withProjectId(ProjectSilverTongue::ID)
+            ->build();
 
         $this->expectFindOnGateway(ProjectSilverTongue::ID, $project);
 
@@ -55,7 +57,7 @@ class LookUpTest extends MockeryTestCase
         $this->expectException(NotFound::class);
         $this->expectFindOnGateway(123, null);
 
-        $this->useCase->execute(LookUpRequestDTO::make()->withProjectId(123));
+        $this->useCase->execute((new LookUpRequestBuilder())->withProjectId(123)->build());
 
     }
 
