@@ -26,14 +26,16 @@ class MessengerTest extends MockeryTestCase
         $handler2   = new \stdClass();
 
         $messenger  = new Messenger();
-        $messenger->subscribe($handler1, $handler2);
-        assertThat(count($messenger), is(equalTo(2)));
+        $eventName  = TestCaseExecuted::handledBy();
+        $messenger->addHandler($eventName, $handler1);
+        $messenger->addHandler($eventName, $handler2);
 
-        $messenger->subscribe($handler2);
-        assertThat(count($messenger), is(equalTo(2)));
+        assertThat($messenger->hasHandlersFor($eventName));
+        assertThat(count($messenger->handlersFor($eventName)), is(equalTo(2)));
 
-        $messenger->unsubscribe($handler2);
-        assertThat(count($messenger), is(equalTo(1)));
+        $messenger->removeHandler($eventName, $handler2);
+
+        assertThat(count($messenger->handlersFor($eventName)), is(equalTo(1)));
 
     }
 
@@ -43,10 +45,13 @@ class MessengerTest extends MockeryTestCase
         $handler2   = new \stdClass();
 
         $messenger  = new Messenger();
-        $messenger->subscribe($handler1, $handler2);
+        $messenger->addHandler('onEventA', $handler1);
+        $messenger->addHandler('onEventA', $handler2);
+        $messenger->addHandler('onEventB', $handler2);
 
-        $messenger->clear();
-        assertThat(count($messenger), is(equalTo(0)));
+        $messenger->clear('onEventA');
+        assertThat($messenger->hasHandlersFor('onEventA'), is(false));
+        assertThat($messenger->hasHandlersFor('onEventB'), is(true));
     }
 
     public function test_broadcast()
@@ -58,7 +63,7 @@ class MessengerTest extends MockeryTestCase
         };
 
         $messenger = new Messenger();
-        $messenger->subscribe($handler1);
+        $messenger->addHandler(TestCaseExecuted::handledBy(),$handler1);
         $event   = $messenger->broadcast(new TestCaseExecuted());
 
         assertThat($event->info, is(equalTo('I have been executed.')));

@@ -8,43 +8,27 @@
 
 namespace Tidy\Domain\Events;
 
-class Messenger implements \Countable
+class Messenger
 {
     protected $handlers = [];
 
-    public function subscribe(...$handlers)
+    public function addHandler($eventName, $handler)
     {
-        foreach ($handlers as $handler) {
-            $this->handlers[spl_object_hash($handler)] = $handler;
-        }
+        $this->ensureKey($eventName)
+            ->handlers[$eventName][spl_object_hash($handler)] = $handler;
     }
 
-    public function unsubscribe($handler)
+    public function removeHandler($eventName, $handler)
     {
-        $this->handlers = array_filter($this->handlers, function($candidate) use ($handler){
+        $this->handlers[$eventName] = array_filter($this->handlers[$eventName], function($candidate) use ($handler){
             return ! ($candidate === $handler);
         });
     }
 
 
-
-    /**
-     * Count elements of an object
-     *
-     * @link  http://php.net/manual/en/countable.count.php
-     * @return int The custom count as an integer.
-     * </p>
-     * <p>
-     * The return value is cast to an integer.
-     * @since 5.1.0
-     */
-    public function count()
-    {
-        return count($this->handlers);
-    }
-
-    public function clear() {
-        $this->handlers = [];
+    public function clear($eventName) {
+        if( $this->hasHandlersFor($eventName))
+            $this->handlers[$eventName] = [];
     }
 
     protected function getEventHandlerNameFor(IEvent $event)
@@ -57,12 +41,31 @@ class Messenger implements \Countable
     public function broadcast(IEvent $event) {
 
         $handlerName = $this->getEventHandlerNameFor($event);
-        foreach ($this->handlers as $handler) {
-            if(! is_callable([$handler, $handlerName])) continue;
-            call_user_func([$handler, $handlerName], $event);
+        foreach ($this->handlersFor($handlerName) as $handler) {
+            if(method_exists($handler, $handlerName)) $handler->$handlerName($event);
         }
 
         return $event;
 
+    }
+
+    /**
+     * @param $eventName
+     *
+     * @return Messenger
+     */
+    protected function ensureKey($eventName)
+    {
+        isset($this->handlers[$eventName]) or $this->handlers[$eventName] = [];
+        return $this;
+    }
+
+    public function handlersFor($eventName) {
+        return isset($this->handlers[$eventName]) ? $this->handlers[$eventName] : [];
+    }
+
+    public function hasHandlersFor($eventName)
+    {
+        return (isset($this->handlers[$eventName]) && count($this->handlers[$eventName]) > 0);
     }
 }

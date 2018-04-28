@@ -25,4 +25,11 @@ interface ICreateRequest
      * @return mixed
      */
     public function ownerId();
+
+    /**
+     * @return mixed
+     */
+    public function canonical();
+
+    public function assignCanonical($canonical);
 }

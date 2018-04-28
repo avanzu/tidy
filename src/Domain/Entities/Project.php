@@ -9,6 +9,7 @@ namespace Tidy\Domain\Entities;
 
 use Tidy\Components\AccessControl\IClaimable;
 use Tidy\Components\AccessControl\IClaimant;
+use Tidy\Domain\Requestors\Project\ICreateRequest;
 
 abstract class Project implements IClaimable
 {
@@ -95,21 +96,10 @@ abstract class Project implements IClaimable
         return $this->canonical;
     }
 
-    /**
-     * @param string $canonical
-     *
-     * @return $this
-     */
-    public function setCanonical($canonical)
-    {
-        $this->canonical = $canonical;
-
-        return $this;
-    }
 
     public function path()
     {
-        return sprintf('/%s/%s', static::PREFIX, $this->canonical);
+        return $this->path;
     }
 
     /**
@@ -126,6 +116,14 @@ abstract class Project implements IClaimable
     public function getOwner()
     {
         return $this->owner;
+    }
+
+    public function setUp(ICreateRequest $request)
+    {
+        $this->name        = $request->name();
+        $this->description = $request->description();
+        $this->canonical   = $request->canonical();
+        $this->path        = sprintf('/%s/%s', static::PREFIX, $this->canonical);
     }
 
 }

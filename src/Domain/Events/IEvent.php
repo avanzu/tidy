@@ -10,5 +10,5 @@ namespace Tidy\Domain\Events;
 
 interface IEvent
 {
-
+    public static function handledBy();
 }

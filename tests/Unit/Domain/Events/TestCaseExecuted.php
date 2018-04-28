@@ -8,9 +8,9 @@
 
 namespace Tidy\Tests\Unit\Domain\Events;
 
-use Tidy\Domain\Events\IEvent;
+use Tidy\Domain\Events\Event;
 
-class TestCaseExecuted implements IEvent
+class TestCaseExecuted extends Event
 {
     public $info;
 

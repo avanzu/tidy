@@ -17,20 +17,28 @@ class CreateRequestDTO implements ICreateRequest
 
     protected $ownerId;
 
+    protected $canonical;
+
     /**
      * CreateRequestDTO constructor.
      *
      * @param $name
      * @param $description
      * @param $ownerId
+     * @param $canonical
      */
-    public function __construct($name, $description, $ownerId)
+    public function __construct($name, $description, $ownerId, $canonical)
     {
         $this->name        = $name;
         $this->description = $description;
         $this->ownerId     = $ownerId;
+        $this->canonical   = $canonical;
     }
 
+    public function canonical()
+    {
+        return $this->canonical;
+    }
 
     /**
      * @return mixed
@@ -48,6 +56,11 @@ class CreateRequestDTO implements ICreateRequest
     public function ownerId()
     {
         return $this->ownerId;
+    }
+
+    public function assignCanonical($canonical)
+    {
+        $this->canonical = $canonical;
     }
 
 
