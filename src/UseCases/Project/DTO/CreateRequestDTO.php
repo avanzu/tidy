@@ -58,10 +58,4 @@ class CreateRequestDTO implements ICreateRequest
         return $this->ownerId;
     }
 
-    public function assignCanonical($canonical)
-    {
-        $this->canonical = $canonical;
-    }
-
-
 }

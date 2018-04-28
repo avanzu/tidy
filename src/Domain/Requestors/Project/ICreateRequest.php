@@ -31,5 +31,4 @@ interface ICreateRequest
      */
     public function canonical();
 
-    public function assignCanonical($canonical);
 }
