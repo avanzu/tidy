@@ -7,6 +7,7 @@
 namespace Tidy\Tests\Unit\UseCases\Project;
 
 use Mockery\MockInterface;
+use Tidy\Components\AccessControl\AccessControlBroker;
 use Tidy\Components\AccessControl\IClaimable;
 use Tidy\Components\AccessControl\IClaimant;
 use Tidy\Components\Normalisation\ITextNormaliser;
@@ -49,11 +50,17 @@ class CreateTest extends MockeryTestCase
      */
     protected $messenger;
 
+    /**
+     * @var AccessControlBroker|MockInterface
+     */
+    protected $broker;
+
 
     public function test_instantiation()
     {
         $useCase = new Create(
             mock(IProjectGateway::class),
+            mock(AccessControlBroker::class),
             mock(IResponseTransformer::class)
         );
 
@@ -87,8 +94,11 @@ class CreateTest extends MockeryTestCase
 
         $project = new ProjectImpl();
 
-        $this->expectMakeForOwner($owner->getId(), $project, $owner);
+        $this->expectMake($project);
+        $this->broker->expects('lookUp')->with($owner->getId())->andReturn($owner);
+
         $this->expectIdentifyingSave($name, $description, $id, $canonical, $owner);
+
 
         $response = $this->useCase->execute($request);
 
@@ -132,27 +142,25 @@ class CreateTest extends MockeryTestCase
     {
 
         $this->useCase = new Create(
-            mock(IProjectGateway::class), mock(IResponseTransformer::class)
+            mock(IProjectGateway::class), mock(AccessControlBroker::class), mock(IResponseTransformer::class)
         );
 
         $this->gateway    = mock(IProjectGateway::class);
         $this->normaliser = mock(ITextNormaliser::class);
+        $this->broker     = mock(AccessControlBroker::class);
         $this->messenger  = new Messenger();
         $transformer      = new ResponseTransformer(new OwnerExcerptTransformer());
 
         $this->useCase->setProjectGateway($this->gateway);
         $this->useCase->setResponseTransformer($transformer);
+        $this->useCase->setAccessControlBroker($this->broker);
+
 
     }
 
-    private function expectMakeForOwner($ownerId, IClaimable $returnValue, IClaimant $ownerValue)
+    private function expectMake(IClaimable $returnValue)
     {
-        $assignment = function () use ($returnValue, $ownerValue) {
-            $returnValue->grantOwnershipTo($ownerValue);
-
-            return $returnValue;
-        };
-        $this->gateway->expects('makeForOwner')->with($ownerId)->andReturnUsing($assignment);
+        $this->gateway->expects('make')->andReturn($returnValue);
     }
 
     /**

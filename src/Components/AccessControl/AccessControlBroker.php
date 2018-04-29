@@ -30,14 +30,14 @@ class AccessControlBroker
     {
 
         if (!$claimant instanceof IClaimant) {
-            $claimant = $this->lookUpClaimant($claimant);
+            $claimant = $this->lookUp($claimant);
         }
 
         return $claimable->grantOwnershipTo($claimant);
     }
 
 
-    protected function lookUpClaimant($claimantID)
+    public function lookUp($claimantID)
     {
         $claimant = $this->provider->lookUp($claimantID);
         if (!$claimant) {

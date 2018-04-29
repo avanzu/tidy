@@ -8,6 +8,7 @@
 
 namespace Tidy\Tests\Unit\Domain\Entities;
 
+use Tidy\Components\AccessControl\AccessControlBroker;
 use Tidy\Domain\Requestors\Project\ICreateRequest;
 use Tidy\Tests\MockeryTestCase;
 
@@ -43,12 +44,12 @@ class ProjectTest extends MockeryTestCase
             }
         };
 
+
         $project->setUp($request);
 
         assertThat($project->getName(), is(equalTo('Demo')));
         assertThat($project->getDescription(), is(equalTo('This is a demo.')));
         assertThat($project->getCanonical(), is(equalTo('demo-1')));
-
 
     }
 
