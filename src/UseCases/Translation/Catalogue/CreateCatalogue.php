@@ -34,15 +34,7 @@ class CreateCatalogue
     {
 
         $catalogue = $this->gateway->makeCatalogueForProject($request->projectId());
-        $catalogue
-            ->setName($request->name())
-            ->setCanonical($request->canonical())
-            ->setSourceLanguage($request->sourceLanguage())
-            ->setSourceCulture($request->sourceCulture())
-            ->setTargetLanguage($request->targetLanguage())
-            ->setTargetCulture($request->targetCulture())
-        ;
-
+        $catalogue->setUp($request);
         $this->gateway->save($catalogue);
 
         return $this->transformer()->transform($catalogue);

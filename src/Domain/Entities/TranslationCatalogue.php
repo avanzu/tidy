@@ -9,7 +9,9 @@
 namespace Tidy\Domain\Entities;
 
 use ArrayObject;
+use Tidy\Components\Exceptions\InvalidArgument;
 use Tidy\Components\Exceptions\LanguageIsEmpty;
+use Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest;
 
 /**
  * Class TranslationCatalogue
@@ -61,6 +63,7 @@ abstract class TranslationCatalogue
      */
     protected $project;
 
+
     /**
      * @return Project
      */
@@ -87,80 +90,36 @@ abstract class TranslationCatalogue
      */
     public function getSourceLanguage()
     {
-        return strtolower($this->sourceLanguage);
+        return $this->sourceLanguage;
     }
 
-    /**
-     * @param mixed $sourceLanguage
-     *
-     * @return $this
-     */
-    public function setSourceLanguage($sourceLanguage)
-    {
-        $this->sourceLanguage = $sourceLanguage;
-
-        return $this;
-    }
 
     /**
      * @return mixed
      */
     public function getSourceCulture()
     {
-        return strtoupper($this->sourceCulture);
+        return $this->sourceCulture;
     }
 
-    /**
-     * @param mixed $sourceCulture
-     *
-     * @return $this
-     */
-    public function setSourceCulture($sourceCulture)
-    {
-        $this->sourceCulture = $sourceCulture;
-
-        return $this;
-    }
 
     /**
      * @return mixed
      */
     public function getTargetLanguage()
     {
-        return strtolower($this->targetLanguage);
+        return $this->targetLanguage;
     }
 
-    /**
-     * @param mixed $targetLanguage
-     *
-     * @return $this
-     */
-    public function setTargetLanguage($targetLanguage)
-    {
-        $this->targetLanguage = $targetLanguage;
-
-        return $this;
-    }
 
     /**
      * @return mixed
      */
     public function getTargetCulture()
     {
-        return strtoupper($this->targetCulture);
+        return $this->targetCulture;
     }
 
-    /**
-     * @param mixed $targetCulture
-     *
-     * @return $this
-     */
-    public function setTargetCulture($targetCulture)
-    {
-        $this->targetCulture = $targetCulture;
-
-        return $this;
-    }
 
     /**
      * @return mixed
@@ -286,6 +245,48 @@ abstract class TranslationCatalogue
     }
 
     /**
+     * @param      $language
+     * @param null $culture
+     *
+     * @return $this
+     */
+    public function defineSourceLocale($language, $culture = null)
+    {
+        $this->verifyLanguageFormat($language);
+
+        $this->sourceLanguage = strtolower($language);
+        $this->sourceCulture  = strtoupper((string)$culture);
+
+        return $this;
+    }
+
+    /**
+     * @param      $language
+     * @param null $culture
+     *
+     * @return $this
+     */
+    public function defineTargetLocale($language, $culture = null)
+    {
+        $this->verifyLanguageFormat($language);
+
+        $this->targetLanguage = strtolower($language);
+        $this->targetCulture  = strtoupper($culture);
+
+        return $this;
+    }
+
+    public function setUp(ICreateCatalogueRequest $request)
+    {
+        $this->name           = $request->name();
+        $this->canonical      = $request->canonical();
+        $this->sourceLanguage = $request->sourceLanguage();
+        $this->sourceCulture  = $request->sourceCulture();
+        $this->targetLanguage = $request->targetLanguage();
+        $this->targetCulture  = $request->targetCulture();
+    }
+
+    /**
      * @return ArrayObject|Translation[]
      */
     protected function translations()
@@ -295,6 +296,16 @@ abstract class TranslationCatalogue
         }
 
         return $this->translations;
+    }
+
+    /**
+     * @param $language
+     */
+    protected function verifyLanguageFormat($language)
+    {
+        if (strlen((string)$language) !== 2) {
+            throw new InvalidArgument(sprintf('Expected 2 character string, got "%s".', $language));
+        }
     }
 
 
