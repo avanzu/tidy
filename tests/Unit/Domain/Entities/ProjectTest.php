@@ -14,6 +14,7 @@ use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\ICreateRequest;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Fixtures\Entities\ProjectImpl;
+use Tidy\Tests\Unit\Fixtures\Entities\ProjectSilverTongue;
 
 class ProjectTest extends MockeryTestCase
 {
@@ -79,6 +80,24 @@ class ProjectTest extends MockeryTestCase
         } catch (\Exception $exception) {
             assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
             assertThat(count($exception->getErrors()), is(equalTo($expectedErrorCount)));
+        }
+    }
+
+    public function test_setup_verifies_unique_canonical()
+    {
+        $project = new ProjectImpl();
+        $request = mock(ICreateRequest::class);
+        $request->allows('name')->andReturn(ProjectSilverTongue::NAME);
+        $request->allows('description')->andReturn(ProjectSilverTongue::DESCRIPTION);
+        $request->allows('canonical')->andReturn(ProjectSilverTongue::CANONICAL);
+        $gateway = mock(IProjectGateway::class);
+        $gateway->expects('findByCanonical')->with(ProjectSilverTongue::CANONICAL)->andReturn(new ProjectSilverTongue());
+        try {
+            $project->setUp($request, new Projects($gateway));
+            $this->fail('Failed to fail.');
+        } catch (PreconditionFailed $exception) {
+            assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
+            $this->assertStringMatchesFormat('Invalid canonical "%s". Already in use by "%s".', current($exception->getErrors()));
         }
     }
 

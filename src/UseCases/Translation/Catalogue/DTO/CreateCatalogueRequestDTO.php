@@ -136,5 +136,4 @@ class CreateCatalogueRequestDTO implements ICreateCatalogueRequest
         return $this->targetLanguage;
     }
 
-
 }

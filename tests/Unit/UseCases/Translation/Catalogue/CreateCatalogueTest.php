@@ -9,7 +9,9 @@
 namespace Tidy\Tests\Unit\UseCases\Translation\Catalogue;
 
 use Mockery\MockInterface;
+use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Domain\Entities\TranslationCatalogue;
+use Tidy\Domain\Entities\TranslationDomain;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
@@ -57,12 +59,37 @@ class CreateCatalogueTest extends MockeryTestCase
             ->build()
         ;
 
+        $expectedDomain = new TranslationDomain('errors', 'en', 'US', 'de', 'DE');
         $this->expectMakeCatalogueForProject();
+        $this->expectDomainLookupWithoutMatch($expectedDomain);
+
         $this->expectSave();
 
         $response = $this->useCase->execute($request);
         assertThat($response, is(anInstanceOf(CatalogueResponseDTO::class)));
         assertThat($response->getId(), is(equalTo(2342)));
+    }
+
+    public function test_execute_precondition_check()
+    {
+        $request = (new CreateCatalogueRequestBuilder())
+            ->withName('')
+            ->withCanonical('')
+            ->withSourceLocale('abc', 'lala')
+            ->withTargetLocale('', 'DE')
+            ->withProjectId(ProjectSilverTongue::ID)
+            ->build()
+        ;
+
+        $this->expectMakeCatalogueForProject();
+
+        try {
+            $this->useCase->execute($request);
+            $this->fail('Failed to fail.');
+        } catch(\Exception $exception) {
+            assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
+        }
+
     }
 
     protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */
@@ -115,6 +142,14 @@ class CreateCatalogueTest extends MockeryTestCase
                           }
                       )
         ;
+    }
+
+    /**
+     * @param $expectedDomain
+     */
+    private function expectDomainLookupWithoutMatch($expectedDomain): void
+    {
+        $this->gateway->expects('findByDomain')->with(equalTo($expectedDomain))->andReturn(null);
     }
 
 

@@ -10,6 +10,8 @@ namespace Tidy\Domain\Entities;
 
 use ArrayObject;
 use Tidy\Components\Exceptions\InvalidArgument;
+use Tidy\Components\Exceptions\PreconditionFailed;
+use Tidy\Domain\Collections\TranslationCatalogues;
 use Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest;
 
 /**
@@ -150,7 +152,6 @@ abstract class TranslationCatalogue
      */
     public function sourceLocale()
     {
-
         return implode('-', array_filter([$this->getSourceLanguage(), $this->getSourceCulture()]));
     }
 
@@ -159,7 +160,6 @@ abstract class TranslationCatalogue
      */
     public function targetLocale()
     {
-
         return implode('-', array_filter([$this->getTargetLanguage(), $this->getTargetCulture()]));
     }
 
@@ -245,14 +245,33 @@ abstract class TranslationCatalogue
         return $this;
     }
 
-    public function setUp(ICreateCatalogueRequest $request)
+    public function identifyDomain()
     {
+        return $this->makeDomain(
+            $this->canonical,
+            $this->sourceLanguage,
+            $this->sourceCulture,
+            $this->targetLanguage,
+            $this->targetCulture
+        );
+    }
+
+    public function setUp(ICreateCatalogueRequest $request, TranslationCatalogues $catalogues)
+    {
+
+        $this->verifySetup($request, $catalogues);
+
         $this->name           = $request->name();
         $this->canonical      = $request->canonical();
         $this->sourceLanguage = $request->sourceLanguage();
         $this->sourceCulture  = $request->sourceCulture();
         $this->targetLanguage = $request->targetLanguage();
         $this->targetCulture  = $request->targetCulture();
+    }
+
+    public function __toString()
+    {
+        return (string)$this->name;
     }
 
     /**
@@ -277,5 +296,142 @@ abstract class TranslationCatalogue
         }
     }
 
+    /**
+     * @param $canonical
+     * @param $sourceLanguage
+     * @param $sourceCulture
+     * @param $targetLanguage
+     * @param $targetCulture
+     *
+     * @return TranslationDomain
+     */
+    protected function makeDomain($canonical, $sourceLanguage, $sourceCulture, $targetLanguage, $targetCulture)
+    {
+        return new TranslationDomain($canonical, $sourceLanguage, $sourceCulture, $targetLanguage, $targetCulture);
+    }
 
+    protected function verifySetup(ICreateCatalogueRequest $request, TranslationCatalogues $catalogues)
+    {
+
+        $errors = new ArrayObject();
+
+        $errors = $this->verifyName($request, $errors);
+        $errors = $this->verifyCanonical($request, $errors);
+        $errors = $this->verifySourceLanguage($request, $errors);
+        $errors = $this->verifyTargetLanguage($request, $errors);
+
+        if ($errors->count() > 0) {
+            throw new PreconditionFailed($errors->getArrayCopy());
+        }
+
+        $errors = $this->verifyDomain($request, $catalogues, $errors);
+
+        if ($errors->count() > 0) {
+            throw new PreconditionFailed($errors->getArrayCopy());
+        }
+    }
+
+    protected function isIdenticalTo($match)
+    {
+        return ($match instanceof TranslationCatalogue) ? $match->getId() === $this->getId() : false;
+    }
+
+    /**
+     * @param ICreateCatalogueRequest $request
+     * @param TranslationCatalogues   $catalogues
+     * @param                         $errors
+     *
+     * @return mixed
+     */
+    protected function verifyDomain(ICreateCatalogueRequest $request, TranslationCatalogues $catalogues, $errors)
+    {
+        $domain = $this->makeDomain(
+            $request->canonical(),
+            $request->sourceLanguage(),
+            $request->sourceCulture(),
+            $request->targetLanguage(),
+            $request->targetCulture()
+        );
+
+        if ($match = $catalogues->findByDomain($domain)) {
+            if (!$this->isIdenticalTo($match)) {
+                $errors['domain'] = sprintf(
+                    'Invalid domain "%s". Already in use by "%s".',
+                    (string)$domain,
+                    (string)$match
+                );
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param ICreateCatalogueRequest $request
+     * @param                         $errors
+     *
+     * @return mixed
+     */
+    protected function verifyName(ICreateCatalogueRequest $request, $errors)
+    {
+        if (strlen($request->name()) < 3) {
+            $errors['name'] = sprintf('Invalid name "%s". Name must contain at least 3 characters.', $request->name());
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param ICreateCatalogueRequest $request
+     * @param                         $errors
+     *
+     * @return mixed
+     */
+    protected function verifyCanonical(ICreateCatalogueRequest $request, $errors)
+    {
+        if (strlen($request->canonical()) < 3) {
+            $errors['canonical'] = sprintf(
+                'Invalid canonical "%s". Canonical must contain at least 3 characters.',
+                $request->canonical()
+            );
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param ICreateCatalogueRequest $request
+     * @param                         $errors
+     *
+     * @return mixed
+     */
+    protected function verifySourceLanguage(ICreateCatalogueRequest $request, $errors)
+    {
+        if (strlen((string)$request->sourceLanguage()) !== 2) {
+            $errors['sourceLanguage'] = sprintf(
+                'Invalid source language. Expected 2 character string, got "%s".',
+                (string)$request->sourceLanguage()
+            );
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param ICreateCatalogueRequest $request
+     * @param                         $errors
+     *
+     * @return mixed
+     */
+    protected function verifyTargetLanguage(ICreateCatalogueRequest $request, $errors)
+    {
+        if (strlen((string)$request->targetLanguage()) !== 2) {
+            $errors['targetLanguage'] = sprintf(
+                'Invalid target language. Expected 2 character string, got "%s".',
+                (string)$request->targetLanguage()
+            );
+        }
+
+        return $errors;
+    }
 }

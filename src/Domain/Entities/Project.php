@@ -176,7 +176,7 @@ abstract class Project implements IClaimable
      *
      * @return mixed
      */
-    private function verifyCanonical(ICreateRequest $request, Projects $projects, $errors)
+    protected function verifyCanonical(ICreateRequest $request, Projects $projects, $errors)
     {
         if (strlen($request->canonical()) < 3) {
             $errors['canonical'] = sprintf(
@@ -190,7 +190,8 @@ abstract class Project implements IClaimable
         if ($match = $projects->findByCanonical($request->canonical())) {
             if (!$this->isIdentical($match)) {
                 $errors['canonical'] = sprintf(
-                    'Invalid canonical "%s". Already in use by "%s". ',
+                    'Invalid canonical "%s". Already in use by "%s".',
+                    $request->canonical(),
                     $match->getName()
                 );
             }

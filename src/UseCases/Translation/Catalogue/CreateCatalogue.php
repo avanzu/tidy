@@ -8,6 +8,7 @@
 
 namespace Tidy\UseCases\Translation\Catalogue;
 
+use Tidy\Domain\Collections\TranslationCatalogues;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
@@ -34,7 +35,7 @@ class CreateCatalogue
     {
 
         $catalogue = $this->gateway->makeCatalogueForProject($request->projectId());
-        $catalogue->setUp($request);
+        $catalogue->setUp($request, new TranslationCatalogues($this->gateway));
         $this->gateway->save($catalogue);
 
         return $this->transformer()->transform($catalogue);

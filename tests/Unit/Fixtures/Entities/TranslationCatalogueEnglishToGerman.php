@@ -8,6 +8,7 @@
 
 namespace Tidy\Tests\Unit\Fixtures\Entities;
 
+use Tidy\Domain\Collections\TranslationDomain;
 use Tidy\Domain\Entities\TranslationCatalogue;
 
 class TranslationCatalogueEnglishToGerman extends TranslationCatalogue

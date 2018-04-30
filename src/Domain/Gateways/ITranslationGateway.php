@@ -12,6 +12,7 @@ use Tidy\Components\Collection\Boundary;
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
+use Tidy\Domain\Entities\TranslationDomain;
 
 interface ITranslationGateway
 {
@@ -80,4 +81,11 @@ interface ITranslationGateway
      * @return bool
      */
     public function removeTranslation($translation);
+
+    /**
+     * @param TranslationDomain $domain
+     *
+     * @return TranslationCatalogue|null
+     */
+    public function findByDomain(TranslationDomain $domain);
 }

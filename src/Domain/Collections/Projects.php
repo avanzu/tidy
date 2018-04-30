@@ -24,7 +24,7 @@ class Projects
      */
     public function __construct(IProjectGateway $gateway) { $this->gateway = $gateway; }
 
-    public function findByCanonical($canonical) { 
+    public function findByCanonical($canonical) {
         return $this->gateway->findByCanonical($canonical);
     }
 

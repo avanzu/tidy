@@ -9,10 +9,15 @@
 namespace Tidy\Tests\Unit\Domain\Entities;
 
 use Tidy\Components\Exceptions\InvalidArgument;
-use Tidy\Components\Exceptions\LanguageIsEmpty;
+use Tidy\Components\Exceptions\PreconditionFailed;
+use Tidy\Domain\Collections\TranslationCatalogues;
+use Tidy\Domain\Entities\TranslationDomain;
+use Tidy\Domain\Gateways\ITranslationGateway;
+use Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueImpl;
 use Tidy\Tests\Unit\Fixtures\Entities\TranslationUntranslated;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueEnglishToGerman as Catalogue;
 
 class TranslationCatalogueTest extends MockeryTestCase
 {
@@ -85,6 +90,102 @@ class TranslationCatalogueTest extends MockeryTestCase
         }
     }
 
+    /**
+     * @dataProvider provideSimpleSetupData
+     *
+     * @param $name
+     * @param $canonical
+     * @param $sourceLanguage
+     * @param $sourceCulture
+     * @param $targetLanguage
+     * @param $targetCulture
+     * @param $errorCount
+     */
+    public function test_setUp_verifies(
+        $name,
+        $canonical,
+        $sourceLanguage,
+        $sourceCulture,
+        $targetLanguage,
+        $targetCulture,
+        $errorCount
+    ) {
+        $catalogue = new TranslationCatalogueImpl();
+        $request   = mock(ICreateCatalogueRequest::class);
+        $request->allows('name')->andReturn($name);
+        $request->allows('canonical')->andReturn($canonical);
+        $request->allows('sourceLanguage')->andReturn($sourceLanguage);
+        $request->allows('sourceCulture')->andReturn($sourceCulture);
+        $request->allows('targetLanguage')->andReturn($targetLanguage);
+        $request->allows('targetCulture')->andReturn($targetCulture);
+        try {
+            $catalogue->setUp($request, new TranslationCatalogues(mock(ITranslationGateway::class)));
+            $this->fail('Failed to fail.');
+        } catch (\Exception $exception) {
+            assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
+            assertThat(count($exception->getErrors()), is(equalTo($errorCount)));
+        }
+    }
+
+
+    public function test_setup_verifies_uniqueDomain()
+    {
+        $catalogue = new TranslationCatalogueImpl();
+        $request   = mock(ICreateCatalogueRequest::class);
+        $request->allows('name')->andReturn(Catalogue::NAME);
+        $request->allows('canonical')->andReturn(Catalogue::CANONICAL);
+        $request->allows('sourceLanguage')->andReturn(Catalogue::SOURCE_LANG);
+        $request->allows('sourceCulture')->andReturn(Catalogue::SOURCE_CULTURE);
+        $request->allows('targetLanguage')->andReturn(Catalogue::TARGET_LANG);
+        $request->allows('targetCulture')->andReturn(Catalogue::TARGET_CULTURE);
+
+        $domain = new TranslationDomain(
+            Catalogue::CANONICAL, Catalogue::SOURCE_LANG, Catalogue::SOURCE_CULTURE, Catalogue::TARGET_LANG, Catalogue::TARGET_CULTURE);
+        $gateway = mock(ITranslationGateway::class);
+        $gateway->expects('findByDomain')->with(equalTo($domain))->andReturn(new Catalogue());
+
+        try {
+            $catalogue->setUp($request, new TranslationCatalogues($gateway));
+            $this->fail('Failed to fail.');
+        } catch (\Exception $exception) {
+            assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
+            $this->assertStringMatchesFormat('Invalid domain "%s". Already in use by "%s".', current($exception->getErrors()));
+        }
+    }
+
+    public function provideSimpleSetupData()
+    {
+        return [
+            'empty'             => [
+                'name'          => '',
+                'canonical'     => '',
+                'sourceLang'    => '',
+                'sourceCulture' => '',
+                'targetLang'    => '',
+                'targetCulture' => '',
+                'errorCount'    => 4,
+            ],
+            'invalid canonical' => [
+                'name'          => 'Test Catalogue 1',
+                'canonical'     => 'a',
+                'sourceLang'    => 'de',
+                'sourceCulture' => '',
+                'targetLang'    => 'pt',
+                'targetCulture' => '',
+                'errorCount'    => 1,
+            ],
+            'invalid languages' => [
+                'name'          => 'Test Catalogue 1',
+                'canonical'     => 'catalogue-1',
+                'sourceLang'    => 'de-DE',
+                'sourceCulture' => '',
+                'targetLang'    => 'pt-PT',
+                'targetCulture' => '',
+                'errorCount'    => 2,
+            ],
+
+        ];
+    }
 
 
     public function provideLocales()
@@ -96,7 +197,6 @@ class TranslationCatalogueTest extends MockeryTestCase
                 'with unproper case' => ['DE', 'at', 'EN', 'gb', 'de-AT', 'en-GB'],
             ];
     }
-
 
 
 }
