@@ -10,6 +10,8 @@ namespace Tidy\Domain\Entities;
 use Tidy\Components\AccessControl\IClaimable;
 use Tidy\Components\AccessControl\IClaimant;
 use Tidy\Components\Exceptions\PreconditionFailed;
+use Tidy\Domain\Collections\Projects;
+use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\ICreateRequest;
 use Tidy\Domain\Requestors\Project\IRenameRequest;
 
@@ -96,15 +98,21 @@ abstract class Project implements IClaimable
         return $this->owner;
     }
 
+    public function isIdentical(Project $project)
+    {
+        return $project->getId() === $this->getId();
+    }
+
     /**
      * @param ICreateRequest $request
+     * @param Projects       $projects
      *
      * @return $this
      */
-    public function setUp(ICreateRequest $request)
+    public function setUp(ICreateRequest $request, Projects $projects)
     {
 
-        $this->verifySetUp($request);
+        $this->verifySetUp($request, $projects);
 
         $this->name        = $request->name();
         $this->description = $request->description();
@@ -125,16 +133,11 @@ abstract class Project implements IClaimable
 
     }
 
-    private function verifySetUp(ICreateRequest $request)
+    private function verifySetUp(ICreateRequest $request, Projects $projects)
     {
         $errors = new \ArrayObject();
         $errors = $this->verifyName($request->name(), $errors);
-        if (strlen($request->canonical()) < 3) {
-            $errors['canonical'] = sprintf(
-                'Invalid canonical "%s". Canonical must contain at least 3 characters.',
-                $request->canonical()
-            );
-        }
+        $errors = $this->verifyCanonical($request, $projects, $errors);
 
         if (0 < $errors->count()) {
             throw new PreconditionFailed($errors->getArrayCopy());
@@ -161,6 +164,36 @@ abstract class Project implements IClaimable
     {
         if (strlen($value) < 3) {
             $errors['name'] = sprintf('Invalid name "%s". Name must contain at least 3 characters.', $value);
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param ICreateRequest $request
+     * @param Projects       $projects
+     * @param                $errors
+     *
+     * @return mixed
+     */
+    private function verifyCanonical(ICreateRequest $request, Projects $projects, $errors)
+    {
+        if (strlen($request->canonical()) < 3) {
+            $errors['canonical'] = sprintf(
+                'Invalid canonical "%s". Canonical must contain at least 3 characters.',
+                $request->canonical()
+            );
+
+            return $errors;
+        }
+
+        if ($match = $projects->findByCanonical($request->canonical())) {
+            if (!$this->isIdentical($match)) {
+                $errors['canonical'] = sprintf(
+                    'Invalid canonical "%s". Already in use by "%s". ',
+                    $match->getName()
+                );
+            }
         }
 
         return $errors;

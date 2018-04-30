@@ -94,6 +94,8 @@ class CreateTest extends MockeryTestCase
         $project = new ProjectImpl();
 
         $this->expectMake($project);
+        $this->expectUniqueCanonicalCheck($expectedCanonical, null);
+
         $this->broker->expects('lookUp')->with($owner->getId())->andReturn($owner);
 
         $this->expectIdentifyingSave($name, $description, $id, $canonical, $owner);
@@ -206,6 +208,10 @@ class CreateTest extends MockeryTestCase
     private function expectNameTransformation($name, $canonical)
     {
         $this->normaliser->expects('transform')->with($name)->andReturn($canonical);
+    }
+
+    private function expectUniqueCanonicalCheck($expectedCanonical, $returnValue) {
+        $this->gateway->expects('findByCanonical')->with($expectedCanonical)->andReturn($returnValue);
     }
 
 

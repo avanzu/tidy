@@ -9,6 +9,8 @@
 namespace Tidy\Tests\Unit\Domain\Entities;
 
 use Tidy\Components\Exceptions\PreconditionFailed;
+use Tidy\Domain\Collections\Projects;
+use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\ICreateRequest;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Fixtures\Entities\ProjectImpl;
@@ -44,7 +46,10 @@ class ProjectTest extends MockeryTestCase
             }
         };
 
-        $project->setUp($request);
+        $gateway  = mock(IProjectGateway::class);
+        $gateway->expects('findByCanonical')->with('demo-1')->andReturn(null);
+
+        $project->setUp($request, new Projects($gateway));
 
         assertThat($project->getName(), is(equalTo('Demo')));
         assertThat($project->getDescription(), is(equalTo('This is a demo.')));
@@ -69,7 +74,7 @@ class ProjectTest extends MockeryTestCase
         $request->allows('canonical')->andReturn($canonical);
 
         try {
-            $project->setUp($request);
+            $project->setUp($request, new Projects(mock(IProjectGateway::class)));
             $this->fail('Failed to fail.');
         } catch (\Exception $exception) {
             assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));

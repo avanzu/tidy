@@ -8,6 +8,7 @@
 namespace Tidy\UseCases\Project;
 
 use Tidy\Components\AccessControl\AccessControlBroker;
+use Tidy\Domain\Collections\Projects;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\ICreateRequest;
 use Tidy\Domain\Responders\Project\IResponse;
@@ -51,7 +52,7 @@ class Create
         $project = $this->gateway->make();
         $owner   = $this->broker->lookUp($request->ownerId());
 
-        $project->setUp($request);
+        $project->setUp($request, new Projects($this->gateway));
         $project->grantOwnershipTo($owner);
 
         $this->gateway->save($project);
