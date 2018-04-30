@@ -7,6 +7,7 @@
 
 namespace Tidy\Domain\Entities;
 
+use ArrayObject;
 use Tidy\Components\AccessControl\IClaimable;
 use Tidy\Components\AccessControl\IClaimant;
 use Tidy\Components\Exceptions\PreconditionFailed;
@@ -98,9 +99,9 @@ abstract class Project implements IClaimable
         return $this->owner;
     }
 
-    public function isIdentical(Project $project)
+    public function isIdentical($project)
     {
-        return $project->getId() === $this->getId();
+        return ($project instanceof  Project) ? $project->getId() === $this->getId() : false;
     }
 
     /**
@@ -135,23 +136,19 @@ abstract class Project implements IClaimable
 
     private function verifySetUp(ICreateRequest $request, Projects $projects)
     {
-        $errors = new \ArrayObject();
+        $errors = new ArrayObject();
         $errors = $this->verifyName($request->name(), $errors);
         $errors = $this->verifyCanonical($request, $projects, $errors);
 
-        if (0 < $errors->count()) {
-            throw new PreconditionFailed($errors->getArrayCopy());
-        }
+        $this->failOnErrors($errors);
     }
 
     private function verifyRename(IRenameRequest $request)
     {
-        $errors = new \ArrayObject();
+        $errors = new ArrayObject();
         $this->verifyName($request->name(), $errors);
 
-        if (0 < $errors->count()) {
-            throw new PreconditionFailed($errors->getArrayCopy());
-        }
+        $this->failOnErrors($errors);
     }
 
     /**
@@ -198,6 +195,16 @@ abstract class Project implements IClaimable
         }
 
         return $errors;
+    }
+
+    /**
+     * @param $errors
+     */
+    private function failOnErrors($errors): void
+    {
+        if (0 < $errors->count()) {
+            throw new PreconditionFailed($errors->getArrayCopy());
+        }
     }
 
 }

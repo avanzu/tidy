@@ -432,7 +432,7 @@ abstract class TranslationCatalogue
     /**
      * @param $errors
      */
-    protected function failOnErrors($errors): void
+    protected function failOnErrors(ArrayObject $errors)
     {
         if ($errors->count() > 0) {
             throw new PreconditionFailed($errors->getArrayCopy());
