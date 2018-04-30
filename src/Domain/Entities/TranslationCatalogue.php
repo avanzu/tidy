@@ -319,16 +319,10 @@ abstract class TranslationCatalogue
         $errors = $this->verifyCanonical($request, $errors);
         $errors = $this->verifySourceLanguage($request, $errors);
         $errors = $this->verifyTargetLanguage($request, $errors);
-
-        if ($errors->count() > 0) {
-            throw new PreconditionFailed($errors->getArrayCopy());
-        }
+        $this->failOnErrors($errors);
 
         $errors = $this->verifyDomain($request, $catalogues, $errors);
-
-        if ($errors->count() > 0) {
-            throw new PreconditionFailed($errors->getArrayCopy());
-        }
+        $this->failOnErrors($errors);
     }
 
     protected function isIdenticalTo($match)
@@ -433,5 +427,15 @@ abstract class TranslationCatalogue
         }
 
         return $errors;
+    }
+
+    /**
+     * @param $errors
+     */
+    protected function failOnErrors($errors): void
+    {
+        if ($errors->count() > 0) {
+            throw new PreconditionFailed($errors->getArrayCopy());
+        }
     }
 }
