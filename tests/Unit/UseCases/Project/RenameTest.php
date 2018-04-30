@@ -7,6 +7,7 @@
 namespace Tidy\Tests\Unit\UseCases\Project;
 
 use Mockery\MockInterface;
+use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Domain\Entities\Project;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Responders\Project\ChangeResponder;
@@ -59,6 +60,16 @@ class RenameTest extends MockeryTestCase
         assertThat($result->getId(), is(equalTo(ProjectSilverTongue::ID)));
     }
 
+    public function test_rename_verifies()
+    {
+        $request = (new RenameRequestBuilder())->withProjectId(ProjectSilverTongue::ID)->renameTo('')->build();
+        $this->expectProjectLookUp(ProjectSilverTongue::ID, new ProjectSilverTongue());
+        try {
+            $this->useCase->execute($request);
+        } catch(\Exception $exception) {
+            assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
+        }
+    }
 
     protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */
     {
