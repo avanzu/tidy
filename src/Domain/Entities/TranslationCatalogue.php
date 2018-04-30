@@ -10,7 +10,6 @@ namespace Tidy\Domain\Entities;
 
 use ArrayObject;
 use Tidy\Components\Exceptions\InvalidArgument;
-use Tidy\Components\Exceptions\LanguageIsEmpty;
 use Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest;
 
 /**
@@ -129,17 +128,6 @@ abstract class TranslationCatalogue
         return $this->name;
     }
 
-    /**
-     * @param mixed $name
-     *
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
 
     /**
      * @return mixed
@@ -158,26 +146,10 @@ abstract class TranslationCatalogue
     }
 
     /**
-     * @param mixed $canonical
-     *
-     * @return $this
-     */
-    public function setCanonical($canonical)
-    {
-        $this->canonical = $canonical;
-
-        return $this;
-    }
-
-
-    /**
      * @return string
      */
     public function sourceLocale()
     {
-        if (empty($this->getSourceLanguage())) {
-            throw new LanguageIsEmpty('Source language is not defined.');
-        }
 
         return implode('-', array_filter([$this->getSourceLanguage(), $this->getSourceCulture()]));
     }
@@ -187,9 +159,6 @@ abstract class TranslationCatalogue
      */
     public function targetLocale()
     {
-        if (empty($this->getTargetLanguage())) {
-            throw new LanguageIsEmpty('Target language is not defined.');
-        }
 
         return implode('-', array_filter([$this->getTargetLanguage(), $this->getTargetCulture()]));
     }
