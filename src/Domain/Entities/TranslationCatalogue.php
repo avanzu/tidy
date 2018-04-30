@@ -275,6 +275,16 @@ abstract class TranslationCatalogue
     }
 
     /**
+     * @param $match
+     *
+     * @return bool
+     */
+    protected function isIdenticalTo($match)
+    {
+        return ($match instanceof TranslationCatalogue) ? $match->getId() === $this->getId() : false;
+    }
+
+    /**
      * @return ArrayObject|Translation[]
      */
     protected function translations()
@@ -284,16 +294,6 @@ abstract class TranslationCatalogue
         }
 
         return $this->translations;
-    }
-
-    /**
-     * @param $language
-     */
-    protected function verifyLanguageFormat($language)
-    {
-        if (strlen((string)$language) !== 2) {
-            throw new InvalidArgument(sprintf('Expected 2 character string, got "%s".', $language));
-        }
     }
 
     /**
@@ -325,9 +325,15 @@ abstract class TranslationCatalogue
         $this->failOnErrors($errors);
     }
 
-    protected function isIdenticalTo($match)
+
+    /**
+     * @param $language
+     */
+    protected function verifyLanguageFormat($language)
     {
-        return ($match instanceof TranslationCatalogue) ? $match->getId() === $this->getId() : false;
+        if (strlen((string)$language) !== 2) {
+            throw new InvalidArgument(sprintf('Expected 2 character string, got "%s".', $language));
+        }
     }
 
     /**
