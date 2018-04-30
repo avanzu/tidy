@@ -10,7 +10,7 @@ namespace Tidy\Tests\Unit\UseCases\Translation\Catalogue\DTO;
 
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueEnglishToGerman;
 
 class NestedCatalogueResponseTransformerTest extends MockeryTestCase
 {

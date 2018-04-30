@@ -5,7 +5,7 @@
  * Date: 07.04.18
  */
 
-namespace Tidy\Tests\Unit\Domain\Entities;
+namespace Tidy\Tests\Unit\Fixtures\Entities;
 
 use Tidy\Domain\Entities\User;
 

@@ -13,7 +13,7 @@ use Tidy\Components\Collection\Boundary;
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\UseCases\Translation\Catalogue\DTO\CollectionResponseDTO;
 use Tidy\UseCases\Translation\Catalogue\DTO\CollectionResponseTransformer;
 use Tidy\UseCases\Translation\Catalogue\DTO\GetCollectionRequestBuilder;

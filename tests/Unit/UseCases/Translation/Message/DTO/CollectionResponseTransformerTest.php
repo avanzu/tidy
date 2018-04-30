@@ -13,8 +13,8 @@ use Tidy\Domain\Responders\CollectionResponse;
 use Tidy\Domain\Responders\Translation\Message\ICollectionResponse;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\TranslationTranslated;
-use Tidy\Tests\Unit\Domain\Entities\TranslationUntranslated;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationTranslated;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationUntranslated;
 use Tidy\UseCases\Translation\Message\DTO\CollectionResponseTransformer;
 
 class CollectionResponseTransformerTest extends MockeryTestCase

@@ -12,7 +12,7 @@ use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Responders\User\ICollectionResponseTransformer;
 use Tidy\Domain\Responders\User\IResponse;
 use Tidy\Domain\Responders\User\IResponseTransformer;
-use Tidy\Tests\Unit\Domain\Entities\UserStub1;
+use Tidy\Tests\Unit\Fixtures\Entities\UserStub1;
 use Tidy\UseCases\User\DTO\CollectionResponseDTO;
 use Tidy\UseCases\User\DTO\CollectionResponseTransformer;
 use Tidy\UseCases\User\DTO\ResponseTransformer;

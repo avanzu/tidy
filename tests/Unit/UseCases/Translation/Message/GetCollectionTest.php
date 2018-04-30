@@ -12,16 +12,14 @@ use Mockery\MockInterface;
 use Tidy\Components\Collection\Boundary;
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Gateways\ITranslationGateway;
-use Tidy\Domain\Requestors\ICollectionRequest;
 use Tidy\Domain\Responders\Translation\Message\ICollectionResponse;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
-use Tidy\Tests\Unit\Domain\Entities\TranslationTranslated;
-use Tidy\Tests\Unit\Domain\Entities\TranslationUntranslated;
-use Tidy\UseCases\Translation\Message\DTO\GetCollectionRequestBuilder;
-use Tidy\UseCases\Translation\Message\DTO\GetCollectionRequestDTO;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueEnglishToGerman;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationTranslated;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationUntranslated;
 use Tidy\UseCases\Translation\Message\DTO\CollectionResponseTransformer;
+use Tidy\UseCases\Translation\Message\DTO\GetCollectionRequestBuilder;
 use Tidy\UseCases\Translation\Message\GetCollection;
 
 class GetCollectionTest extends MockeryTestCase

@@ -12,9 +12,8 @@ use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Responders\Project\IResponse;
 use Tidy\Domain\Responders\Project\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\ProjectSilverTongue;
+use Tidy\Tests\Unit\Fixtures\Entities\ProjectSilverTongue;
 use Tidy\UseCases\Project\DTO\LookUpRequestBuilder;
-use Tidy\UseCases\Project\DTO\LookUpRequestDTO;
 use Tidy\UseCases\Project\LookUp;
 
 class LookUpTest extends MockeryTestCase

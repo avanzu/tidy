@@ -13,10 +13,9 @@ use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Responders\User\IResponse;
 use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\UserStub1;
+use Tidy\Tests\Unit\Fixtures\Entities\UserStub1;
 use Tidy\UseCases\User\Activate;
 use Tidy\UseCases\User\DTO\ActivateRequestBuilder;
-use Tidy\UseCases\User\DTO\ActivateRequestDTO;
 use Tidy\UseCases\User\DTO\ResponseTransformer;
 
 class ActivateTest extends MockeryTestCase

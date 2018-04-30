@@ -18,9 +18,9 @@ use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
 use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
-use Tidy\Tests\Unit\Domain\Entities\TranslationImpl;
-use Tidy\Tests\Unit\Domain\Entities\TranslationTranslated;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueEnglishToGerman;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationImpl;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationTranslated;
 use Tidy\UseCases\Translation\Catalogue\AddTranslation;
 use Tidy\UseCases\Translation\Catalogue\DTO\AddTranslationRequestBuilder;
 

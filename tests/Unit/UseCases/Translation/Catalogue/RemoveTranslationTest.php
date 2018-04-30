@@ -14,8 +14,8 @@ use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman as Catalogue;
-use Tidy\Tests\Unit\Domain\Entities\TranslationUntranslated;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueEnglishToGerman as Catalogue;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationUntranslated;
 use Tidy\UseCases\Translation\Catalogue\DTO\RemoveTranslationRequestBuilder;
 use Tidy\UseCases\Translation\Catalogue\RemoveTranslation;
 
@@ -135,7 +135,7 @@ class RemoveTranslationTest extends MockeryTestCase
      *
      * @param $translation
      *
-     * @return TranslationUntranslated
+     * @return \Tidy\Tests\Unit\Fixtures\Entities\TranslationUntranslated
      */
     protected function expect_Catalogue_find($catalogue, $token, $translation)
     {

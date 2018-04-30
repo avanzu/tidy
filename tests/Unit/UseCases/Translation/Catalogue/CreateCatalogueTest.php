@@ -13,12 +13,11 @@ use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\ProjectSilverTongue;
-use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueImpl;
+use Tidy\Tests\Unit\Fixtures\Entities\ProjectSilverTongue;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueImpl;
 use Tidy\UseCases\Translation\Catalogue\CreateCatalogue;
 use Tidy\UseCases\Translation\Catalogue\DTO\CatalogueResponseDTO;
 use Tidy\UseCases\Translation\Catalogue\DTO\CreateCatalogueRequestBuilder;
-use Tidy\UseCases\Translation\Catalogue\DTO\CreateCatalogueRequestDTO;
 
 class CreateCatalogueTest extends MockeryTestCase
 {

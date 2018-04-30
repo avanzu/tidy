@@ -14,7 +14,7 @@ use Tidy\Domain\Responders\Project\IResponse;
 use Tidy\Domain\Responders\Project\IResponseTransformer;
 use Tidy\Domain\Responders\Project\ItemResponder;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\ProjectSilverTongue;
+use Tidy\Tests\Unit\Fixtures\Entities\ProjectSilverTongue;
 use Tidy\UseCases\Project\DTO\RenameRequestBuilder;
 use Tidy\UseCases\Project\DTO\RenameRequestDTO;
 use Tidy\UseCases\Project\Rename;

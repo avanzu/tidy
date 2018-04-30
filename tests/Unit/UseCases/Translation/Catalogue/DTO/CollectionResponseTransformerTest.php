@@ -15,7 +15,7 @@ use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
 use Tidy\Domain\Responders\Translation\Catalogue\ICollectionResponse;
 use Tidy\Domain\Responders\Translation\Catalogue\ICollectionResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\UseCases\Translation\Catalogue\DTO\CollectionResponseTransformer;
 
 class CollectionResponseTransformerTest extends MockeryTestCase

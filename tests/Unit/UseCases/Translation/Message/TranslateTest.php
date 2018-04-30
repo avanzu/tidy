@@ -14,8 +14,8 @@ use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
-use Tidy\Tests\Unit\Domain\Entities\TranslationUntranslated;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueEnglishToGerman;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationUntranslated;
 use Tidy\UseCases\Translation\Message\DTO\TranslateRequestBuilder;
 use Tidy\UseCases\Translation\Message\Translate;
 

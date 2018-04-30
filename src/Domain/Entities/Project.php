@@ -10,6 +10,7 @@ namespace Tidy\Domain\Entities;
 use Tidy\Components\AccessControl\IClaimable;
 use Tidy\Components\AccessControl\IClaimant;
 use Tidy\Domain\Requestors\Project\ICreateRequest;
+use Tidy\Domain\Requestors\Project\IRenameRequest;
 
 abstract class Project implements IClaimable
 {
@@ -118,12 +119,27 @@ abstract class Project implements IClaimable
         return $this->owner;
     }
 
+    /**
+     * @param ICreateRequest $request
+     *
+     * @return $this
+     */
     public function setUp(ICreateRequest $request)
     {
         $this->name        = $request->name();
         $this->description = $request->description();
         $this->canonical   = $request->canonical();
         $this->path        = sprintf('/%s/%s', static::PREFIX, $this->canonical);
+        return $this;
     }
 
+    /**
+     * @param IRenameRequest $request
+     */
+    public function rename(IRenameRequest $request)
+    {
+        $this->name        = $request->name();
+        $this->description = $request->description();
+
+    }
 }

@@ -12,7 +12,7 @@ use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\TranslationCatalogueEnglishToGerman;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\UseCases\Translation\Catalogue\DTO\CatalogueResponseDTO;
 use Tidy\UseCases\Translation\Catalogue\DTO\LookUpRequestBuilder;
 use Tidy\UseCases\Translation\Catalogue\LookUp;

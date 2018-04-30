@@ -13,9 +13,8 @@ use Tidy\Domain\Responders\User\IResponse;
 use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Domain\Responders\User\ItemResponder;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\TimmyUser;
+use Tidy\Tests\Unit\Fixtures\Entities\TimmyUser;
 use Tidy\UseCases\User\DTO\RecoverRequestBuilder;
-use Tidy\UseCases\User\DTO\RecoverRequestDTO;
 use Tidy\UseCases\User\Recover;
 
 class RecoverTest extends MockeryTestCase

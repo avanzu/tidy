@@ -10,7 +10,7 @@ namespace Tidy\Tests\Unit\UseCases\Translation\Message\DTO;
 
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\TranslationTranslated;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationTranslated;
 
 class TranslationResponseTransformerTest extends MockeryTestCase
 {

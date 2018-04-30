@@ -10,7 +10,6 @@ namespace Tidy\UseCases\Project;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\IRenameRequest;
 use Tidy\Domain\Responders\Project\IResponseTransformer;
-use Tidy\Domain\Responders\Project\ItemResponder;
 use Tidy\UseCases\Project\Traits\TItemResponder;
 
 class Rename
@@ -32,10 +31,7 @@ class Rename
     {
 
         $project = $this->gateway->find($request->projectId());
-        $project
-            ->setName($request->name())
-            ->setDescription($request->description())
-        ;
+        $project->rename($request);
 
         $this->gateway->save($project);
 

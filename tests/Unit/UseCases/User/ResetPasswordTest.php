@@ -15,9 +15,8 @@ use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Responders\User\IResponse;
 use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\UserStub2;
+use Tidy\Tests\Unit\Fixtures\Entities\UserStub2;
 use Tidy\UseCases\User\DTO\ResetPasswordRequestBuilder;
-use Tidy\UseCases\User\DTO\ResetPasswordRequestDTO;
 use Tidy\UseCases\User\ResetPassword;
 
 class ResetPasswordTest extends MockeryTestCase

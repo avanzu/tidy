@@ -10,6 +10,8 @@ namespace Tidy\Tests\Unit\Domain\Entities;
 
 use Tidy\Components\Exceptions\LanguageIsEmpty;
 use Tidy\Tests\MockeryTestCase;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueImpl;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationUntranslated;
 
 class TranslationCatalogueTest extends MockeryTestCase
 {

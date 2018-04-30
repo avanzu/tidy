@@ -9,7 +9,7 @@
 namespace Tidy\Tests\Unit\UseCases\Project\DTO;
 
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\ProjectSilverTongue;
+use Tidy\Tests\Unit\Fixtures\Entities\ProjectSilverTongue;
 use Tidy\UseCases\Project\DTO\ExcerptDTO;
 use Tidy\UseCases\Project\DTO\ExcerptTransformer;
 

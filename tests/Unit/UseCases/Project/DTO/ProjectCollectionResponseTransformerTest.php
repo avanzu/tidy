@@ -12,7 +12,7 @@ use Tidy\Domain\Responders\Project\ICollectionResponseTransformer;
 use Tidy\Domain\Responders\Project\IResponse;
 use Tidy\Domain\Responders\Project\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Domain\Entities\ProjectSilverTongue;
+use Tidy\Tests\Unit\Fixtures\Entities\ProjectSilverTongue;
 use Tidy\UseCases\Project\DTO\CollectionResponseDTO;
 use Tidy\UseCases\Project\DTO\CollectionResponseTransformer;
 use Tidy\UseCases\Project\DTO\ResponseTransformer;

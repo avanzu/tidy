@@ -8,9 +8,9 @@
 
 namespace Tidy\Tests\Unit\Domain\Entities;
 
-use Tidy\Components\AccessControl\AccessControlBroker;
 use Tidy\Domain\Requestors\Project\ICreateRequest;
 use Tidy\Tests\MockeryTestCase;
+use Tidy\Tests\Unit\Fixtures\Entities\ProjectImpl;
 
 class ProjectTest extends MockeryTestCase
 {
