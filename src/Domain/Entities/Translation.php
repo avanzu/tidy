@@ -152,4 +152,29 @@ abstract class Translation
         return $this;
     }
 
+    public function isEqualTo($subject)
+    {
+        if (!($subject instanceof Translation)) {
+            return false;
+        }
+        if (!($subject->getToken() === $this->getToken())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function __toString()
+    {
+        if (!empty($this->localeString)) {
+            return $this->getLocaleString();
+        }
+        if (!empty($this->sourceString)) {
+            return $this->getSourceString();
+        }
+
+        return $this->getToken();
+    }
+
+
 }

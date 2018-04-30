@@ -9,9 +9,12 @@
 namespace Tidy\Domain\Entities;
 
 use ArrayObject;
+use Tidy\Components\Collection\HashMap;
 use Tidy\Components\Exceptions\InvalidArgument;
 use Tidy\Components\Exceptions\PreconditionFailed;
+use Tidy\Components\Validation\ErrorList;
 use Tidy\Domain\Collections\TranslationCatalogues;
+use Tidy\Domain\Requestors\Translation\Catalogue\IAddTranslationRequest;
 use Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest;
 
 /**
@@ -77,6 +80,7 @@ abstract class TranslationCatalogue
      * @param Project $project
      *
      * @return $this
+     * @todo replace this by actual transaction
      */
     public function setProject($project)
     {
@@ -161,6 +165,23 @@ abstract class TranslationCatalogue
     public function targetLocale()
     {
         return implode('-', array_filter([$this->getTargetLanguage(), $this->getTargetCulture()]));
+    }
+
+    public function appendTranslation(IAddTranslationRequest $request)
+    {
+        $this->verifyAppend($request);
+
+        $translation = $this->makeTranslation(
+            $request->token(),
+            $request->sourceString(),
+            $request->localeString(),
+            $request->meaning(),
+            $request->notes(),
+            $request->state()
+        );
+
+        $this->translations()->offsetSet($translation->getToken(), $translation);
+
     }
 
     /**
@@ -285,12 +306,12 @@ abstract class TranslationCatalogue
     }
 
     /**
-     * @return ArrayObject|Translation[]
+     * @return HashMap|Translation[]
      */
     protected function translations()
     {
         if (!$this->translations) {
-            $this->translations = new ArrayObject();
+            $this->translations = new HashMap();
         }
 
         return $this->translations;
@@ -443,5 +464,57 @@ abstract class TranslationCatalogue
         if ($errors->count() > 0) {
             throw new PreconditionFailed($errors->getArrayCopy());
         }
+    }
+
+    /**
+     * @param $token
+     * @param $sourceString
+     * @param $localeString
+     * @param $meaning
+     * @param $notes
+     * @param $state
+     *
+     * @return Translation
+     */
+    abstract protected function makeTranslation($token, $sourceString, $localeString, $meaning, $notes, $state);
+
+    protected function verifyAppend(IAddTranslationRequest $request)
+    {
+        $errors = new ErrorList();
+        $errors = $this->verifyToken($request->token(), $errors);
+        $errors = $this->verifyTokenIsUnique($request->token(), $errors);
+
+        $this->failOnErrors($errors);
+    }
+
+    /**
+     * @param                        $value
+     * @param                        $errors
+     *
+     * @return mixed
+     */
+    protected function verifyTokenIsUnique($value, $errors)
+    {
+        /** @var Translation|null $match */
+        if ($match = $this->translations()->atIndex($value)) {
+            $errors['token'] = sprintf('Token %s already exists translated as "%s".', $value, (string)$match);
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param                        $value
+     * @param                        $errors
+     *
+     * @return mixed
+     */
+    protected function verifyToken($value, $errors)
+    {
+        if (empty($value)) {
+            $errors['token'] = 'Token cannot be empty.';
+        }
+
+        return $errors;
     }
 }

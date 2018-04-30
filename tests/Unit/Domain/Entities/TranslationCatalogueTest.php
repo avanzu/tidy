@@ -11,13 +11,16 @@ namespace Tidy\Tests\Unit\Domain\Entities;
 use Tidy\Components\Exceptions\InvalidArgument;
 use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Domain\Collections\TranslationCatalogues;
+use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationDomain;
 use Tidy\Domain\Gateways\ITranslationGateway;
+use Tidy\Domain\Requestors\Translation\Catalogue\IAddTranslationRequest;
 use Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest;
 use Tidy\Tests\MockeryTestCase;
-use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueImpl;
-use Tidy\Tests\Unit\Fixtures\Entities\TranslationUntranslated;
 use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueEnglishToGerman as Catalogue;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueImpl;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationTranslated;
+use Tidy\Tests\Unit\Fixtures\Entities\TranslationUntranslated;
 
 class TranslationCatalogueTest extends MockeryTestCase
 {
@@ -139,8 +142,13 @@ class TranslationCatalogueTest extends MockeryTestCase
         $request->allows('targetLanguage')->andReturn(Catalogue::TARGET_LANG);
         $request->allows('targetCulture')->andReturn(Catalogue::TARGET_CULTURE);
 
-        $domain = new TranslationDomain(
-            Catalogue::CANONICAL, Catalogue::SOURCE_LANG, Catalogue::SOURCE_CULTURE, Catalogue::TARGET_LANG, Catalogue::TARGET_CULTURE);
+        $domain  = new TranslationDomain(
+            Catalogue::CANONICAL,
+            Catalogue::SOURCE_LANG,
+            Catalogue::SOURCE_CULTURE,
+            Catalogue::TARGET_LANG,
+            Catalogue::TARGET_CULTURE
+        );
         $gateway = mock(ITranslationGateway::class);
         $gateway->expects('findByDomain')->with(equalTo($domain))->andReturn(new Catalogue());
 
@@ -149,7 +157,59 @@ class TranslationCatalogueTest extends MockeryTestCase
             $this->fail('Failed to fail.');
         } catch (\Exception $exception) {
             assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
-            $this->assertStringMatchesFormat('Invalid domain "%s". Already in use by "%s".', current($exception->getErrors()));
+            $this->assertStringMatchesFormat(
+                'Invalid domain "%s". Already in use by "%s".',
+                current($exception->getErrors())
+            );
+        }
+    }
+
+    public function test_addTranslation()
+    {
+        $catalogue = new Catalogue();
+        $request   = mock(IAddTranslationRequest::class);
+        $request->allows('catalogueId')->andReturn(Catalogue::ID);
+        $request->allows('token')->andReturn('message.token.add_translation');
+        $request->allows('sourceString')->andReturn('The add translation source string');
+        $request->allows('localeString')->andReturn('Übersetzung hinzufügen');
+        $request->allows('meaning')->andReturn('Give some meaning');
+        $request->allows('notes')->andReturn('Give some additional notes');
+        $request->allows('state')->andReturn('translated');
+
+        $catalogue->appendTranslation($request);
+        assertThat($catalogue->find('message.token.add_translation'), is(anInstanceOf(Translation::class)));
+    }
+
+    public function test_addTranslation_verifies_token_presence()
+    {
+        $catalogue = new Catalogue();
+        $request   = mock(IAddTranslationRequest::class);
+        $request->allows('token')->andReturn('');
+        try {
+            $catalogue->appendTranslation($request);
+            $this->fail('Failed to fail.');
+        } catch (\Exception $exception) {
+            assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
+            $this->assertStringMatchesFormat('Token cannot be empty.', $exception->getErrors()->atIndex('token'));
+        }
+    }
+
+    public function test_addTranslation_verifies_token_uniqueness()
+    {
+        $catalogue = new Catalogue();
+        $request   = mock(IAddTranslationRequest::class);
+        $request->allows('token')->andReturn(TranslationTranslated::MSG_ID);
+        $request->allows('sourceString')->andReturn('The add translation source string');
+
+        try {
+            $catalogue->appendTranslation($request);
+            $this->fail('Failed to fail.');
+        } catch (\Exception $exception) {
+            assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
+            $this->assertStringMatchesFormat(
+                'Token %s already exists translated as "%s".',
+                $exception->getErrors()->atIndex('token')
+            );
         }
     }
 
@@ -192,9 +252,9 @@ class TranslationCatalogueTest extends MockeryTestCase
     {
         return
             [
-                'no culture'         => ['de', null, 'en', null, 'de', 'en'],
-                'with culture'       => ['de', 'DE', 'en', 'US', 'de-DE', 'en-US'],
-                'with unproper case' => ['DE', 'at', 'EN', 'gb', 'de-AT', 'en-GB'],
+                'no culture'       => ['de', null, 'en', null, 'de', 'en'],
+                'with culture'     => ['de', 'DE', 'en', 'US', 'de-DE', 'en-US'],
+                'with faulty case' => ['DE', 'at', 'EN', 'gb', 'de-AT', 'en-GB'],
             ];
     }
 

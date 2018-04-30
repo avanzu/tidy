@@ -86,7 +86,7 @@ class CreateCatalogueTest extends MockeryTestCase
         try {
             $this->useCase->execute($request);
             $this->fail('Failed to fail.');
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
         }
 

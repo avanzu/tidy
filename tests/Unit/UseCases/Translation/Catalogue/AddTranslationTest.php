@@ -11,6 +11,8 @@ namespace Tidy\Tests\Unit\UseCases\Translation\Catalogue;
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\Duplicate;
 use Tidy\Components\Exceptions\NotFound;
+use Tidy\Components\Exceptions\PreconditionFailed;
+use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse;
@@ -74,7 +76,7 @@ class AddTranslationTest extends MockeryTestCase
         ;
 
         $this->expectFindCatalogue();
-        $this->expectMakeTranslation();
+        $this->expectSave('message.source_code');
 
         $result = $this->useCase->execute($request);
 
@@ -110,14 +112,17 @@ class AddTranslationTest extends MockeryTestCase
             ->build()
         ;
 
-        $this->gateway->expects('findCatalogue')->andReturns(new TranslationCatalogueEnglishToGerman());
+        $this->gateway->expects('findCatalogue')->andReturn(new TranslationCatalogueEnglishToGerman());
         try {
             $this->useCase->execute($request);
             $this->fail('Failed to fail.');
 
         } catch (\Exception $exception) {
-            assertThat($exception, is(anInstanceOf(Duplicate::class)));
-            $this->assertStringMatchesFormat('Duplicate token "%s" in catalogue "%s".', $exception->getMessage());
+            assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
+            $this->assertStringMatchesFormat(
+                'Token %s already exists translated as "%s".',
+                $exception->getErrors()->atIndex('token')
+            );
         }
 
     }
@@ -143,17 +148,15 @@ class AddTranslationTest extends MockeryTestCase
     /**
      * @return TranslationImpl
      */
-    protected function expectMakeTranslation(): TranslationImpl
+    protected function expectSave($token)
     {
-        $expected = new TranslationImpl();
-        $this->gateway->expects('makeTranslation')->andReturn($expected);
         $this
             ->gateway
             ->expects('save')
             ->with(
                 argumentThat(
-                    function (TranslationCatalogue $catalogue) use ($expected) {
-                        assertThat($catalogue->find('message.source_code'), is(sameInstance($expected)));
+                    function (TranslationCatalogue $catalogue) use ($token) {
+                        assertThat($catalogue->find($token), is(anInstanceOf(Translation::class)));
 
                         return true;
                     }
@@ -166,9 +169,7 @@ class AddTranslationTest extends MockeryTestCase
                     return $catalogue;
                 }
             )
-        ;;
-
-        return $expected;
+        ;
     }
 
 }

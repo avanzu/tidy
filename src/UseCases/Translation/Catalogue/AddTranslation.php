@@ -38,22 +38,7 @@ class AddTranslation
     public function execute(IAddTranslationRequest $request)
     {
         $catalogue = $this->lookUpCatalogue($request);
-
-        $this->preserveUniqueness($request, $catalogue);
-
-        $translation = $this->gateway->makeTranslation();
-
-        $translation
-            ->setSourceString($request->sourceString())
-            ->setLocaleString($request->localeString())
-            ->setMeaning($request->meaning())
-            ->setNotes($request->notes())
-            ->setState($request->state())
-            ->setToken($request->token())
-        ;
-
-        $catalogue->add($translation);
-
+        $catalogue->appendTranslation($request);
         $this->gateway->save($catalogue);
 
         return $this->transformer()->transform($catalogue);
@@ -84,19 +69,6 @@ class AddTranslation
         }
 
         return $catalogue;
-    }
-
-    /**
-     * @param \Tidy\Domain\Requestors\Translation\Catalogue\IAddTranslationRequest $request
-     * @param                                                                      $catalogue
-     */
-    protected function preserveUniqueness(IAddTranslationRequest $request, TranslationCatalogue $catalogue)
-    {
-        if ($match = $catalogue->find($request->token())) {
-            throw new Duplicate(
-                sprintf('Duplicate token "%s" in catalogue "%s".', $request->token(), $catalogue->getName())
-            );
-        }
     }
 
 }

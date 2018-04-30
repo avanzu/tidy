@@ -8,10 +8,8 @@
 
 namespace Tidy\Tests\Unit\Fixtures\Entities;
 
-use Tidy\Domain\Collections\TranslationDomain;
-use Tidy\Domain\Entities\TranslationCatalogue;
 
-class TranslationCatalogueEnglishToGerman extends TranslationCatalogue
+class TranslationCatalogueEnglishToGerman extends TranslationCatalogueImpl
 {
     const ID             = 4711;
     const TARGET_CULTURE = 'DE';

@@ -9,6 +9,7 @@
 namespace Tidy\Components\Exceptions;
 
 use Throwable;
+use Tidy\Components\Validation\ErrorList;
 
 class PreconditionFailed extends InvalidArgument
 {
@@ -20,11 +21,11 @@ class PreconditionFailed extends InvalidArgument
     public function __construct(array $errors, string $message = "", int $code = 0, Throwable $previous = null)
     {
         parent::__construct($message,$code,$previous);
-        $this->errors = $errors;
+        $this->errors = new ErrorList($errors);
     }
 
     /**
-     * @return mixed
+     * @return ErrorList
      */
     public function getErrors()
     {
