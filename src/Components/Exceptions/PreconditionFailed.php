@@ -10,11 +10,12 @@ namespace Tidy\Components\Exceptions;
 
 use Throwable;
 use Tidy\Components\Validation\ErrorList;
+use Traversable;
 
 class PreconditionFailed extends InvalidArgument
 {
     /**
-     * @var array
+     * @var ErrorList
      */
     protected $errors;
 
@@ -31,4 +32,16 @@ class PreconditionFailed extends InvalidArgument
     {
         return $this->errors;
     }
+
+    /**
+     * @param $name
+     *
+     * @return string|null
+     */
+    public function atIndex($name)
+    {
+        return (string)$this->errors->atIndex($name);
+    }
+
+
 }

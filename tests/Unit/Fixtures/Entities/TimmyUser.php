@@ -7,9 +7,8 @@
 
 namespace Tidy\Tests\Unit\Fixtures\Entities;
 
-use Tidy\Domain\Entities\User;
 
-class TimmyUser extends User
+class TimmyUser extends UserImpl
 {
     const ID       = 998811;
     const USERNAME = 'timmy';

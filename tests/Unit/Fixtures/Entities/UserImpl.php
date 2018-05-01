@@ -13,4 +13,10 @@ class UserImpl extends User
 {
 
 
+    protected function makeProfile($firstName, $lastName)
+    {
+        $profile = new UserProfileImpl();
+        $profile->setFirstName($firstName)->setLastName($lastName);
+        return $profile;
+    }
 }

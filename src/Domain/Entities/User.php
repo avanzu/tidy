@@ -8,6 +8,14 @@
 namespace Tidy\Domain\Entities;
 
 use Tidy\Components\AccessControl\IClaimant;
+use Tidy\Components\Exceptions\PreconditionFailed;
+use Tidy\Components\Normalisation\ITextNormaliser;
+use Tidy\Components\Security\Encoder\IPasswordEncoder;
+use Tidy\Components\Util\IStringUtilFactory;
+use Tidy\Components\Util\StringConverter;
+use Tidy\Components\Validation\ErrorList;
+use Tidy\Domain\Collections\Users;
+use Tidy\Domain\Requestors\User\ICreateRequest;
 
 /**
  * Class User
@@ -85,29 +93,7 @@ abstract class User implements IClaimant
         return $this->userName;
     }
 
-    /**
-     * @param $userName
-     *
-     * @return $this
-     */
-    public function setUserName($userName)
-    {
-        $this->userName = $userName;
 
-        return $this;
-    }
-
-    /**
-     * @param $canonical
-     *
-     * @return $this
-     */
-    public function setCanonical($canonical)
-    {
-        $this->canonical = $canonical;
-
-        return $this;
-    }
 
     public function canonical()
     {
@@ -123,17 +109,7 @@ abstract class User implements IClaimant
         return $this->eMail;
     }
 
-    /**
-     * @param mixed $eMail
-     *
-     * @return $this
-     */
-    public function setEMail($eMail)
-    {
-        $this->eMail = $eMail;
 
-        return $this;
-    }
 
     /**
      * @return mixed
@@ -210,10 +186,99 @@ abstract class User implements IClaimant
         return $this->profile;
     }
 
-    public function assignProfile(UserProfile $profile)
-    {
-        $this->profile = $profile;
 
+    public function register(
+        ICreateRequest $request,
+        IStringUtilFactory $factory,
+        Users $users
+    ) {
+
+        $this->verifyRegister($request, $factory, $users);
+
+        $this->userName  = $request->getUserName();
+        $this->eMail     = $request->eMail();
+        $this->password  = $factory->createEncoder()->encode($request->plainPassword(), null);
+        $this->canonical = $factory->createNormaliser()->transform($this->userName);
+        $this->profile   = $this->makeProfile(
+            $request->firstName(),
+            $request->lastName()
+        );
+
+        $this->grantAccessOrAssignToken($request);
+
+    }
+
+    abstract protected function makeProfile($firstName, $lastName);
+
+    /**
+     * @param ICreateRequest $request
+     *
+     * @return User
+     */
+    protected function grantAccessOrAssignToken(ICreateRequest $request)
+    {
+        if ($request->isAccessGranted()) {
+            $this->enabled = true;
+            return $this;
+        }
+
+        $this->token   = uniqid();
+        $this->enabled = false;
         return $this;
+    }
+
+    /**
+     * @param ICreateRequest $request
+     * @param                $errors
+     *
+     * @return mixed
+     */
+    protected function verifyUserName(ICreateRequest $request, $errors)
+    {
+        if (strlen($request->getUserName()) < 3) {
+            $errors['username'] = sprintf(
+                'Username "%s" is not allowed. Must be at least 3 characters long.',
+                $request->getUserName()
+            );
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param ICreateRequest     $request
+     * @param IStringUtilFactory $factory
+     * @param                    $errors
+     *
+     * @return mixed
+     */
+    protected function verifyEMailAddress(ICreateRequest $request, IStringUtilFactory $factory, $errors)
+    {
+        if (!$factory->createEMailValidator()->validate($request->eMail())) {
+            $errors['email'] = sprintf('EMail address "%s" is not valid.', $request->eMail());
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param ICreateRequest     $request
+     * @param IStringUtilFactory $factory
+     */
+    protected function verifyRegister(ICreateRequest $request, IStringUtilFactory $factory, Users $users)
+    {
+        $errors = new ErrorList();
+        $errors = $this->verifyUserName($request, $errors);
+        $errors = $this->verifyEMailAddress($request, $factory, $errors);
+
+
+
+        $this->failOnErrors($errors);
+    }
+
+    private function failOnErrors(ErrorList $errors) {
+        if( $errors->count() > 0) {
+            throw new PreconditionFailed($errors->getArrayCopy());
+        }
     }
 }

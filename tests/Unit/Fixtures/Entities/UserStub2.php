@@ -18,5 +18,12 @@ class UserStub2 extends User
 
     protected $userName = self::USERNAME;
 
+    protected function makeProfile($firstName, $lastName)
+    {
+        $profile = new UserProfileImpl();
+        $profile->setFirstName($firstName)->setLastName($lastName);
+        return $profile;
+    }
+
 
 }
