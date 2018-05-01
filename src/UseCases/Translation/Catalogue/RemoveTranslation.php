@@ -42,10 +42,8 @@ class RemoveTranslation
     {
 
         $catalogue   = $this->lookUpCatalogue($request);
-        $translation = $this->lookUpTranslation($request, $catalogue);
-
-        $this->gateway->removeTranslation($translation);
-        $catalogue->remove($translation);
+        $catalogue->removeTranslation($request);
+        $this->gateway->save($catalogue);
 
         return $this->transformer()->transform($catalogue);
     }
@@ -58,34 +56,11 @@ class RemoveTranslation
      */
     protected function lookUpCatalogue(RemoveTranslationRequestDTO $request)
     {
-        $catalogue = $this->gateway->findCatalogue($request->catalogueId());
-        if (!$catalogue) {
+        if (!$catalogue = $this->gateway->findCatalogue($request->catalogueId())) {
             throw new NotFound(sprintf('Unable to find catalogue identified by "%d".', $request->catalogueId()));
         }
 
         return $catalogue;
-    }
-
-    /**
-     * @param RemoveTranslationRequestDTO $request
-     * @param TranslationCatalogue        $catalogue
-     *
-     * @return mixed
-     */
-    protected function lookUpTranslation(RemoveTranslationRequestDTO $request, TranslationCatalogue $catalogue)
-    {
-        $translation = $catalogue->find($request->token());
-        if (!$translation) {
-            throw new NotFound(
-                sprintf(
-                    'Unable to find translation identified by "%s" in catalogue "%s".',
-                    $request->token(),
-                    $catalogue->getName()
-                )
-            );
-        }
-
-        return $translation;
     }
 
 }

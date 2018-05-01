@@ -9,7 +9,7 @@
 namespace Tidy\Tests\Unit\UseCases\Translation\Catalogue;
 
 use Tidy\Components\Exceptions\NotFound;
-use Tidy\Domain\Entities\Translation;
+use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse;
@@ -46,10 +46,10 @@ class RemoveTranslationTest extends MockeryTestCase
             ->withCatalogueId(Catalogue::ID)
             ->withToken(TranslationUntranslated::MSG_ID)
             ->build()
-        ;;
+        ;
 
         $this->expect_Gateway_findCatalogue(new Catalogue(), Catalogue::ID);
-        $this->expect_Gateway_removeTranslation(TranslationUntranslated::ID);
+        $this->expect_Gateway_saveWithoutTranslationInCatalogue(TranslationUntranslated::ID);
 
         $result = $this->useCase->execute($request);
 
@@ -74,29 +74,44 @@ class RemoveTranslationTest extends MockeryTestCase
         }
     }
 
+    public function test_remove_with_catalogueIdMismatch_throws_PredonditionFailed()
+    {
+        $catalogueId = 100009999;
+        $this->expect_Gateway_findCatalogue(new Catalogue(), $catalogueId);
+
+        try {
+            $request = (new RemoveTranslationRequestBuilder())
+                ->withCatalogueId($catalogueId)
+                ->withToken('some_token')
+                ->build()
+            ;
+            $this->useCase->execute($request);
+            $this->fail('Failed to fail.');
+        } catch (PreconditionFailed $exception) {
+            $this->assertStringMatchesFormat(
+                'Wrong catalogue. Request addresses catalogue #%d. This is catalogue #%d.',
+                $exception->getErrors()->atIndex('catalogue')
+            );
+        }
+    }
+
     public function test_remove_with_unknown_token_throws_NotFound()
     {
-
-        $catalogueId = 100009999;
-        $catalogue   = $this->expect_Gateway_findCatalogue(mock(TranslationCatalogue::class), $catalogueId);
-
-        $this->expect_Catalogue_find($catalogue, 'some_token', null);
-        $this->expect_Catalogue_getName($catalogue, 'The Catalogue');
+        $this->expect_Gateway_findCatalogue(new Catalogue(), Catalogue::ID);
 
         try {
             $this->useCase->execute(
                 (new RemoveTranslationRequestBuilder())
-                    ->withCatalogueId($catalogueId)
+                    ->withCatalogueId(Catalogue::ID)
                     ->withToken('some_token')
                     ->build()
             );
 
             $this->fail('Failed to fail.');
-        } catch (\Exception $exception) {
-            assertThat($exception, is(anInstanceOf(NotFound::class)));
+        } catch (PreconditionFailed $exception) {
             $this->assertStringMatchesFormat(
                 'Unable to find translation identified by "%s" in catalogue "%s".',
-                $exception->getMessage()
+                $exception->getErrors()->atIndex('token')
             );
         }
     }
@@ -150,12 +165,12 @@ class RemoveTranslationTest extends MockeryTestCase
     /**
      * @param $translation
      */
-    protected function expect_Gateway_removeTranslation($translationId): void
+    protected function expect_Gateway_saveWithoutTranslationInCatalogue($translationId): void
     {
-        $this->gateway->expects('removeTranslation')->with(
+        $this->gateway->expects('save')->with(
             argumentThat(
-                function (Translation $translation) use ($translationId) {
-                    assertThat($translation->getId(), is(equalTo($translationId)));
+                function (TranslationCatalogue $catalogue) use ($translationId) {
+                    assertThat($catalogue->find($translationId), is(nullValue()));
 
                     return true;
                 }
@@ -170,7 +185,7 @@ class RemoveTranslationTest extends MockeryTestCase
      */
     protected function expect_Catalogue_removeTranslation($catalogue, $translation): void
     {
-        $catalogue->expects('remove')->with($translation);
+        $catalogue->expects('removeTranslation')->with($translation->getToken());
     }
 
     /**

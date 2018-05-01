@@ -16,6 +16,7 @@ use Tidy\Components\Validation\ErrorList;
 use Tidy\Domain\Collections\TranslationCatalogues;
 use Tidy\Domain\Requestors\Translation\Catalogue\IAddTranslationRequest;
 use Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest;
+use Tidy\UseCases\Translation\Catalogue\DTO\RemoveTranslationRequestDTO;
 
 /**
  * Class TranslationCatalogue
@@ -184,30 +185,18 @@ abstract class TranslationCatalogue
 
     }
 
-    /**
-     * @param Translation $translation
-     *
-     * @return $this
-     */
-    public function add(Translation $translation)
+    public function removeTranslation(RemoveTranslationRequestDTO $request)
     {
-        $this->translations()->offsetSet($translation->getToken(), $translation);
+        $errors = new ErrorList();
+        $errors = $this->verifyCatalogueId($request, $errors);
+        $match  = $this->verifyTokenExists($request, $errors);
 
-        return $this;
-    }
+        $this->failOnErrors($errors);
 
-    /**
-     * @param Translation $translation
-     *
-     * @return $this
-     */
-    public function remove(Translation $translation)
-    {
-        if ($this->translations()->offsetExists($translation->getToken())) {
-            $this->translations()->offsetUnset($translation->getToken());
-        }
+        $this->translations()->offsetUnset($request->token());
 
-        return $this;
+        return $match;
+
     }
 
     /**
@@ -516,5 +505,43 @@ abstract class TranslationCatalogue
         }
 
         return $errors;
+    }
+
+    /**
+     * @param RemoveTranslationRequestDTO $request
+     * @param                             $errors
+     *
+     * @return mixed
+     */
+    protected function verifyCatalogueId(RemoveTranslationRequestDTO $request, $errors)
+    {
+        if ($request->catalogueId() !== $this->id) {
+            $errors['catalogue'] = sprintf(
+                'Wrong catalogue. Request addresses catalogue #%d. This is catalogue #%d.',
+                $request->catalogueId(),
+                $this->id
+            );
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param RemoveTranslationRequestDTO $request
+     * @param                             $errors
+     *
+     * @return mixed|null
+     */
+    protected function verifyTokenExists(RemoveTranslationRequestDTO $request, $errors)
+    {
+        if (!$match = $this->translations()->atIndex($request->token())) {
+            $errors['token'] = sprintf(
+                'Unable to find translation identified by "%s" in catalogue "%s".',
+                $request->token(),
+                $this->getName()
+            );
+        }
+
+        return $match;
     }
 }

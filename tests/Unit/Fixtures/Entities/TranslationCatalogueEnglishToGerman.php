@@ -39,8 +39,8 @@ class TranslationCatalogueEnglishToGerman extends TranslationCatalogueImpl
     public function __construct()
     {
         $this->project = new ProjectSilverTongue();
-        $this->add(new TranslationTranslated());
-        $this->add(new TranslationUntranslated());
+        $this->translations()->offsetSet(TranslationTranslated::MSG_ID, new TranslationTranslated());
+        $this->translations()->offsetSet(TranslationUntranslated::MSG_ID, new TranslationUntranslated());
     }
 
 
