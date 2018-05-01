@@ -33,4 +33,18 @@ class TranslationUntranslated extends Translation
     protected $notes        = self::MSG_NOTES;
 
     protected $state        = self::MSG_STATE;
+
+    public function __construct($source = self::MSG_SOURCE, $target = self::MSG_TARGET, $state = self::MSG_STATE)
+    {
+        parent::__construct(
+            self::MSG_ID,
+            $source,
+            $target,
+            self::MSG_MEANING,
+            self::MSG_NOTES,
+            $state
+        );
+    }
+
+
 }

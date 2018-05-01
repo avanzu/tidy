@@ -12,25 +12,28 @@ use Tidy\Domain\Entities\Translation;
 
 class TranslationTranslated extends Translation
 {
-    const MSG_STATE   = 'translated';
-    const MSG_NOTES   = 'Integer sed lacus sapien. Ut ac porta risus. ';
+    const MSG_STATE = 'translated';
+    const MSG_NOTES = 'Integer sed lacus sapien. Ut ac porta risus. ';
     const MSG_MEANING = 'Greet the world';
-    const MSG_TARGET  = 'Hallo Welt! ';
-    const MSG_SOURCE  = 'Hello World! ';
-    const MSG_ID      = 'message.hello';
-    const ID          = 2507;
+    const MSG_TARGET = 'Hallo Welt! ';
+    const MSG_SOURCE = 'Hello World! ';
+    const MSG_ID = 'message.hello';
+    const ID = 2507;
 
-    protected $id           = self::ID;
+    protected $id = self::ID;
 
-    protected $token        = self::MSG_ID;
 
-    protected $sourceString = self::MSG_SOURCE;
+    public function __construct($source = self::MSG_SOURCE, $target = self::MSG_TARGET)
+    {
+        parent::__construct(
+            self::MSG_ID,
+            $source,
+            $target,
+            self::MSG_MEANING,
+            self::MSG_NOTES,
+            self::MSG_STATE
+        );
+    }
 
-    protected $localeString = self::MSG_TARGET;
 
-    protected $meaning      = self::MSG_MEANING;
-
-    protected $notes        = self::MSG_NOTES;
-
-    protected $state        = self::MSG_STATE;
 }

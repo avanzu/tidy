@@ -9,8 +9,8 @@
 namespace Tidy\UseCases\Translation\Catalogue;
 
 use Tidy\Components\Exceptions\NotFound;
-use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
+use Tidy\Domain\Requestors\Translation\Message\IRemoveTranslationRequest;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
 use Tidy\UseCases\Translation\Catalogue\DTO\RemoveTranslationRequestDTO;
 use Tidy\UseCases\Translation\Catalogue\Traits\TNestedItemResponder;
@@ -34,14 +34,14 @@ class RemoveTranslation
 
 
     /**
-     * @param RemoveTranslationRequestDTO $request
+     * @param IRemoveTranslationRequest $request
      *
      * @return \Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse
      */
-    public function execute(RemoveTranslationRequestDTO $request)
+    public function execute(IRemoveTranslationRequest $request)
     {
 
-        $catalogue   = $this->lookUpCatalogue($request);
+        $catalogue = $this->lookUpCatalogue($request);
         $catalogue->removeTranslation($request);
         $this->gateway->save($catalogue);
 
@@ -50,11 +50,11 @@ class RemoveTranslation
 
 
     /**
-     * @param RemoveTranslationRequestDTO $request
+     * @param IRemoveTranslationRequest $request
      *
      * @return null|\Tidy\Domain\Entities\TranslationCatalogue
      */
-    protected function lookUpCatalogue(RemoveTranslationRequestDTO $request)
+    protected function lookUpCatalogue(IRemoveTranslationRequest $request)
     {
         if (!$catalogue = $this->gateway->findCatalogue($request->catalogueId())) {
             throw new NotFound(sprintf('Unable to find catalogue identified by "%d".', $request->catalogueId()));

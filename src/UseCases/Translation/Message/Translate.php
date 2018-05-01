@@ -9,11 +9,10 @@
 namespace Tidy\UseCases\Translation\Message;
 
 use Tidy\Components\Exceptions\NotFound;
-use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Message\ITranslateRequest;
-use Tidy\Domain\Responders\Translation\Message\ItemResponder;
+use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponseTransformer;
 use Tidy\UseCases\Translation\Message\Traits\TItemResponder;
 
@@ -34,13 +33,16 @@ class Translate
         $this->transformer = $transformer;
     }
 
+    /**
+     * @param ITranslateRequest $request
+     *
+     * @return ITranslationResponse
+     */
     public function execute(ITranslateRequest $request)
     {
 
         $catalogue   = $this->lookUpCatalogue($request);
-        $translation = $this->lookUpTranslation($request, $catalogue);
-        $this->replaceLocaleString($request, $translation);
-        $this->replaceState($request, $translation);
+        $translation = $catalogue->translate($request);
 
         $this->gateway->save($catalogue);
 
@@ -49,36 +51,9 @@ class Translate
 
 
     /**
-     * @param \Tidy\Domain\Requestors\Translation\Message\ITranslateRequest $request
-     * @param Translation                                                   $translation
+     * @param ITranslateRequest $request
      *
-     */
-    protected function replaceLocaleString(ITranslateRequest $request, Translation $translation)
-    {
-        if ($request->localeString()) {
-            $translation->setLocaleString($request->localeString());
-        }
-
-    }
-
-    /**
-     * @param \Tidy\Domain\Requestors\Translation\Message\ITranslateRequest $request
-     * @param Translation                                                   $translation
-     *
-     */
-    protected function replaceState(ITranslateRequest $request, Translation $translation)
-    {
-        if ($request->state()) {
-            $translation->setState($request->state());
-        }
-
-    }
-
-
-    /**
-     * @param \Tidy\Domain\Requestors\Translation\Message\ITranslateRequest $request
-     *
-     * @return null|\Tidy\Domain\Entities\TranslationCatalogue
+     * @return null|TranslationCatalogue
      */
     protected function lookUpCatalogue(ITranslateRequest $request)
     {
@@ -90,26 +65,5 @@ class Translate
         return $catalogue;
     }
 
-    /**
-     * @param \Tidy\Domain\Requestors\Translation\Message\ITranslateRequest $request
-     * @param                                                               $catalogue
-     *
-     * @return mixed
-     */
-    protected function lookUpTranslation(ITranslateRequest $request, TranslationCatalogue $catalogue)
-    {
-        $translation = $catalogue->find($request->token());
-        if (!$translation) {
-            throw new NotFound(
-                sprintf(
-                    'Unable to find translation identified by "%s" in catalogue "%s".',
-                    $request->token(),
-                    $catalogue->getName()
-                )
-            );
-        }
-
-        return $translation;
-    }
 
 }

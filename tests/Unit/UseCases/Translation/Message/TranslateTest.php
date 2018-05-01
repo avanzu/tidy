@@ -10,8 +10,10 @@ namespace Tidy\Tests\Unit\UseCases\Translation\Message;
 
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
+use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
+use Tidy\Domain\Requestors\Translation\Message\ITranslateRequest;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueEnglishToGerman;
@@ -55,14 +57,14 @@ class TranslateTest extends MockeryTestCase
         $translation = new TranslationUntranslated();
 
         $this->expect_findCatalogue_on_gateway($catalogue);
-        $this->expect_find_on_catalogue($catalogue, $translation);
+        $this->expect_translate_on_catalogue($catalogue, $translation);
         $this->expect_save_on_gateway($catalogue);
 
         $response = $this->useCase->execute($request);
 
         assertThat($response, is(anInstanceOf(ITranslationResponse::class)));
-        assertThat($translation->getLocaleString(), is(equalTo(self::LIPSUM)));
-        assertThat($translation->getState(), is(equalTo('translated')));
+        assertThat($response->getLocaleString(), is(equalTo(self::LIPSUM)));
+        assertThat($response->getState(), is(equalTo('translated')));
     }
 
 
@@ -86,10 +88,8 @@ class TranslateTest extends MockeryTestCase
     public function test_execute_with_unknown_token_throws_NotFound()
     {
 
-        $catalogue = mock(TranslationCatalogue::class);
+        $catalogue = new TranslationCatalogueEnglishToGerman();
         $this->gateway->expects('findCatalogue')->andReturns($catalogue);
-        $catalogue->expects('find')->with('token.unknown')->andReturns(null);
-        $catalogue->expects('getName')->andReturns('Some Catalogue');
 
         try {
 
@@ -98,11 +98,10 @@ class TranslateTest extends MockeryTestCase
             );
 
             $this->fail('failed to fail.');
-        } catch (\Exception $exception) {
-            assertThat($exception, is(anInstanceOf(NotFound::class)));
+        } catch (PreconditionFailed $exception) {
             $this->assertStringMatchesFormat(
                 'Unable to find translation identified by "%s" in catalogue "%s".',
-                $exception->getMessage()
+                $exception->getErrors()->atIndex('token')
             );
         }
 
@@ -132,9 +131,13 @@ class TranslateTest extends MockeryTestCase
      * @param $catalogue
      * @param $translation
      */
-    protected function expect_find_on_catalogue($catalogue, $translation): void
+    protected function expect_translate_on_catalogue($catalogue, $translation): void
     {
-        $catalogue->expects('find')->with(TranslationUntranslated::MSG_ID)->andReturns($translation);
+        $catalogue->expects('translate')
+                  ->with(anInstanceOf(ITranslateRequest::class))
+                  ->andReturnUsing(function(ITranslateRequest $request)  {
+                      return new TranslationUntranslated(TranslationUntranslated::MSG_SOURCE, $request->localeString(), $request->state());
+                  });
     }
 
     /**

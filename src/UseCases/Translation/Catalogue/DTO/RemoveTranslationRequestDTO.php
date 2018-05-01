@@ -8,7 +8,9 @@
 
 namespace Tidy\UseCases\Translation\Catalogue\DTO;
 
-class RemoveTranslationRequestDTO
+use Tidy\Domain\Requestors\Translation\Message\IRemoveTranslationRequest;
+
+class RemoveTranslationRequestDTO implements IRemoveTranslationRequest
 {
     protected $catalogueId;
 

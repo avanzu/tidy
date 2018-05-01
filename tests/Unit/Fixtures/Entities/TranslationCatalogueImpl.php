@@ -15,15 +15,7 @@ class TranslationCatalogueImpl extends TranslationCatalogue
 
     protected function makeTranslation($token, $sourceString, $localeString, $meaning, $notes, $state)
     {
-        $translation = new TranslationImpl();
-        $translation->setToken($token)
-                    ->setSourceString($sourceString)
-                    ->setLocaleString($localeString)
-                    ->setMeaning($meaning)
-                    ->setNotes($notes)
-                    ->setState($state)
-        ;
+        return new TranslationImpl($token, $sourceString, $localeString, $meaning, $notes, $state);
 
-        return $translation;
     }
 }

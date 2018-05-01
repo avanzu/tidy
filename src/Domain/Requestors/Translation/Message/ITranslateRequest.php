@@ -7,14 +7,11 @@
  */
 namespace Tidy\Domain\Requestors\Translation\Message;
 
-interface ITranslateRequest
+interface ITranslateRequest extends IToken, ICatalogueIdentifier
 {
 
     public function localeString();
 
     public function state();
 
-    public function catalogueId();
-
-    public function token();
 }

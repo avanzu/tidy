@@ -21,6 +21,7 @@ use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueEnglishToGerman as Cat
 use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueImpl;
 use Tidy\Tests\Unit\Fixtures\Entities\TranslationTranslated;
 use Tidy\Tests\Unit\Fixtures\Entities\TranslationUntranslated;
+use Tidy\UseCases\Translation\Message\DTO\TranslateRequestBuilder;
 
 class TranslationCatalogueTest extends MockeryTestCase
 {
@@ -201,6 +202,40 @@ class TranslationCatalogueTest extends MockeryTestCase
         }
     }
 
+    /**
+     * @param $expected
+     * @param $currentState
+     * @param $newState
+     * @param $expectedState
+     * @dataProvider provideTranslations
+     */
+    public function test_translate($expected, $state, $expectedState)
+    {
+        $catalogue = new Catalogue();
+        $request = (new TranslateRequestBuilder())
+            ->withCatalogueId(Catalogue::ID)
+            ->withToken(TranslationUntranslated::MSG_ID)
+            ->translateAs($expected)
+            ->commitStateTo($state)
+            ->build()
+            ;
+
+        $catalogue->translate($request);
+        $this->assertEquals($expected, $catalogue->find(TranslationUntranslated::MSG_ID)->getLocaleString());
+        $this->assertEquals($expectedState, $catalogue->find(TranslationUntranslated::MSG_ID)->getState());
+    }
+
+
+    public function provideTranslations() {
+        return [
+            'translation only' => ['translation only', null, 'translated'],
+            'state only'       => ['', 'requires-translation', 'requires-translation'],
+            'trans & state'    => ['translation and state', 'new', 'new'],
+            'same translation' => [TranslationUntranslated::MSG_SOURCE, null, 'new']
+        ];
+    }
+
+
     public function provideSimpleSetupData()
     {
         return [
@@ -245,6 +280,7 @@ class TranslationCatalogueTest extends MockeryTestCase
                 'with faulty case' => ['DE', 'at', 'EN', 'gb', 'de-AT', 'en-GB'],
             ];
     }
+
 
 
 }

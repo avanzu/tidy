@@ -18,8 +18,7 @@ class TranslationTest extends MockeryTestCase
     public function test_isEqual()
     {
         $trans1 = new TranslationTranslated();
-        $trans2 = new TranslationImpl();
-        $trans2->setToken(TranslationTranslated::MSG_ID);
+        $trans2 = new TranslationImpl(TranslationTranslated::MSG_ID, '', '', '', '', '');
 
         assertThat($trans1->isEqualTo($trans2), is(true));
         assertThat($trans1->isEqualTo('123abc'), is(false));
@@ -29,13 +28,13 @@ class TranslationTest extends MockeryTestCase
 
     public function test___toString()
     {
-        $trans = new TranslationImpl();
-        $trans->setToken('_toString uses token');
+        $trans = new TranslationImpl('_toString uses token','', '', '', '', '');
         assertThat((string)$trans, is(equalTo('_toString uses token')));
 
-        $trans->setSourceString('_to string prefers source string');
+        $trans = new TranslationImpl('_toString uses token','_to string prefers source string', '', '', '', '');
         assertThat((string)$trans, is(equalTo('_to string prefers source string')));
-        $trans->setLocaleString('_to string really likes locale strings');
+
+        $trans = new TranslationImpl('_toString uses token','_to string prefers source string', '_to string really likes locale strings', '', '', '');
         assertThat((string)$trans, is(equalTo('_to string really likes locale strings')));
 
 

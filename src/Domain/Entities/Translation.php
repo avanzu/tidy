@@ -25,6 +25,27 @@ abstract class Translation
     protected $state;
 
     /**
+     * Translation constructor.
+     *
+     * @param $token
+     * @param $sourceString
+     * @param $localeString
+     * @param $meaning
+     * @param $notes
+     * @param $state
+     */
+    public function __construct($token, $sourceString, $localeString, $meaning, $notes, $state)
+    {
+        $this->token        = $token;
+        $this->sourceString = $sourceString;
+        $this->localeString = $localeString;
+        $this->meaning      = $meaning;
+        $this->notes        = $notes;
+        $this->state        = $state;
+    }
+
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -41,18 +62,6 @@ abstract class Translation
     }
 
     /**
-     * @param mixed $sourceString
-     *
-     * @return $this
-     */
-    public function setSourceString($sourceString)
-    {
-        $this->sourceString = $sourceString;
-
-        return $this;
-    }
-
-    /**
      * @return mixed
      */
     public function getLocaleString()
@@ -60,17 +69,6 @@ abstract class Translation
         return $this->localeString;
     }
 
-    /**
-     * @param mixed $localeString
-     *
-     * @return $this
-     */
-    public function setLocaleString($localeString)
-    {
-        $this->localeString = $localeString;
-
-        return $this;
-    }
 
     /**
      * @return mixed
@@ -80,17 +78,7 @@ abstract class Translation
         return $this->meaning;
     }
 
-    /**
-     * @param mixed $meaning
-     *
-     * @return $this
-     */
-    public function setMeaning($meaning)
-    {
-        $this->meaning = $meaning;
 
-        return $this;
-    }
 
     /**
      * @return mixed
@@ -100,17 +88,6 @@ abstract class Translation
         return $this->notes;
     }
 
-    /**
-     * @param mixed $notes
-     *
-     * @return $this
-     */
-    public function setNotes($notes)
-    {
-        $this->notes = $notes;
-
-        return $this;
-    }
 
     /**
      * @return mixed
@@ -121,18 +98,6 @@ abstract class Translation
     }
 
     /**
-     * @param mixed $state
-     *
-     * @return $this
-     */
-    public function setState($state)
-    {
-        $this->state = $state;
-
-        return $this;
-    }
-
-    /**
      * @return mixed
      */
     public function getToken()
@@ -140,17 +105,6 @@ abstract class Translation
         return $this->token;
     }
 
-    /**
-     * @param mixed $token
-     *
-     * @return $this
-     */
-    public function setToken($token)
-    {
-        $this->token = $token;
-
-        return $this;
-    }
 
     public function isEqualTo($subject)
     {
