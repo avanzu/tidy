@@ -9,13 +9,12 @@ namespace Tidy\Domain\Entities;
 
 use Tidy\Components\AccessControl\IClaimant;
 use Tidy\Components\Exceptions\PreconditionFailed;
-use Tidy\Components\Normalisation\ITextNormaliser;
-use Tidy\Components\Security\Encoder\IPasswordEncoder;
 use Tidy\Components\Util\IStringUtilFactory;
 use Tidy\Components\Util\StringConverter;
 use Tidy\Components\Validation\ErrorList;
 use Tidy\Components\Validation\IPasswordStrengthValidator;
 use Tidy\Domain\Collections\Users;
+use Tidy\Domain\Requestors\User\IActivateRequest;
 use Tidy\Domain\Requestors\User\ICreateRequest;
 
 /**
@@ -95,7 +94,6 @@ abstract class User implements IClaimant
     }
 
 
-
     public function canonical()
     {
         return $this->canonical;
@@ -109,7 +107,6 @@ abstract class User implements IClaimant
     {
         return $this->eMail;
     }
-
 
 
     /**
@@ -138,18 +135,6 @@ abstract class User implements IClaimant
     public function isEnabled()
     {
         return $this->enabled;
-    }
-
-    /**
-     * @param bool $enabled
-     *
-     * @return $this
-     */
-    public function setEnabled($enabled)
-    {
-        $this->enabled = $enabled;
-
-        return $this;
     }
 
     /**
@@ -188,6 +173,14 @@ abstract class User implements IClaimant
     }
 
 
+    /**
+     * Attempts to create a new User entity using the given request.
+     *
+     * @param ICreateRequest     $request
+     * @param IStringUtilFactory $factory
+     * @param Users              $users
+     * @see User::verifyRegister()
+     */
     public function register(
         ICreateRequest $request,
         IStringUtilFactory $factory,
@@ -209,6 +202,49 @@ abstract class User implements IClaimant
 
     }
 
+    /**
+     * Attempts to activate this user and removes the token on success.
+     *
+     * @param IActivateRequest $request
+     * @see User::verifyActivate()
+     */
+    public function activate(IActivateRequest $request)
+    {
+
+        $this->verifyActivate($request);
+
+        $this->enabled = true;
+        $this->token   = null;
+    }
+
+    /**
+     * @param IActivateRequest $request
+     */
+    public function verifyActivate(IActivateRequest $request): void
+    {
+        $errors = new ErrorList();
+        $errors = $this->verifyToken($request, $errors);
+        $this->failOnErrors($errors);
+    }
+
+    /**
+     * @param ICreateRequest     $request
+     * @param IStringUtilFactory $factory
+     * @param Users              $users
+     */
+    public function verifyRegister(ICreateRequest $request, IStringUtilFactory $factory, Users $users)
+    {
+        $errors = new ErrorList();
+        $errors = $this->verifyUserName($request, $errors);
+        $errors = $this->verifyEMailAddress($request, $factory, $errors);
+        $errors = $this->verifyPlainPassword($request, $factory, $errors);
+        $this->failOnErrors($errors);
+
+        $errors = $this->verifyUniqueUserName($request, $users, $errors);
+        $this->failOnErrors($errors);
+
+    }
+
     abstract protected function makeProfile($firstName, $lastName);
 
     /**
@@ -220,11 +256,13 @@ abstract class User implements IClaimant
     {
         if ($request->isAccessGranted()) {
             $this->enabled = true;
+
             return $this;
         }
 
         $this->token   = uniqid();
         $this->enabled = false;
+
         return $this;
     }
 
@@ -265,24 +303,6 @@ abstract class User implements IClaimant
     /**
      * @param ICreateRequest     $request
      * @param IStringUtilFactory $factory
-     * @param Users              $users
-     */
-    protected function verifyRegister(ICreateRequest $request, IStringUtilFactory $factory, Users $users)
-    {
-        $errors = new ErrorList();
-        $errors = $this->verifyUserName($request, $errors);
-        $errors = $this->verifyEMailAddress($request, $factory, $errors);
-        $errors = $this->verifyPlainPassword($request, $factory, $errors);
-        $this->failOnErrors($errors);
-
-        $errors = $this->verifyUniqueUserName($request, $users, $errors);
-        $this->failOnErrors($errors);
-
-    }
-
-    /**
-     * @param ICreateRequest $request
-     * @param IStringUtilFactory $factory
      * @param                    $errors
      *
      * @return mixed
@@ -316,9 +336,27 @@ abstract class User implements IClaimant
         return $errors;
     }
 
-    private function failOnErrors(ErrorList $errors) {
-        if( $errors->count() > 0) {
+    /**
+     * @param IActivateRequest $request
+     * @param                  $errors
+     *
+     * @return mixed
+     */
+    protected function verifyToken(IActivateRequest $request, $errors)
+    {
+        if ($request->token() !== $this->token) {
+            $errors['token'] = sprintf('Token "%s" does not match expected "%s".', $request->token(), $this->token);
+        }
+
+        return $errors;
+    }
+
+    private function failOnErrors(ErrorList $errors)
+    {
+        if ($errors->count() > 0) {
             throw new PreconditionFailed($errors->getArrayCopy());
         }
     }
+
+
 }

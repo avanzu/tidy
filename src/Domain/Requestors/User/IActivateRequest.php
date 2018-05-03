@@ -7,7 +7,6 @@
 
 namespace Tidy\Domain\Requestors\User;
 
-interface IActivateRequest
+interface IActivateRequest extends IToken
 {
-    public function token();
 }

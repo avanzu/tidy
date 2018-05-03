@@ -45,7 +45,8 @@ class Activate
             throw new NotFound(sprintf('Unable to find user by token "%s".', $request->token()));
         }
 
-        $user->setEnabled(true)->clearToken();
+        $user->activate($request);
+
         $this->userGateway->save($user);
 
         return $this->transformer()->transform($user);

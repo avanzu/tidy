@@ -8,11 +8,13 @@ namespace Tidy\Tests\Unit\UseCases\User;
 
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
+use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Responders\User\IResponse;
 use Tidy\Domain\Responders\User\IResponseTransformer;
 use Tidy\Tests\MockeryTestCase;
+use Tidy\Tests\Unit\Fixtures\Entities\TimmyUser;
 use Tidy\Tests\Unit\Fixtures\Entities\UserStub1;
 use Tidy\UseCases\User\Activate;
 use Tidy\UseCases\User\DTO\ActivateRequestBuilder;
@@ -72,7 +74,21 @@ class ActivateTest extends MockeryTestCase
 
         $this->expectException(NotFound::class);
         $this->useCase->execute((new ActivateRequestBuilder())->withToken($token)->build());
+    }
 
+    public function test_activate_with_token_mismatch()
+    {
+        $token = uniqid();
+        $user = new TimmyUser();
+        $user->assignToken(uniqid());
+        $this->expectFindReturning($token, $user);
+
+        try {
+            $this->useCase->execute((new ActivateRequestBuilder())->withToken($token)->build());
+            $this->fail('Failed to fail.');
+        } catch(PreconditionFailed $exception) {
+            $this->assertStringMatchesFormat('Token "%s" does not match expected "%s".', $exception->atIndex('token'));
+        }
     }
 
 
