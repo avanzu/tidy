@@ -7,20 +7,21 @@
 namespace Tidy\Tests\Unit\UseCases\User;
 
 use Mockery\MockInterface;
-use Tidy\Components\Exceptions\PersistenceFailed;
 use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Components\Normalisation\ITextNormaliser;
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
 use Tidy\Components\Util\IStringUtilFactory;
 use Tidy\Components\Util\StringUtilFactory;
+use Tidy\Components\Validation\IPasswordStrengthValidator;
 use Tidy\Components\Validation\Validators\EMailValidator;
+use Tidy\Components\Validation\Validators\PasswordStrengthValidator;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Entities\UserProfile;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\ICreateRequest;
 use Tidy\Tests\MockeryTestCase;
+use Tidy\Tests\Unit\Fixtures\Entities\TimmyUser;
 use Tidy\Tests\Unit\Fixtures\Entities\UserImpl;
-use Tidy\Tests\Unit\Fixtures\Entities\UserProfileImpl;
 use Tidy\UseCases\User\Create;
 use Tidy\UseCases\User\DTO\CreateRequestBuilder;
 use Tidy\UseCases\User\DTO\ResponseDTO;
@@ -29,7 +30,7 @@ use Tidy\UseCases\User\DTO\ResponseTransformer;
 class CreateTest extends MockeryTestCase
 {
     const TIMMY           = self::TIMMY_FIRSTNAME;
-    const PLAIN_PASS      = '123999';
+    const PLAIN_PASS      = '$aAbB12!#';
     const TIMMY_MAIL      = 'timmy@example.com';
     const TIMMY_FIRSTNAME = 'Timmy';
     const TIMMY_LASTNAME  = 'Tungsten';
@@ -75,10 +76,7 @@ class CreateTest extends MockeryTestCase
         $firstName     = self::TIMMY_FIRSTNAME;
         $lastName      = self::TIMMY_LASTNAME;
 
-        $this->expectGatewaySaveCall($username);
-        $this->expectPasswordEncoderCallUsingFactory($plainPassword);
-        $this->expectNormaliserCallUsingFactory($username);
-        $this->expectEMailValidationUsingFactory();
+        $this->expectRequestVerification($username, $plainPassword);
 
         $request = $this->makeRequestDTO($username, $plainPassword, $eMail, $firstName, $lastName);
 
@@ -98,18 +96,15 @@ class CreateTest extends MockeryTestCase
 
     public function test_CreateUserRequest_deniesImmediateAccess_by_default()
     {
-        $username  = self::TIMMY;
-        $plainPass = self::PLAIN_PASS;
-        $eMail     = self::TIMMY_MAIL;
-        $firstName = self::TIMMY_FIRSTNAME;
-        $lastName  = self::TIMMY_LASTNAME;
+        $username      = self::TIMMY;
+        $plainPassword = self::PLAIN_PASS;
+        $eMail         = self::TIMMY_MAIL;
+        $firstName     = self::TIMMY_FIRSTNAME;
+        $lastName      = self::TIMMY_LASTNAME;
 
-        $this->expectGatewaySaveCall($username);
-        $this->expectPasswordEncoderCallUsingFactory($plainPass);
-        $this->expectNormaliserCallUsingFactory($username);
-        $this->expectEMailValidationUsingFactory();
+        $this->expectRequestVerification($username, $plainPassword);
 
-        $request = $this->makeRequestDTO($username, $plainPass, $eMail, $firstName, $lastName);
+        $request = $this->makeRequestDTO($username, $plainPassword, $eMail, $firstName, $lastName);
         /** @var ResponseDTO $result */
         $result = $this->useCase->execute($request);
 
@@ -121,18 +116,15 @@ class CreateTest extends MockeryTestCase
 
     public function test_CreateUserRequest_grantsImmediateAccess()
     {
-        $username  = self::TIMMY;
-        $plainPass = self::PLAIN_PASS;
-        $eMail     = self::TIMMY_MAIL;
-        $firstName = self::TIMMY_FIRSTNAME;
-        $lastName  = self::TIMMY_LASTNAME;
+        $username      = self::TIMMY;
+        $plainPassword = self::PLAIN_PASS;
+        $eMail         = self::TIMMY_MAIL;
+        $firstName     = self::TIMMY_FIRSTNAME;
+        $lastName      = self::TIMMY_LASTNAME;
 
-        $this->expectGatewaySaveCall($username);
-        $this->expectPasswordEncoderCallUsingFactory($plainPass);
-        $this->expectNormaliserCallUsingFactory($username);
-        $this->expectEMailValidationUsingFactory();
+        $this->expectRequestVerification($username, $plainPassword);
 
-        $request = $this->makeRequestDTOWithImmediateAccess($username, $plainPass, $eMail, $firstName, $lastName);
+        $request = $this->makeRequestDTOWithImmediateAccess($username, $plainPassword, $eMail, $firstName, $lastName);
 
         $result = $this->useCase->execute($request);
 
@@ -144,6 +136,8 @@ class CreateTest extends MockeryTestCase
     public function test_create_verifies()
     {
         $this->expectEMailValidationUsingFactory();
+        $this->expectPasswordStrengthCheck();
+
         $dto = $this->makeRequestDTO('a', '', '123abc', '', '');
         try {
             $this->useCase->execute($dto);
@@ -153,24 +147,34 @@ class CreateTest extends MockeryTestCase
                 'Username "%s" is not allowed. Must be at least 3 characters long.',
                 $exception->atIndex('username')
             );
-            $this->assertStringMatchesFormat('EMail address "%s" is not valid.',
+            $this->assertStringMatchesFormat(
+                'EMail address "%s" is not valid.',
                 $exception->atIndex('email')
+            );
+            $this->assertStringStartsWith(
+                "Password is too weak. Please make sure to meet the following requirements:\n",
+                $exception->atIndex('plainPassword')
             );
         }
 
     }
 
-    public function test_CreateUserRequest_persistenceFailure_throwsPersistenceFailed()
+    public function test_create_verifies_unique_username()
     {
-        $this->markTestSkipped('requires refactoring.');
-        $this->expectNormaliserCallUsingFactory('');
-        $this->expectPasswordEncoderCallUsingFactory('');
+        $this->expectEMailValidationUsingFactory();
+        $this->expectPasswordStrengthCheck();
+        $this->expectUserNameLookUp(new TimmyUser());
 
-        $this->gateway->expects('save')->andThrows(new PersistenceFailed());
+        $dto = $this->makeRequestDTO(TimmyUser::USERNAME, self::PLAIN_PASS, self::TIMMY_MAIL, '', '');
+        try {
+            $this->useCase->execute($dto);
+            $this->fail('Failed to fail.');
+        } catch (PreconditionFailed $exception) {
+            $this->assertStringMatchesFormat('Username "%s" is already taken.', $exception->atIndex('username'));
+        }
 
-        $this->expectException(PersistenceFailed::class);
-        $this->useCase->execute($this->makeRequestDTO('abc', '', '', '', ''));
     }
+
 
     protected function setUp()
     {
@@ -181,11 +185,41 @@ class CreateTest extends MockeryTestCase
         $this->useCase    = new Create($this->gateway, $this->factory);
 
         $this->gateway->allows('makeUser')->andReturn(new UserImpl());
-        $this->gateway->allows('makeProfile')->andReturn(new UserProfileImpl());
 
         $this->useCase->setUserGateway($this->gateway);
         $this->useCase->setTransformer(new ResponseTransformer());
 
+    }
+
+    protected function expectPasswordStrengthCheck(
+        $passwordStrengthValidator = null,
+        $passwordStrength = IPasswordStrengthValidator::STRENGTH_STRONG
+    ) {
+        $passwordStrengthValidator = $passwordStrengthValidator ?: new PasswordStrengthValidator($passwordStrength);
+        $this->factory
+            ->expects('createPasswordStrengthValidator')
+            ->with($passwordStrength)
+            ->andReturn($passwordStrengthValidator)
+        ;
+    }
+
+    protected function expectUserNameLookUp($returnValue)
+    {
+        $this->gateway->expects('findByUserName')->andReturn($returnValue);
+    }
+
+    /**
+     * @param $username
+     * @param $plainPassword
+     */
+    protected function expectRequestVerification($username, $plainPassword): void
+    {
+        $this->expectGatewaySaveCall($username);
+        $this->expectPasswordEncoderCallUsingFactory($plainPassword);
+        $this->expectNormaliserCallUsingFactory($username);
+        $this->expectEMailValidationUsingFactory();
+        $this->expectPasswordStrengthCheck();
+        $this->expectUserNameLookUp(null);
     }
 
     /**

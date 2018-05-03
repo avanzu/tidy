@@ -44,6 +44,11 @@ class StringUtilFactory implements IStringUtilFactory
         return new TextNormaliser();
     }
 
+    /**
+     * @param int $strength
+     *
+     * @return IPasswordStrengthValidator|PasswordStrengthValidator
+     */
     public function createPasswordStrengthValidator($strength = IPasswordStrengthValidator::STRENGTH_MODERATE)
     {
         return new PasswordStrengthValidator($strength);

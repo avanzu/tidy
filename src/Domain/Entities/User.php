@@ -14,6 +14,7 @@ use Tidy\Components\Security\Encoder\IPasswordEncoder;
 use Tidy\Components\Util\IStringUtilFactory;
 use Tidy\Components\Util\StringConverter;
 use Tidy\Components\Validation\ErrorList;
+use Tidy\Components\Validation\IPasswordStrengthValidator;
 use Tidy\Domain\Collections\Users;
 use Tidy\Domain\Requestors\User\ICreateRequest;
 
@@ -264,16 +265,55 @@ abstract class User implements IClaimant
     /**
      * @param ICreateRequest     $request
      * @param IStringUtilFactory $factory
+     * @param Users              $users
      */
     protected function verifyRegister(ICreateRequest $request, IStringUtilFactory $factory, Users $users)
     {
         $errors = new ErrorList();
         $errors = $this->verifyUserName($request, $errors);
         $errors = $this->verifyEMailAddress($request, $factory, $errors);
-
-
-
+        $errors = $this->verifyPlainPassword($request, $factory, $errors);
         $this->failOnErrors($errors);
+
+        $errors = $this->verifyUniqueUserName($request, $users, $errors);
+        $this->failOnErrors($errors);
+
+    }
+
+    /**
+     * @param ICreateRequest $request
+     * @param IStringUtilFactory $factory
+     * @param                    $errors
+     *
+     * @return mixed
+     */
+    protected function verifyPlainPassword(ICreateRequest $request, IStringUtilFactory $factory, $errors)
+    {
+        $validator = $factory->createPasswordStrengthValidator(IPasswordStrengthValidator::STRENGTH_STRONG);
+        if (false === $validator->validate($request->plainPassword())) {
+            $errors['plainPassword'] = sprintf(
+                "Password is too weak. Please make sure to meet the following requirements:\n%s",
+                $validator->violations()->list()
+            );
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param ICreateRequest $request
+     * @param Users          $users
+     * @param                $errors
+     *
+     * @return mixed
+     */
+    protected function verifyUniqueUserName(ICreateRequest $request, Users $users, $errors)
+    {
+        if ($user = $users->findByUserName($request->getUserName())) {
+            $errors['username'] = sprintf('Username "%s" is already taken.', $request->getUserName());
+        }
+
+        return $errors;
     }
 
     private function failOnErrors(ErrorList $errors) {

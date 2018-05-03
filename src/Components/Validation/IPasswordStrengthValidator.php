@@ -15,6 +15,8 @@ interface IPasswordStrengthValidator extends IValidator
     public const STRENGTH_PARANOID = 3;
     public const STRENGTH_MODERATE = 1;
 
-    /**  */
+    /**
+     * @return ErrorList
+     */
     public function violations();
 }
