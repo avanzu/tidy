@@ -7,7 +7,7 @@
 
 namespace Tidy\Domain\Requestors\User;
 
-interface ICreateRequest
+interface ICreateRequest extends IPlainPassword
 {
 
 
@@ -16,9 +16,6 @@ interface ICreateRequest
 
 
     public function eMail();
-
-    public function plainPassword();
-
 
     public function isAccessGranted();
 

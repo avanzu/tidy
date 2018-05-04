@@ -7,10 +7,6 @@
 
 namespace Tidy\Domain\Requestors\User;
 
-interface IResetPasswordRequest
+interface IResetPasswordRequest extends IPlainPassword, IToken
 {
-
-    public function token();
-
-    public function plainPassword();
 }

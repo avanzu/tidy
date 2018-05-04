@@ -9,7 +9,11 @@ namespace Tidy\Tests\Unit\UseCases\User;
 
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
+use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Components\Security\Encoder\IPasswordEncoder;
+use Tidy\Components\Util\IStringUtilFactory;
+use Tidy\Components\Validation\IPasswordStrengthValidator;
+use Tidy\Components\Validation\Validators\PasswordStrengthValidator;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Responders\User\IResponse;
@@ -23,7 +27,7 @@ class ResetPasswordTest extends MockeryTestCase
 {
 
     const RESET_TOKEN   = 'reset-token';
-    const PLAIN_PASS    = '123123';
+    const PLAIN_PASS    = '/bb|[^B]{2}/';
     const INVALID_TOKEN = 'invalid-token';
 
     /**
@@ -40,10 +44,14 @@ class ResetPasswordTest extends MockeryTestCase
      * @var IPasswordEncoder|MockInterface
      */
     protected $encoder;
+    /**
+     * @var IStringUtilFactory|MockInterface
+     */
+    protected $factory;
 
     public function test_instantiation()
     {
-        $useCase = new ResetPassword($this->encoder, $this->gateway, mock(IResponseTransformer::class));
+        $useCase = new ResetPassword(mock(IStringUtilFactory::class), $this->gateway, mock(IResponseTransformer::class));
         $this->assertInstanceOf(ResetPassword::class, $useCase);
     }
 
@@ -56,7 +64,10 @@ class ResetPasswordTest extends MockeryTestCase
             ->withPlainPassword(self::PLAIN_PASS)
             ->build();
 
-        $this->expectFindByToken(self::RESET_TOKEN, new UserStub2());
+        $this->expectFindByToken(self::RESET_TOKEN, new UserStub2(self::RESET_TOKEN));
+
+        $this->expectPasswordStrengthCheck();
+        $this->expectEncoderFactoryCall();
         $this->expectEncode($hash);
         $this->expectSaveWithEncodedPassword($hash);
 
@@ -68,6 +79,40 @@ class ResetPasswordTest extends MockeryTestCase
         $this->assertEmpty($result->getToken(), 'Token should be cleared.');
     }
 
+    public function test_reset_verifies_password_strength() {
+
+        $request = (new ResetPasswordRequestBuilder())
+            ->withToken(self::RESET_TOKEN)
+            ->withPlainPassword("123")
+            ->build();
+
+        $this->expectFindByToken(self::RESET_TOKEN, new UserStub2(self::RESET_TOKEN));
+        $this->expectPasswordStrengthCheck();
+
+        try {
+            $this->useCase->execute($request);
+            $this->fail('Failed to fail.');
+        } catch(PreconditionFailed $exception){
+            $this->assertStringStartsWith('Password is too weak', $exception->atIndex('plainPassword'));
+        }
+    }
+
+    public function test_reset_verifies_token() {
+        $request = (new ResetPasswordRequestBuilder())
+            ->withToken(self::RESET_TOKEN)
+            ->withPlainPassword("123")
+            ->build();
+
+        $this->expectFindByToken(self::RESET_TOKEN, new UserStub2(self::INVALID_TOKEN));
+        $this->expectPasswordStrengthCheck();
+
+        try {
+            $this->useCase->execute($request);
+            $this->fail('Failed to fail.');
+        } catch(PreconditionFailed $exception){
+            $this->assertStringMatchesFormat('Token "%s" does not match expected "%s".', $exception->atIndex('token'));
+        }
+    }
 
     public function test_reset_failure()
     {
@@ -88,8 +133,25 @@ class ResetPasswordTest extends MockeryTestCase
     {
         $this->gateway = mock(IUserGateway::class);
         $this->encoder = mock(IPasswordEncoder::class);
-        $this->useCase = new ResetPassword($this->encoder, $this->gateway);
+        $this->factory = mock(IStringUtilFactory::class);
+        $this->useCase = new ResetPassword($this->factory, $this->gateway);
 
+    }
+
+    protected function expectPasswordStrengthCheck(
+        $passwordStrengthValidator = null,
+        $passwordStrength = IPasswordStrengthValidator::STRENGTH_STRONG
+    ) {
+        $passwordStrengthValidator = $passwordStrengthValidator ?: new PasswordStrengthValidator($passwordStrength);
+        $this->factory
+            ->expects('createPasswordStrengthValidator')
+            ->with($passwordStrength)
+            ->andReturn($passwordStrengthValidator)
+        ;
+    }
+
+    protected function expectEncoderFactoryCall() {
+        $this->factory->allows('createEncoder')->andReturn($this->encoder);
     }
 
     private function expectFindByToken($str, $returnValue)

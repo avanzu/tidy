@@ -39,7 +39,8 @@ class Recover
             throw new NotFound(sprintf('Unable to find user by username "%s".', $request->userName()));
         }
 
-        $user->assignToken(uniqid());
+        $user->recover($request);
+
         $this->userGateway->save($user);
 
         return $this->transformer()->transform($user);
