@@ -8,6 +8,9 @@
 
 namespace Tidy\Domain\Entities;
 
+/**
+ * Class TranslationDomain represents the fully qualified translation domain
+ */
 class TranslationDomain
 {
     /**

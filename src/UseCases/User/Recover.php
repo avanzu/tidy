@@ -11,7 +11,6 @@ use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\IRecoverRequest;
 use Tidy\Domain\Responders\User\IResponseTransformer;
-use Tidy\Domain\Responders\User\ItemResponder;
 use Tidy\UseCases\User\Traits\TItemResponder;
 
 class Recover
