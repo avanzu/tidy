@@ -19,6 +19,7 @@ class TranslationResponseTransformer implements ITranslationResponseTransformer
 
         $response               = new TranslationResponseDTO();
         $response->id           = $translation->getId();
+        $response->token        = $translation->getToken();
         $response->sourceString = $translation->getSourceString();
         $response->localeString = $translation->getLocaleString();
         $response->meaning      = $translation->getMeaning();

@@ -32,4 +32,9 @@ interface ITranslationResponse
      * @return mixed
      */
     public function getLocaleString();
+
+    /**
+     * @return mixed
+     */
+    public function getToken();
 }

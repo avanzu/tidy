@@ -20,6 +20,7 @@ use Tidy\Domain\Requestors\Translation\Message\ICatalogueIdentifier;
 use Tidy\Domain\Requestors\Translation\Message\IRemoveTranslationRequest;
 use Tidy\Domain\Requestors\Translation\Message\IToken;
 use Tidy\Domain\Requestors\Translation\Message\ITranslateRequest;
+use Tidy\UseCases\Translation\Message\DTO\DescribeRequestDTO;
 
 /**
  * Class TranslationCatalogue
@@ -71,6 +72,10 @@ abstract class TranslationCatalogue
      */
     protected $project;
 
+    public function __toString()
+    {
+        return (string)$this->name;
+    }
 
     /**
      * @return Project
@@ -175,26 +180,23 @@ abstract class TranslationCatalogue
     {
         $this->verifyAppend($request);
 
-        $translation = $this->makeTranslation(
-            $request->token(),
-            $request->sourceString(),
-            $request->localeString(),
-            $request->meaning(),
-            $request->notes(),
-            $request->state()
+        return $this->deposit(
+            $this->makeTranslation(
+                $request->token(),
+                $request->sourceString(),
+                $request->localeString(),
+                $request->meaning(),
+                $request->notes(),
+                $request->state()
+            )
         );
-
-        $this->translations()->offsetSet($translation->getToken(), $translation);
 
     }
 
     public function removeTranslation(IRemoveTranslationRequest $request)
     {
-        $errors = new ErrorList();
-        $errors = $this->verifyCatalogueId($request, $errors);
-        $match  = $this->verifyTokenExists($request, $errors);
-
-        $this->failOnErrors($errors);
+        $this->verifyCatalogueId($request);
+        $match  = $this->verifyTokenExists($request);
 
         $this->translations()->offsetUnset($request->token());
 
@@ -267,7 +269,6 @@ abstract class TranslationCatalogue
 
     public function setUp(ICreateCatalogueRequest $request, TranslationCatalogues $catalogues)
     {
-
         $this->verifySetup($request, $catalogues);
 
         $this->name           = $request->name();
@@ -278,32 +279,42 @@ abstract class TranslationCatalogue
         $this->targetCulture  = $request->targetCulture();
     }
 
-    public function __toString()
-    {
-        return (string)$this->name;
-    }
 
     public function translate(ITranslateRequest $request)
     {
-        $errors = new ErrorList();
-        $errors = $this->verifyCatalogueId($request, $errors);
-        $match  = $this->verifyTokenExists($request, $errors);
+        $match = $this
+            ->verifyCatalogueId($request)
+            ->verifyTokenExists($request)
+        ;
 
-        $this->failOnErrors($errors);
-
-
-        $translation = $this->makeTranslation(
-            $request->token(),
-            $match->getSourceString(),
-            $request->localeString(),
-            $match->getMeaning(),
-            $match->getNotes(),
-            $this->identifyState($request, $match)
+        return $this->deposit(
+            $this->makeTranslation(
+                $request->token(),
+                $match->getSourceString(),
+                $request->localeString(),
+                $match->getMeaning(),
+                $match->getNotes(),
+                $this->identifyState($request, $match)
+            )
         );
+    }
 
-        $this->translations()->offsetSet($request->token(), $translation);
+    public function describe(DescribeRequestDTO $request)
+    {
+        $match = $this
+            ->verifyCatalogueId($request)
+             ->verifyTokenExists($request);
 
-        return $translation;
+        return $this->deposit(
+            $this->makeTranslation(
+                $request->token(),
+                $request->sourceString(),
+                $match->getLocaleString(),
+                $request->meaning(),
+                $request->notes(),
+                $match->getState()
+            )
+        );
 
     }
 
@@ -531,13 +542,13 @@ abstract class TranslationCatalogue
     }
 
     /**
-     * @param ICatalogueIdentifier        $request
-     * @param                             $errors
+     * @param ICatalogueIdentifier $request
      *
-     * @return ErrorList
+     * @return TranslationCatalogue
      */
-    protected function verifyCatalogueId(ICatalogueIdentifier $request, ErrorList $errors)
+    protected function verifyCatalogueId(ICatalogueIdentifier $request)
     {
+        $errors = new ErrorList();
         if ($request->catalogueId() !== $this->id) {
             $errors['catalogue'] = sprintf(
                 'Wrong catalogue. Request addresses catalogue #%d. This is catalogue #%d.',
@@ -546,17 +557,18 @@ abstract class TranslationCatalogue
             );
         }
 
-        return $errors;
+        $this->failOnErrors($errors);
+        return $this;
     }
 
     /**
-     * @param IToken                      $request
-     * @param                             $errors
+     * @param IToken $request
      *
      * @return Translation|null
      */
-    protected function verifyTokenExists(IToken $request, ErrorList $errors)
+    protected function verifyTokenExists(IToken $request)
     {
+        $errors = new ErrorList();
         if (!$match = $this->translations()->atIndex($request->token())) {
             $errors['token'] = sprintf(
                 'Unable to find translation identified by "%s" in catalogue "%s".',
@@ -564,6 +576,8 @@ abstract class TranslationCatalogue
                 $this->getName()
             );
         }
+
+        $this->failOnErrors($errors);
 
         return $match;
 
@@ -588,5 +602,17 @@ abstract class TranslationCatalogue
 
         return $match->getState();
 
+    }
+
+    /**
+     * @param Translation $translation
+     *
+     * @return Translation
+     */
+    private function deposit($translation)
+    {
+        $this->translations()->offsetSet($translation->getToken(), $translation);
+
+        return $translation;
     }
 }

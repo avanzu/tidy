@@ -11,7 +11,6 @@ namespace Tidy\Tests\Unit\UseCases\Translation\Message;
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Exceptions\PreconditionFailed;
-use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Message\ITranslateRequest;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
@@ -53,7 +52,7 @@ class TranslateTest extends MockeryTestCase
             ->build()
         ;
 
-        $catalogue   = mock(TranslationCatalogueEnglishToGerman::class);
+        $catalogue = mock(TranslationCatalogueEnglishToGerman::class);
         $translation = new TranslationUntranslated();
 
         $this->expect_findCatalogue_on_gateway($catalogue);
@@ -94,14 +93,17 @@ class TranslateTest extends MockeryTestCase
         try {
 
             $this->useCase->execute(
-                (new TranslateRequestBuilder())->withCatalogueId(1234876543)->withToken('token.unknown')->build()
+                (new TranslateRequestBuilder())
+                    ->withCatalogueId(TranslationCatalogueEnglishToGerman::ID)
+                    ->withToken('token.unknown')
+                    ->build()
             );
 
             $this->fail('failed to fail.');
         } catch (PreconditionFailed $exception) {
             $this->assertStringMatchesFormat(
                 'Unable to find translation identified by "%s" in catalogue "%s".',
-                $exception->getErrors()->atIndex('token')
+                $exception->atIndex('token')
             );
         }
 
@@ -135,9 +137,16 @@ class TranslateTest extends MockeryTestCase
     {
         $catalogue->expects('translate')
                   ->with(anInstanceOf(ITranslateRequest::class))
-                  ->andReturnUsing(function(ITranslateRequest $request)  {
-                      return new TranslationUntranslated(TranslationUntranslated::MSG_SOURCE, $request->localeString(), $request->state());
-                  });
+                  ->andReturnUsing(
+                      function (ITranslateRequest $request) {
+                          return new TranslationUntranslated(
+                              TranslationUntranslated::MSG_SOURCE,
+                              $request->localeString(),
+                              $request->state()
+                          );
+                      }
+                  )
+        ;
     }
 
     /**

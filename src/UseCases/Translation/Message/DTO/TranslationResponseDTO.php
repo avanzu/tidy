@@ -13,17 +13,19 @@ use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 class TranslationResponseDTO implements ITranslationResponse
 {
 
-    public $id;
+    public    $id;
 
-    public $sourceString;
+    public    $sourceString;
 
-    public $localeString;
+    public    $localeString;
 
-    public $meaning;
+    public    $meaning;
 
-    public $notes;
+    public    $notes;
 
-    public $state;
+    public    $state;
+
+    public $token;
 
     public function getId()
     {
@@ -67,5 +69,12 @@ class TranslationResponseDTO implements ITranslationResponse
         return $this->state;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
 
 }
