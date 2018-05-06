@@ -16,7 +16,10 @@
     "autoload": {
         "psr-4": {
             "Tidy\\" : "src/"
-        }
+        },
+        "files" : [
+            "src/Components/Util/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4" : {

@@ -61,6 +61,24 @@ class DescribeTest extends MockeryTestCase
         $this->assertEquals('The source', $result->getSourceString());
     }
 
+    public function testExecuteUsesCoalesceForOptionalValues()
+    {
+        $request = (new DescribeRequestBuilder())
+            ->withCatalogueId(Catalogue::ID)
+            ->withToken(TranslationUntranslated::MSG_ID)
+            ->describeAs('The source')
+            ->build()
+        ;
+
+        $catalogue = new Catalogue();
+        $this->expectfindCatalogueOnGateway($catalogue, Catalogue::ID);
+        $this->expectSaveOnGateway($catalogue);
+
+        $result = $this->useCase->execute($request);
+        $this->assertEquals(TranslationUntranslated::MSG_MEANING, $result->getMeaning());
+        $this->assertEquals(TranslationUntranslated::MSG_NOTES, $result->getNotes());
+
+    }
 
     public function testExecuteThrowsNotFound()
     {

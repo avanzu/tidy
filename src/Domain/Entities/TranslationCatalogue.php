@@ -308,10 +308,10 @@ abstract class TranslationCatalogue
         return $this->deposit(
             $this->makeTranslation(
                 $request->token(),
-                $request->sourceString(),
+                coalesce($request->sourceString(), $match->getSourceString()),
                 $match->getLocaleString(),
-                $request->meaning(),
-                $request->notes(),
+                coalesce($request->meaning(), $match->getMeaning()),
+                coalesce($request->notes(), $match->getNotes()),
                 $match->getState()
             )
         );
