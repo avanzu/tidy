@@ -8,11 +8,15 @@
 namespace Tidy\Domain\Entities;
 
 use Tidy\Components\AccessControl\IClaimant;
+use Tidy\Components\Events\IMessenger;
+use Tidy\Components\Events\TMessenger;
 use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Components\Util\IStringUtilFactory;
 use Tidy\Components\Validation\ErrorList;
 use Tidy\Components\Validation\IPasswordStrengthValidator;
 use Tidy\Domain\Collections\Users;
+use Tidy\Domain\Events\UserActivated;
+use Tidy\Domain\Events\UserRegistered;
 use Tidy\Domain\Requestors\User\IActivateRequest;
 use Tidy\Domain\Requestors\User\ICreateRequest;
 use Tidy\Domain\Requestors\User\IPlainPassword;
@@ -23,7 +27,9 @@ use Tidy\Domain\Requestors\User\IToken;
 /**
  * Class User
  */
-abstract class User implements IClaimant {
+abstract class User implements IClaimant, IMessenger {
+
+    use TMessenger;
 
     const PREFIX = 'users';
 
@@ -159,6 +165,7 @@ abstract class User implements IClaimant {
 
         $this->verifyRegister($request, $factory, $users);
 
+        $this->id        = uuid();
         $this->userName  = $request->getUserName();
         $this->eMail     = $request->eMail();
         $this->password  = $this->encodePlainPassword($factory, $request->plainPassword());
@@ -167,6 +174,8 @@ abstract class User implements IClaimant {
             $request->firstName(),
             $request->lastName()
         );
+
+        $this->queueEvent(new UserRegistered($this->id));
 
         $this->grantAccessOrAssignToken($request);
 
@@ -185,6 +194,8 @@ abstract class User implements IClaimant {
 
         $this->enabled = TRUE;
         $this->token   = NULL;
+
+        $this->queueEvent(new UserActivated($this->id));
     }
 
     public function recover(IRecoverRequest $request) {
@@ -248,7 +259,7 @@ abstract class User implements IClaimant {
     protected function grantAccessOrAssignToken(ICreateRequest $request) {
         if ($request->isAccessGranted()) {
             $this->enabled = TRUE;
-
+            $this->queueEvent(new UserActivated($this->id));
             return $this;
         }
 

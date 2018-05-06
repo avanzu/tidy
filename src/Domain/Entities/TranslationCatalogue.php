@@ -270,7 +270,7 @@ abstract class TranslationCatalogue
     public function setUp(ICreateCatalogueRequest $request, TranslationCatalogues $catalogues)
     {
         $this->verifySetup($request, $catalogues);
-
+        $this->id             = uuid();
         $this->name           = $request->name();
         $this->canonical      = $request->canonical();
         $this->sourceLanguage = $request->sourceLanguage();

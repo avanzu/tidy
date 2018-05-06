@@ -6,9 +6,9 @@
  *
  */
 
-namespace Tidy\Tests\Unit\Domain\Events;
+namespace Tidy\Tests\Unit\Components\Events;
 
-use Tidy\Domain\Events\Event;
+use Tidy\Components\Events\Event;
 
 class TestCaseExecuted extends Event
 {

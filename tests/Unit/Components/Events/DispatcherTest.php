@@ -6,17 +6,17 @@
  *
  */
 
-namespace Tidy\Tests\Unit\Domain\Events;
+namespace Tidy\Tests\Unit\Components\Events;
 
-use Tidy\Domain\Events\Messenger;
+use Tidy\Components\Events\Dispatcher;
 use Tidy\Tests\MockeryTestCase;
 
-class MessengerTest extends MockeryTestCase
+class DispatcherTest extends MockeryTestCase
 {
 
     public function test_instantiation()
     {
-        $messenger = new Messenger();
+        $messenger = new Dispatcher();
         assertThat($messenger, is(notNullValue()));
     }
 
@@ -25,7 +25,7 @@ class MessengerTest extends MockeryTestCase
         $handler1   = new \stdClass();
         $handler2   = new \stdClass();
 
-        $messenger  = new Messenger();
+        $messenger  = new Dispatcher();
         $eventName  = TestCaseExecuted::handledBy();
         $messenger->addHandler($eventName, $handler1);
         $messenger->addHandler($eventName, $handler2);
@@ -44,7 +44,7 @@ class MessengerTest extends MockeryTestCase
         $handler1   = new \stdClass();
         $handler2   = new \stdClass();
 
-        $messenger  = new Messenger();
+        $messenger  = new Dispatcher();
         $messenger->addHandler('onEventA', $handler1);
         $messenger->addHandler('onEventA', $handler2);
         $messenger->addHandler('onEventB', $handler2);
@@ -62,7 +62,7 @@ class MessengerTest extends MockeryTestCase
             }
         };
 
-        $messenger = new Messenger();
+        $messenger = new Dispatcher();
         $messenger->addHandler(TestCaseExecuted::handledBy(),$handler1);
         $event   = $messenger->broadcast(new TestCaseExecuted());
 

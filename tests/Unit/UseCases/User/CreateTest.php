@@ -77,6 +77,7 @@ class CreateTest extends MockeryTestCase
         $lastName      = self::TIMMY_LASTNAME;
 
         $this->expectRequestVerification($username, $plainPassword);
+        $this->expectGatewaySaveCall($username);
 
         $request = $this->makeRequestDTO($username, $plainPassword, $eMail, $firstName, $lastName);
 
@@ -91,7 +92,7 @@ class CreateTest extends MockeryTestCase
         $this->assertEquals($firstName, $result->getFirstName(), 'FirstName should be assigned.');
         $this->assertEquals($lastName, $result->getLastName(), 'LastName should be assigned.');
 
-        $this->assertEquals(999, $result->getId());
+        $this->assertIssUuid($result->getId());
     }
 
     public function test_CreateUserRequest_deniesImmediateAccess_by_default()
@@ -103,6 +104,7 @@ class CreateTest extends MockeryTestCase
         $lastName      = self::TIMMY_LASTNAME;
 
         $this->expectRequestVerification($username, $plainPassword);
+        $this->expectGatewaySaveCall($username);
 
         $request = $this->makeRequestDTO($username, $plainPassword, $eMail, $firstName, $lastName);
         /** @var ResponseDTO $result */
@@ -123,6 +125,7 @@ class CreateTest extends MockeryTestCase
         $lastName      = self::TIMMY_LASTNAME;
 
         $this->expectRequestVerification($username, $plainPassword);
+        $this->expectGatewaySaveCall($username);
 
         $request = $this->makeRequestDTOWithImmediateAccess($username, $plainPassword, $eMail, $firstName, $lastName);
 
@@ -214,7 +217,6 @@ class CreateTest extends MockeryTestCase
      */
     protected function expectRequestVerification($username, $plainPassword): void
     {
-        $this->expectGatewaySaveCall($username);
         $this->expectPasswordEncoderCallUsingFactory($plainPassword);
         $this->expectNormaliserCallUsingFactory($username);
         $this->expectEMailValidationUsingFactory();
@@ -240,11 +242,6 @@ class CreateTest extends MockeryTestCase
                         return $user->getUserName() === $username;
                     }
                 )
-            )
-            ->andReturnUsing(
-                function (User $user) {
-                    return identify($user, 999);
-                }
             )
         ;
     }

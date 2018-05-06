@@ -115,6 +115,7 @@ abstract class Project implements IClaimable
 
         $this->verifySetUp($request, $projects);
 
+        $this->id          = uuid();
         $this->name        = $request->name();
         $this->description = $request->description();
         $this->canonical   = $request->canonical();

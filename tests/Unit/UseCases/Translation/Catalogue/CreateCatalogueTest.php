@@ -67,7 +67,7 @@ class CreateCatalogueTest extends MockeryTestCase
 
         $response = $this->useCase->execute($request);
         assertThat($response, is(anInstanceOf(CatalogueResponseDTO::class)));
-        assertThat($response->getId(), is(equalTo(2342)));
+        $this->assertIssUuid($response->getId());
     }
 
     public function test_execute_precondition_check()
@@ -134,13 +134,6 @@ class CreateCatalogueTest extends MockeryTestCase
                 }
             )
         )
-                      ->andReturnUsing(
-                          function ($catalogue) {
-                              identify($catalogue, 2342);
-
-                              return $catalogue;
-                          }
-                      )
         ;
     }
 

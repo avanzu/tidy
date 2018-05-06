@@ -9,10 +9,10 @@ namespace Tidy\Tests\Unit\UseCases\Project;
 use Mockery\MockInterface;
 use Tidy\Components\AccessControl\AccessControlBroker;
 use Tidy\Components\AccessControl\IClaimable;
+use Tidy\Components\Events\Dispatcher;
 use Tidy\Components\Normalisation\ITextNormaliser;
 use Tidy\Domain\Entities\Project;
 use Tidy\Domain\Entities\User;
-use Tidy\Domain\Events\Messenger;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Responders\AccessControl\IOwnerExcerpt;
 use Tidy\Domain\Responders\Project\IResponseTransformer;
@@ -45,7 +45,7 @@ class CreateTest extends MockeryTestCase
     protected $normaliser;
 
     /**
-     * @var Messenger
+     * @var Dispatcher
      */
     protected $messenger;
 
@@ -107,7 +107,7 @@ class CreateTest extends MockeryTestCase
         $this->assertEquals($name, $response->getName());
         $this->assertEquals($description, $response->getDescription());
         $this->assertEquals($expectedCanonical, $response->getCanonical());
-        $this->assertEquals($id, $response->getId());
+        $this->assertIssUuid($response->getId());
         $this->assertInstanceOf(IOwnerExcerpt::class, $response->getOwner());
         $this->assertEquals($owner->getId(), $response->getOwner()->getIdentity());
         $this->assertEquals($owner->getUserName(), $response->getOwner()->getName());
@@ -149,7 +149,7 @@ class CreateTest extends MockeryTestCase
         $this->gateway    = mock(IProjectGateway::class);
         $this->normaliser = mock(ITextNormaliser::class);
         $this->broker     = mock(AccessControlBroker::class);
-        $this->messenger  = new Messenger();
+        $this->messenger  = new Dispatcher();
         $transformer      = new ResponseTransformer(new OwnerExcerptTransformer());
 
         $this->useCase->setProjectGateway($this->gateway);
@@ -188,16 +188,9 @@ class CreateTest extends MockeryTestCase
 
             return true;
         };
-
-        $identify = function (Project $project) use ($id) {
-            identify($project, $id);
-
-            return $project;
-        };
         $this->gateway
             ->expects('save')
             ->with(argumentThat($matchesAssertion))
-            ->andReturnUsing($identify)
         ;
     }
 

@@ -6,9 +6,9 @@
  *
  */
 
-namespace Tidy\Domain\Events;
+namespace Tidy\Components\Events;
 
-class Messenger
+class Dispatcher implements IDispatcher
 {
     protected $handlers = [];
 
@@ -52,7 +52,7 @@ class Messenger
     /**
      * @param $eventName
      *
-     * @return Messenger
+     * @return Dispatcher
      */
     protected function ensureKey($eventName)
     {

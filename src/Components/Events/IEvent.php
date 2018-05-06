@@ -6,7 +6,7 @@
  *
  */
 
-namespace Tidy\Domain\Events;
+namespace Tidy\Components\Events;
 
 interface IEvent
 {
