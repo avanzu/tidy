@@ -22,11 +22,11 @@ class DispatcherTest extends MockeryTestCase
 
     public function test_Subscribe_UnSubscribe()
     {
-        $handler1   = new \stdClass();
-        $handler2   = new \stdClass();
+        $handler1 = new \stdClass();
+        $handler2 = new \stdClass();
 
-        $messenger  = new Dispatcher();
-        $eventName  = TestCaseExecuted::handledBy();
+        $messenger = new Dispatcher();
+        $eventName = TestCaseExecuted::handledBy();
         $messenger->addHandler($eventName, $handler1);
         $messenger->addHandler($eventName, $handler2);
 
@@ -41,10 +41,10 @@ class DispatcherTest extends MockeryTestCase
 
     public function test_clear()
     {
-        $handler1   = new \stdClass();
-        $handler2   = new \stdClass();
+        $handler1 = new \stdClass();
+        $handler2 = new \stdClass();
 
-        $messenger  = new Dispatcher();
+        $messenger = new Dispatcher();
         $messenger->addHandler('onEventA', $handler1);
         $messenger->addHandler('onEventA', $handler2);
         $messenger->addHandler('onEventB', $handler2);
@@ -56,15 +56,18 @@ class DispatcherTest extends MockeryTestCase
 
     public function test_broadcast()
     {
-        $handler1 = new class {
-            public function onTestCaseExecuted(TestCaseExecuted $event) {
-                    $event->info = 'I have been executed.';
+        $handler1 = new class
+        {
+            public function onTestCaseExecuted(TestCaseExecuted $event)
+            {
+                $event->info = 'I have been executed.';
             }
         };
 
         $messenger = new Dispatcher();
-        $messenger->addHandler(TestCaseExecuted::handledBy(),$handler1);
-        $event   = $messenger->broadcast(new TestCaseExecuted());
+        $messenger->addHandler(TestCaseExecuted::handledBy(), $handler1);
+        $event = new TestCaseExecuted();
+        $messenger->broadcast($event);
 
         assertThat($event->info, is(equalTo('I have been executed.')));
 
