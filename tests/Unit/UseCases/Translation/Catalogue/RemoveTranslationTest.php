@@ -10,6 +10,8 @@ namespace Tidy\Tests\Unit\UseCases\Translation\Catalogue;
 
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Exceptions\PreconditionFailed;
+use Tidy\Domain\BusinessRules\TranslationRules;
+use Tidy\Domain\Collections\TranslationCatalogues;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse;
@@ -35,7 +37,7 @@ class RemoveTranslationTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $useCase = new RemoveTranslation(mock(ITranslationGateway::class));
+        $useCase = new RemoveTranslation(mock(ITranslationGateway::class), mock(TranslationRules::class));
         assertThat($useCase, is(notNullValue()));
     }
 
@@ -121,7 +123,8 @@ class RemoveTranslationTest extends MockeryTestCase
         parent::setUp();
 
         $this->gateway = mock(ITranslationGateway::class);
-        $this->useCase = new RemoveTranslation($this->gateway);
+        $rules = new TranslationRules(new TranslationCatalogues($this->gateway));
+        $this->useCase = new RemoveTranslation($this->gateway, $rules);
     }
 
     /**

@@ -10,6 +10,7 @@ namespace Tidy\Tests\Unit\Domain\Entities;
 
 use Tidy\Components\Exceptions\InvalidArgument;
 use Tidy\Components\Exceptions\PreconditionFailed;
+use Tidy\Domain\BusinessRules\TranslationRules;
 use Tidy\Domain\Collections\TranslationCatalogues;
 use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationDomain;
@@ -120,7 +121,7 @@ class TranslationCatalogueTest extends MockeryTestCase
             $targetCulture
         );
         try {
-            $catalogue->setUp($request, new TranslationCatalogues(mock(ITranslationGateway::class)));
+            $catalogue->setUp($request, new TranslationRules(new TranslationCatalogues(mock(ITranslationGateway::class))));
             $this->fail('Failed to fail.');
         } catch (\Exception $exception) {
             assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
@@ -137,7 +138,7 @@ class TranslationCatalogueTest extends MockeryTestCase
         $this->expectCatalogueLookUp($gateway, $this->makeDomain(), new Catalogue());
 
         try {
-            $catalogue->setUp($request, new TranslationCatalogues($gateway));
+            $catalogue->setUp($request, new TranslationRules(new TranslationCatalogues($gateway)));
             $this->fail('Failed to fail.');
         } catch (\Exception $exception) {
             assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
@@ -156,7 +157,7 @@ class TranslationCatalogueTest extends MockeryTestCase
         $gateway = mock(ITranslationGateway::class);
         $this->expectCatalogueLookUp($gateway, $this->makeDomain(), null);
 
-        $catalogue->setUp($request, new TranslationCatalogues($gateway));
+        $catalogue->setUp($request, new TranslationRules(new TranslationCatalogues($gateway)));
 
         $this->assertCount(1, $catalogue->events());
         $event = $catalogue->events()->dequeue();
@@ -169,8 +170,9 @@ class TranslationCatalogueTest extends MockeryTestCase
         $catalogue     = new Catalogue();
         $expectedToken = 'message.token.add_translation';
         $request       = $this->makeAddTranslationRequest($expectedToken);
-
-        $catalogue->appendTranslation($request);
+        $rules         = mock(TranslationRules::class);
+        $rules->expects('verifyAppend');
+        $catalogue->appendTranslation($request, $rules);
         assertThat($catalogue->find($expectedToken), is(anInstanceOf(Translation::class)));
 
         $this->assertCount(1, $catalogue->events());
@@ -185,8 +187,10 @@ class TranslationCatalogueTest extends MockeryTestCase
         $catalogue = new Catalogue();
         $request   = mock(IAddTranslationRequest::class);
         $request->allows('token')->andReturn('');
+        ;
+
         try {
-            $catalogue->appendTranslation($request);
+            $catalogue->appendTranslation($request,new TranslationRules(mock(TranslationCatalogues::class)));
             $this->fail('Failed to fail.');
         } catch (\Exception $exception) {
             assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
@@ -200,9 +204,9 @@ class TranslationCatalogueTest extends MockeryTestCase
         $request   = mock(IAddTranslationRequest::class);
         $request->allows('token')->andReturn(TranslationTranslated::MSG_ID);
         $request->allows('sourceString')->andReturn('The add translation source string');
-
+        $rules = new TranslationRules(mock(TranslationCatalogues::class));
         try {
-            $catalogue->appendTranslation($request);
+            $catalogue->appendTranslation($request, $rules);
             $this->fail('Failed to fail.');
         } catch (\Exception $exception) {
             assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
@@ -220,7 +224,9 @@ class TranslationCatalogueTest extends MockeryTestCase
         $request->shouldReceive('catalogueId')->andReturn(Catalogue::ID);
         $request->shouldReceive('token')->andReturn(TranslationTranslated::MSG_ID);
 
-        $catalogue->removeTranslation($request);
+        $rules = mock(TranslationRules::class);
+        $rules->expects('verifyRemoveTranslation');
+        $catalogue->removeTranslation($request, $rules);
 
         $this->assertNull($catalogue->find(TranslationTranslated::MSG_ID));
         $this->assertCount(1, $catalogue->events());
@@ -274,7 +280,7 @@ class TranslationCatalogueTest extends MockeryTestCase
             ->build()
         ;
 
-        $catalogue->translate($request);
+        $catalogue->translate($request, new TranslationRules(mock(TranslationCatalogues::class)));
         $this->assertEquals($expected, $catalogue->find(TranslationUntranslated::MSG_ID)->getLocaleString());
         $this->assertEquals($expectedState, $catalogue->find(TranslationUntranslated::MSG_ID)->getState());
 
@@ -297,7 +303,9 @@ class TranslationCatalogueTest extends MockeryTestCase
             ->build()
         ;
 
-        $catalogue->describe($request);
+        $rules = mock(TranslationRules::class);
+        $rules->expects('verifyDescribe');
+        $catalogue->describe($request, $rules);
 
         $this->assertEquals($expected, $catalogue->find(TranslationUntranslated::MSG_ID)->getSourceString());
         $this->assertCount(1, $catalogue->events());

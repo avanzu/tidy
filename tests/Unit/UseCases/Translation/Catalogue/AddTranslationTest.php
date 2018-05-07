@@ -12,6 +12,8 @@ use Mockery\MockInterface;
 use Tidy\Components\Exceptions\Duplicate;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Exceptions\PreconditionFailed;
+use Tidy\Domain\BusinessRules\TranslationRules;
+use Tidy\Domain\Collections\TranslationCatalogues;
 use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
@@ -45,7 +47,7 @@ class AddTranslationTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $useCase = new AddTranslation(mock(ITranslationGateway::class));
+        $useCase = new AddTranslation(mock(ITranslationGateway::class), mock(TranslationRules::class));
         assertThat($useCase, is(notNullValue()));
 
     }
@@ -55,7 +57,7 @@ class AddTranslationTest extends MockeryTestCase
         $initial = mock(ICatalogueResponseTransformer::class);
         $swapped = mock(ICatalogueResponseTransformer::class);
 
-        $useCase = new AddTranslation($this->gateway, $initial);
+        $useCase = new AddTranslation($this->gateway, mock(TranslationRules::class), $initial);
         $result  = $useCase->swapTransformer($swapped);
 
         assertThat($result, is(sameInstance($initial)));
@@ -133,7 +135,8 @@ class AddTranslationTest extends MockeryTestCase
         parent::setUp();
 
         $this->gateway = mock(ITranslationGateway::class);
-        $this->useCase = new AddTranslation($this->gateway);
+        $rules = new TranslationRules(new TranslationCatalogues($this->gateway));
+        $this->useCase = new AddTranslation($this->gateway, $rules);
     }
 
     protected function expectFindCatalogue(): void

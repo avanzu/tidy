@@ -13,9 +13,7 @@ use Tidy\Components\Collection\HashMap;
 use Tidy\Components\Events\IMessenger;
 use Tidy\Components\Events\TMessenger;
 use Tidy\Components\Exceptions\InvalidArgument;
-use Tidy\Components\Exceptions\PreconditionFailed;
-use Tidy\Components\Validation\ErrorList;
-use Tidy\Domain\Collections\TranslationCatalogues;
+use Tidy\Domain\BusinessRules\TranslationRules;
 use Tidy\Domain\Events\Translation\Created;
 use Tidy\Domain\Events\Translation\Described;
 use Tidy\Domain\Events\Translation\DomainChanged;
@@ -24,9 +22,7 @@ use Tidy\Domain\Events\Translation\SetUp;
 use Tidy\Domain\Events\Translation\Translated;
 use Tidy\Domain\Requestors\Translation\Catalogue\IAddTranslationRequest;
 use Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest;
-use Tidy\Domain\Requestors\Translation\Message\ICatalogueIdentifier;
 use Tidy\Domain\Requestors\Translation\Message\IRemoveTranslationRequest;
-use Tidy\Domain\Requestors\Translation\Message\IToken;
 use Tidy\Domain\Requestors\Translation\Message\ITranslateRequest;
 use Tidy\UseCases\Translation\Message\DTO\DescribeRequestDTO;
 
@@ -186,9 +182,9 @@ abstract class TranslationCatalogue implements IMessenger
         return implode('-', array_filter([$this->getTargetLanguage(), $this->getTargetCulture()]));
     }
 
-    public function appendTranslation(IAddTranslationRequest $request)
+    public function appendTranslation(IAddTranslationRequest $request, TranslationRules $rules)
     {
-        $this->verifyAppend($request);
+        $rules->verifyAppend($request, $this);
 
         $translation = $this->deposit(
             $this->makeTranslation(
@@ -202,15 +198,15 @@ abstract class TranslationCatalogue implements IMessenger
         );
 
         $this->queueEvent(new Created($this->id, $translation));
+
         return $translation;
 
     }
 
-    public function removeTranslation(IRemoveTranslationRequest $request)
+    public function removeTranslation(IRemoveTranslationRequest $request, TranslationRules $rules)
     {
-        $this->verifyCatalogueId($request);
-        $match = $this->verifyTokenExists($request);
-
+        $rules->verifyRemoveTranslation($request, $this);
+        $match = $this->find($request->token());
         $this->translations()->offsetUnset($request->token());
         $this->queueEvent(new Removed($this->id, $match));
 
@@ -246,7 +242,7 @@ abstract class TranslationCatalogue implements IMessenger
      */
     public function defineSourceLocale($language, $culture = null)
     {
-        $this->verifyLanguageFormat($language);
+        $this->enforceLanguageFormat($language);
 
         $this->sourceLanguage = strtolower($language);
         $this->sourceCulture  = strtoupper((string)$culture);
@@ -264,7 +260,7 @@ abstract class TranslationCatalogue implements IMessenger
      */
     public function defineTargetLocale($language, $culture = null)
     {
-        $this->verifyLanguageFormat($language);
+        $this->enforceLanguageFormat($language);
 
         $this->targetLanguage = strtolower($language);
         $this->targetCulture  = strtoupper($culture);
@@ -284,9 +280,10 @@ abstract class TranslationCatalogue implements IMessenger
         );
     }
 
-    public function setUp(ICreateCatalogueRequest $request, TranslationCatalogues $catalogues)
+    public function setUp(ICreateCatalogueRequest $request, TranslationRules $rules)
     {
-        $this->verifySetup($request, $catalogues);
+        $rules->verifySetUp($request, $this);
+
         $this->id             = coalesce($this->id, uuid());
         $this->name           = $request->name();
         $this->canonical      = $request->canonical();
@@ -299,12 +296,10 @@ abstract class TranslationCatalogue implements IMessenger
     }
 
 
-    public function translate(ITranslateRequest $request)
+    public function translate(ITranslateRequest $request, TranslationRules $rules)
     {
-        $match = $this
-            ->verifyCatalogueId($request)
-            ->verifyTokenExists($request)
-        ;
+        $rules->verifyTranslate($request, $this);
+        $match = $this->find($request->token());
 
         $translation = $this->deposit(
             $this->makeTranslation(
@@ -322,13 +317,11 @@ abstract class TranslationCatalogue implements IMessenger
         return $translation;
     }
 
-    public function describe(DescribeRequestDTO $request)
+    public function describe(DescribeRequestDTO $request, TranslationRules $rules)
     {
-        $match = $this
-            ->verifyCatalogueId($request)
-            ->verifyTokenExists($request)
-        ;
+        $rules->verifyDescribe($request, $this);
 
+        $match       = $this->find($request->token());
         $translation = $this->deposit(
             $this->makeTranslation(
                 $request->token(),
@@ -350,9 +343,23 @@ abstract class TranslationCatalogue implements IMessenger
      *
      * @return bool
      */
-    protected function isIdenticalTo($match)
+    public function isIdenticalTo($match)
     {
         return ($match instanceof TranslationCatalogue) ? $match->getId() === $this->getId() : false;
+    }
+
+    /**
+     * @param $canonical
+     * @param $sourceLanguage
+     * @param $sourceCulture
+     * @param $targetLanguage
+     * @param $targetCulture
+     *
+     * @return TranslationDomain
+     */
+    public function makeDomain($canonical, $sourceLanguage, $sourceCulture, $targetLanguage, $targetCulture)
+    {
+        return new TranslationDomain($canonical, $sourceLanguage, $sourceCulture, $targetLanguage, $targetCulture);
     }
 
     /**
@@ -367,152 +374,14 @@ abstract class TranslationCatalogue implements IMessenger
         return $this->translations;
     }
 
-    /**
-     * @param $canonical
-     * @param $sourceLanguage
-     * @param $sourceCulture
-     * @param $targetLanguage
-     * @param $targetCulture
-     *
-     * @return TranslationDomain
-     */
-    protected function makeDomain($canonical, $sourceLanguage, $sourceCulture, $targetLanguage, $targetCulture)
-    {
-        return new TranslationDomain($canonical, $sourceLanguage, $sourceCulture, $targetLanguage, $targetCulture);
-    }
-
-    protected function verifySetup(ICreateCatalogueRequest $request, TranslationCatalogues $catalogues)
-    {
-
-        $errors = new ErrorList();
-
-        $errors = $this->verifyName($request, $errors);
-        $errors = $this->verifyCanonical($request, $errors);
-        $errors = $this->verifySourceLanguage($request, $errors);
-        $errors = $this->verifyTargetLanguage($request, $errors);
-        $this->failOnErrors($errors);
-
-        $errors = $this->verifyDomain($request, $catalogues, $errors);
-        $this->failOnErrors($errors);
-    }
-
 
     /**
      * @param $language
      */
-    protected function verifyLanguageFormat($language)
+    private function enforceLanguageFormat($language)
     {
         if (strlen((string)$language) !== 2) {
             throw new InvalidArgument(sprintf('Expected 2 character string, got "%s".', $language));
-        }
-    }
-
-    /**
-     * @param ICreateCatalogueRequest $request
-     * @param TranslationCatalogues   $catalogues
-     * @param                         $errors
-     *
-     * @return mixed
-     */
-    protected function verifyDomain(ICreateCatalogueRequest $request, TranslationCatalogues $catalogues, $errors)
-    {
-        $domain = $this->makeDomain(
-            $request->canonical(),
-            $request->sourceLanguage(),
-            $request->sourceCulture(),
-            $request->targetLanguage(),
-            $request->targetCulture()
-        );
-
-        if ($match = $catalogues->findByDomain($domain)) {
-            if (!$this->isIdenticalTo($match)) {
-                $errors['domain'] = sprintf(
-                    'Invalid domain "%s". Already in use by "%s".',
-                    (string)$domain,
-                    (string)$match
-                );
-            }
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @param ICreateCatalogueRequest $request
-     * @param                         $errors
-     *
-     * @return mixed
-     */
-    protected function verifyName(ICreateCatalogueRequest $request, $errors)
-    {
-        if (strlen($request->name()) < 3) {
-            $errors['name'] = sprintf('Invalid name "%s". Name must contain at least 3 characters.', $request->name());
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @param ICreateCatalogueRequest $request
-     * @param                         $errors
-     *
-     * @return mixed
-     */
-    protected function verifyCanonical(ICreateCatalogueRequest $request, $errors)
-    {
-        if (strlen($request->canonical()) < 3) {
-            $errors['canonical'] = sprintf(
-                'Invalid canonical "%s". Canonical must contain at least 3 characters.',
-                $request->canonical()
-            );
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @param ICreateCatalogueRequest $request
-     * @param                         $errors
-     *
-     * @return mixed
-     */
-    protected function verifySourceLanguage(ICreateCatalogueRequest $request, $errors)
-    {
-        if (strlen((string)$request->sourceLanguage()) !== 2) {
-            $errors['sourceLanguage'] = sprintf(
-                'Invalid source language. Expected 2 character string, got "%s".',
-                (string)$request->sourceLanguage()
-            );
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @param ICreateCatalogueRequest $request
-     * @param                         $errors
-     *
-     * @return mixed
-     */
-    protected function verifyTargetLanguage(ICreateCatalogueRequest $request, $errors)
-    {
-        if (strlen((string)$request->targetLanguage()) !== 2) {
-            $errors['targetLanguage'] = sprintf(
-                'Invalid target language. Expected 2 character string, got "%s".',
-                (string)$request->targetLanguage()
-            );
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @param $errors
-     */
-    protected function failOnErrors(ErrorList $errors)
-    {
-        if ($errors->count() > 0) {
-            throw new PreconditionFailed($errors->getArrayCopy());
         }
     }
 
@@ -528,88 +397,6 @@ abstract class TranslationCatalogue implements IMessenger
      */
     abstract protected function makeTranslation($token, $sourceString, $localeString, $meaning, $notes, $state);
 
-    protected function verifyAppend(IAddTranslationRequest $request)
-    {
-        $errors = new ErrorList();
-        $errors = $this->verifyToken($request->token(), $errors);
-        $errors = $this->verifyTokenIsUnique($request->token(), $errors);
-
-        $this->failOnErrors($errors);
-    }
-
-    /**
-     * @param                        $value
-     * @param                        $errors
-     *
-     * @return mixed
-     */
-    protected function verifyTokenIsUnique($value, $errors)
-    {
-        /** @var Translation|null $match */
-        if ($match = $this->translations()->atIndex($value)) {
-            $errors['token'] = sprintf('Token %s already exists translated as "%s".', $value, (string)$match);
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @param                        $value
-     * @param                        $errors
-     *
-     * @return mixed
-     */
-    protected function verifyToken($value, $errors)
-    {
-        if (empty($value)) {
-            $errors['token'] = 'Token cannot be empty.';
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @param ICatalogueIdentifier $request
-     *
-     * @return TranslationCatalogue
-     */
-    protected function verifyCatalogueId(ICatalogueIdentifier $request)
-    {
-        $errors = new ErrorList();
-        if ($request->catalogueId() !== $this->id) {
-            $errors['catalogue'] = sprintf(
-                'Wrong catalogue. Request addresses catalogue #%d. This is catalogue #%d.',
-                $request->catalogueId(),
-                $this->id
-            );
-        }
-
-        $this->failOnErrors($errors);
-
-        return $this;
-    }
-
-    /**
-     * @param IToken $request
-     *
-     * @return Translation|null
-     */
-    protected function verifyTokenExists(IToken $request)
-    {
-        $errors = new ErrorList();
-        if (!$match = $this->translations()->atIndex($request->token())) {
-            $errors['token'] = sprintf(
-                'Unable to find translation identified by "%s" in catalogue "%s".',
-                $request->token(),
-                $this->getName()
-            );
-        }
-
-        $this->failOnErrors($errors);
-
-        return $match;
-
-    }
 
     /**
      * @param ITranslateRequest $request

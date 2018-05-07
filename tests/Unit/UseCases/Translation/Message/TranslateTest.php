@@ -11,6 +11,8 @@ namespace Tidy\Tests\Unit\UseCases\Translation\Message;
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Exceptions\PreconditionFailed;
+use Tidy\Domain\BusinessRules\TranslationRules;
+use Tidy\Domain\Collections\TranslationCatalogues;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Message\ITranslateRequest;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
@@ -37,7 +39,7 @@ class TranslateTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $useCase = new Translate(mock(ITranslationGateway::class));
+        $useCase = new Translate(mock(ITranslationGateway::class), mock(TranslationRules::class));
         assertThat($useCase, is(notNullValue()));
     }
 
@@ -114,7 +116,7 @@ class TranslateTest extends MockeryTestCase
     {
         parent::setUp();
         $this->gateway = mock(ITranslationGateway::class);
-        $this->useCase = new Translate($this->gateway);
+        $this->useCase = new Translate($this->gateway, new TranslationRules(new TranslationCatalogues($this->gateway)));
     }
 
     /**
@@ -136,7 +138,7 @@ class TranslateTest extends MockeryTestCase
     protected function expect_translate_on_catalogue($catalogue, $translation): void
     {
         $catalogue->expects('translate')
-                  ->with(anInstanceOf(ITranslateRequest::class))
+                  ->with(anInstanceOf(ITranslateRequest::class), anInstanceOf(TranslationRules::class))
                   ->andReturnUsing(
                       function (ITranslateRequest $request) {
                           return new TranslationUntranslated(

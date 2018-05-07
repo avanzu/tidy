@@ -8,7 +8,7 @@
 
 namespace Tidy\UseCases\Translation\Catalogue;
 
-use Tidy\Domain\Collections\TranslationCatalogues;
+use Tidy\Domain\BusinessRules\TranslationRules;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
@@ -19,15 +19,25 @@ class CreateCatalogue
     use TItemResponder;
 
     /**
+     * @var TranslationRules
+     */
+    private $rules;
+
+    /**
      * CreateCatalogue constructor.
      *
      * @param ITranslationGateway           $gateway
+     * @param TranslationRules              $rules
      * @param ICatalogueResponseTransformer $transformer
      */
-    public function __construct(ITranslationGateway $gateway, ICatalogueResponseTransformer $transformer = null)
-    {
+    public function __construct(
+        ITranslationGateway $gateway,
+        TranslationRules $rules,
+        ICatalogueResponseTransformer $transformer = null
+    ) {
         $this->gateway     = $gateway;
         $this->transformer = $transformer;
+        $this->rules       = $rules;
     }
 
 
@@ -35,7 +45,7 @@ class CreateCatalogue
     {
 
         $catalogue = $this->gateway->makeCatalogueForProject($request->projectId());
-        $catalogue->setUp($request, new TranslationCatalogues($this->gateway));
+        $catalogue->setUp($request, $this->rules);
         $this->gateway->save($catalogue);
 
         return $this->transformer()->transform($catalogue);

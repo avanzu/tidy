@@ -9,10 +9,10 @@
 namespace Tidy\UseCases\Translation\Catalogue;
 
 use Tidy\Components\Exceptions\NotFound;
+use Tidy\Domain\BusinessRules\TranslationRules;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Message\IRemoveTranslationRequest;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
-use Tidy\UseCases\Translation\Catalogue\DTO\RemoveTranslationRequestDTO;
 use Tidy\UseCases\Translation\Catalogue\Traits\TNestedItemResponder;
 
 class RemoveTranslation
@@ -21,15 +21,25 @@ class RemoveTranslation
     use TNestedItemResponder;
 
     /**
+     * @var TranslationRules
+     */
+    private $rules;
+
+    /**
      * CreateCatalogue constructor.
      *
      * @param ITranslationGateway           $gateway
+     * @param TranslationRules              $rules
      * @param ICatalogueResponseTransformer $transformer
      */
-    public function __construct(ITranslationGateway $gateway, ICatalogueResponseTransformer $transformer = null)
-    {
+    public function __construct(
+        ITranslationGateway $gateway,
+        TranslationRules $rules,
+        ICatalogueResponseTransformer $transformer = null
+    ) {
         $this->gateway     = $gateway;
         $this->transformer = $transformer;
+        $this->rules       = $rules;
     }
 
 
@@ -42,7 +52,7 @@ class RemoveTranslation
     {
 
         $catalogue = $this->lookUpCatalogue($request);
-        $catalogue->removeTranslation($request);
+        $catalogue->removeTranslation($request, $this->rules);
         $this->gateway->save($catalogue);
 
         return $this->transformer()->transform($catalogue);

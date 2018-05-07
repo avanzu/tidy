@@ -11,6 +11,8 @@ namespace Tidy\Tests\Unit\UseCases\Translation\Message;
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Exceptions\PreconditionFailed;
+use Tidy\Domain\BusinessRules\TranslationRules;
+use Tidy\Domain\Collections\TranslationCatalogues;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 use Tidy\Tests\MockeryTestCase;
@@ -34,7 +36,7 @@ class DescribeTest extends MockeryTestCase
 
     public function testInstantiation()
     {
-        $useCase = new Describe(mock(ITranslationGateway::class));
+        $useCase = new Describe(mock(ITranslationGateway::class), mock(TranslationRules::class));
         $this->assertNotNull($useCase);
     }
 
@@ -166,7 +168,7 @@ class DescribeTest extends MockeryTestCase
     {
         parent::setUp();
         $this->gateway = mock(ITranslationGateway::class);
-        $this->useCase = new Describe($this->gateway);
+        $this->useCase = new Describe($this->gateway, new TranslationRules(new TranslationCatalogues($this->gateway)));
 
     }
 

@@ -9,6 +9,7 @@
 namespace Tidy\UseCases\Translation\Message;
 
 use Tidy\Components\Exceptions\NotFound;
+use Tidy\Domain\BusinessRules\TranslationRules;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponseTransformer;
@@ -20,15 +21,21 @@ class Describe
     use TItemResponder;
 
     /**
+     * @var TranslationRules
+     */
+    private $rules;
+
+    /**
      * CreateCatalogue constructor.
      *
      * @param ITranslationGateway             $gateway
      * @param ITranslationResponseTransformer $transformer
      */
-    public function __construct(ITranslationGateway $gateway, ITranslationResponseTransformer $transformer = null)
+    public function __construct(ITranslationGateway $gateway, TranslationRules $rules, ITranslationResponseTransformer $transformer = null)
     {
         $this->gateway     = $gateway;
         $this->transformer = $transformer;
+        $this->rules = $rules;
     }
 
     /**
@@ -42,7 +49,7 @@ class Describe
         if (!$catalogue) {
             throw new NotFound(sprintf('Unable to find catalogue identified by "%d".', $request->catalogueId()));
         }
-        $translation = $catalogue->describe($request);
+        $translation = $catalogue->describe($request, $this->rules);
         $this->gateway->save($catalogue);
 
         return $this->transformer()->transform($translation);

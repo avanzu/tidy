@@ -9,6 +9,7 @@
 namespace Tidy\UseCases\Translation\Message;
 
 use Tidy\Components\Exceptions\NotFound;
+use Tidy\Domain\BusinessRules\TranslationRules;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Message\ITranslateRequest;
@@ -22,15 +23,22 @@ class Translate
     use TItemResponder;
 
     /**
+     * @var TranslationRules
+     */
+    private $rules;
+
+    /**
      * CreateCatalogue constructor.
      *
      * @param ITranslationGateway             $gateway
+     * @param TranslationRules                $rules
      * @param ITranslationResponseTransformer $transformer
      */
-    public function __construct(ITranslationGateway $gateway, ITranslationResponseTransformer $transformer = null)
+    public function __construct(ITranslationGateway $gateway, TranslationRules $rules, ITranslationResponseTransformer $transformer = null)
     {
         $this->gateway     = $gateway;
         $this->transformer = $transformer;
+        $this->rules = $rules;
     }
 
     /**
@@ -42,7 +50,7 @@ class Translate
     {
 
         $catalogue   = $this->lookUpCatalogue($request);
-        $translation = $catalogue->translate($request);
+        $translation = $catalogue->translate($request, $this->rules);
 
         $this->gateway->save($catalogue);
 
