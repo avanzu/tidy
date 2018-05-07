@@ -10,16 +10,21 @@ namespace Tidy\Domain\Entities;
 use ArrayObject;
 use Tidy\Components\AccessControl\IClaimable;
 use Tidy\Components\AccessControl\IClaimant;
+use Tidy\Components\Events\IMessenger;
+use Tidy\Components\Events\TMessenger;
 use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Domain\Collections\Projects;
+use Tidy\Domain\Events\Project\Renamed;
+use Tidy\Domain\Events\Project\SetUp;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\ICreateRequest;
 use Tidy\Domain\Requestors\Project\IRenameRequest;
 
-abstract class Project implements IClaimable
+abstract class Project implements IClaimable, IMessenger
 {
-    const PREFIX = 'projects';
+    use TMessenger;
 
+    const PREFIX = 'projects';
 
     /**
      * @var int
@@ -121,6 +126,8 @@ abstract class Project implements IClaimable
         $this->canonical   = $request->canonical();
         $this->path        = sprintf('/%s/%s', static::PREFIX, $this->canonical);
 
+        $this->queueEvent(new SetUp($this->id));
+
         return $this;
     }
 
@@ -131,7 +138,9 @@ abstract class Project implements IClaimable
     {
         $this->verifyRename($request);
         $this->name        = $request->name();
-        $this->description = $request->description();
+        $this->description = coalesce($request->description(), $this->description);
+
+        $this->queueEvent(new Renamed($this->id));
 
     }
 
