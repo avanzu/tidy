@@ -74,12 +74,11 @@ class CreateTest extends MockeryTestCase
      *
      * @param      $name
      * @param      $description
-     * @param      $id
      * @param      $canonical
      * @param User $owner
      * @param      $expectedCanonical
      */
-    public function test_create_success($name, $description, $id, $canonical, User $owner, $expectedCanonical)
+    public function test_create_success($name, $description, $canonical, User $owner, $expectedCanonical)
     {
         if (empty($canonical)) {
             $this->expectNameTransformation($name, $expectedCanonical);
@@ -123,7 +122,6 @@ class CreateTest extends MockeryTestCase
             'given canonical'       => [
                 'name'              => 'My fancy project',
                 'description'       => 'This describes the project.',
-                'ID'                => 9999,
                 'canonical'         => 'my-fancy-project',
                 'owner'             => new UserStub1(),
                 'expectedCanonical' => 'my-fancy-project',
@@ -131,7 +129,6 @@ class CreateTest extends MockeryTestCase
             'transformed canonical' => [
                 'name'              => 'My other project',
                 'description'       => 'This is another project.',
-                'ID'                => 7777,
                 'canonical'         => '',
                 'owner'             => new UserStub2(),
                 'expectedCanonical' => 'my-other-project',

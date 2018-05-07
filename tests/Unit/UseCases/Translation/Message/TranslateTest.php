@@ -54,7 +54,6 @@ class TranslateTest extends MockeryTestCase
         ;
 
         $catalogue = mock(TranslationCatalogueEnglishToGerman::class);
-        $translation = new TranslationUntranslated();
 
         $this->expect_findCatalogue_on_gateway($catalogue);
         $this->expect_translate_on_catalogue($catalogue);
