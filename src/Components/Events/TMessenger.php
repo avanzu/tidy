@@ -8,25 +8,41 @@
 
 namespace Tidy\Components\Events;
 
+use SplQueue as Queue;
+
 trait TMessenger
 {
     /**
-     * @var \SplQueue
+     * @var Queue
      */
     protected $eventQueue;
 
-    protected function eventQueue()
+    /**
+     * @return Queue|IEvent[]
+     */
+    public function events()
     {
-        if( ! $this->eventQueue ) $this->eventQueue = new \SplQueue();
-        return $this->eventQueue;
-    }
-    public function events() {
         return $this->eventQueue();
     }
 
+    /**
+     * @param IEvent $event
+     */
     public function queueEvent(IEvent $event)
     {
         $this->eventQueue()->enqueue($event);
+    }
+
+    /**
+     * @return Queue
+     */
+    protected function eventQueue()
+    {
+        if (!$this->eventQueue) {
+            $this->eventQueue = new Queue();
+        }
+
+        return $this->eventQueue;
     }
 
 }
