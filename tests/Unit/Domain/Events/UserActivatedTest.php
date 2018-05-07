@@ -8,7 +8,7 @@
 
 namespace Tidy\Tests\Unit\Domain\Events;
 
-use Tidy\Domain\Events\UserActivated;
+use Tidy\Domain\Events\User\Activated;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Fixtures\Entities\TimmyUser;
 
@@ -16,7 +16,7 @@ class UserActivatedTest extends MockeryTestCase
 {
     public function testIdentity()
     {
-        $event = new UserActivated(TimmyUser::ID);
+        $event = new Activated(TimmyUser::ID);
         $this->assertEquals(TimmyUser::ID, $event->id());
     }
 }

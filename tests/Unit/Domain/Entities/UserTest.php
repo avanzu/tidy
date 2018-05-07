@@ -9,15 +9,19 @@
 namespace Tidy\Tests\Unit\Domain\Entities;
 
 use Tidy\Components\AccessControl\IClaimant;
-use Tidy\Components\Events\IDispatcher;
 use Tidy\Components\Events\IMessenger;
 use Tidy\Components\Util\StringUtilFactory;
 use Tidy\Domain\Collections\Users;
-use Tidy\Domain\Events\UserActivated;
-use Tidy\Domain\Events\UserRegistered;
+use Tidy\Domain\Events\User\PasswordReset;
+use Tidy\Domain\Events\User\Activated;
+use Tidy\Domain\Events\User\Recovering;
+use Tidy\Domain\Events\User\Registered;
 use Tidy\Domain\Requestors\User\IActivateRequest;
 use Tidy\Domain\Requestors\User\ICreateRequest;
+use Tidy\Domain\Requestors\User\IRecoverRequest;
+use Tidy\Domain\Requestors\User\IResetPasswordRequest;
 use Tidy\Tests\MockeryTestCase;
+use Tidy\Tests\Unit\Fixtures\Entities\TimmyUser;
 use Tidy\Tests\Unit\Fixtures\Entities\UserImpl;
 use Tidy\Tests\Unit\Fixtures\Entities\UserStub2;
 
@@ -47,7 +51,7 @@ class UserTest extends MockeryTestCase
 
         $this->assertCount(1, $user->events());
         $event = $user->events()->dequeue();
-        $this->assertInstanceOf(UserRegistered::class, $event);
+        $this->assertInstanceOf(Registered::class, $event);
         $this->assertIssUuid($event->id());
         $this->assertEquals($user->getId(), $event->id());
     }
@@ -64,7 +68,7 @@ class UserTest extends MockeryTestCase
         $this->assertCount(2, $user->events());
         $user->events()->dequeue();
         $event = $user->events()->dequeue();
-        $this->assertInstanceOf(UserActivated::class, $event);
+        $this->assertInstanceOf(Activated::class, $event);
         $this->assertEquals($user->getId(), $event->id());
     }
 
@@ -77,11 +81,34 @@ class UserTest extends MockeryTestCase
 
         $this->assertCount(1, $user->events());
         $event = $user->events()->dequeue();
-        $this->assertInstanceOf(UserActivated::class, $event);
+        $this->assertInstanceOf(Activated::class, $event);
         $this->assertEquals($user->getId(), $event->id());
     }
 
+    public function testRecover()
+    {
+        $mock = mock(IRecoverRequest::class);
+        $user = new TimmyUser();
+        $user->recover($mock);
 
+        $this->assertCount(1, $user->events());
+        $event = $user->events()->dequeue();
+        $this->assertInstanceOf(Recovering::class, $event);
+        $this->assertEquals($user->getId(), $event->id());
+    }
+
+    public function testResetPassword()
+    {
+        $user = new UserStub2('the-token');
+        $request = mock(IResetPasswordRequest::class);
+        $request->expects('token')->andReturn('the-token');
+        $request->shouldReceive('plainPassword')->andReturn(self::PLAIN_PASS)->atLeast()->once();
+        $user->resetPassword($request, new StringUtilFactory());
+
+        $this->assertCount(1, $user->events());
+        $event = $user->events()->dequeue();
+        $this->assertInstanceOf(PasswordReset::class, $event);
+    }
 
     /**
      * @return mixed|\Mockery\MockInterface

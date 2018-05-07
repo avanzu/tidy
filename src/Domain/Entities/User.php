@@ -15,8 +15,10 @@ use Tidy\Components\Util\IStringUtilFactory;
 use Tidy\Components\Validation\ErrorList;
 use Tidy\Components\Validation\IPasswordStrengthValidator;
 use Tidy\Domain\Collections\Users;
-use Tidy\Domain\Events\UserActivated;
-use Tidy\Domain\Events\UserRegistered;
+use Tidy\Domain\Events\User\PasswordReset;
+use Tidy\Domain\Events\User\Activated;
+use Tidy\Domain\Events\User\Recovering;
+use Tidy\Domain\Events\User\Registered;
 use Tidy\Domain\Requestors\User\IActivateRequest;
 use Tidy\Domain\Requestors\User\ICreateRequest;
 use Tidy\Domain\Requestors\User\IPlainPassword;
@@ -175,7 +177,7 @@ abstract class User implements IClaimant, IMessenger {
             $request->lastName()
         );
 
-        $this->queueEvent(new UserRegistered($this->id));
+        $this->queueEvent(new Registered($this->id));
 
         $this->grantAccessOrAssignToken($request);
 
@@ -195,12 +197,13 @@ abstract class User implements IClaimant, IMessenger {
         $this->enabled = TRUE;
         $this->token   = NULL;
 
-        $this->queueEvent(new UserActivated($this->id));
+        $this->queueEvent(new Activated($this->id));
     }
 
     public function recover(IRecoverRequest $request) {
         $this->verifyRecover($request);
         $this->token = uniqid();
+        $this->queueEvent(new Recovering($this->id));
     }
 
     public function verifyRecover(IRecoverRequest $request) { }
@@ -213,6 +216,8 @@ abstract class User implements IClaimant, IMessenger {
         $this->verifyResetPassword($request, $factory);
         $this->password = $this->encodePlainPassword($factory, $request->plainPassword());
         $this->token    = NULL;
+
+        $this->queueEvent(new PasswordReset($this->id));
     }
 
     public function verifyResetPassword(IResetPasswordRequest $request, IStringUtilFactory $factory) {
@@ -259,7 +264,7 @@ abstract class User implements IClaimant, IMessenger {
     protected function grantAccessOrAssignToken(ICreateRequest $request) {
         if ($request->isAccessGranted()) {
             $this->enabled = TRUE;
-            $this->queueEvent(new UserActivated($this->id));
+            $this->queueEvent(new Activated($this->id));
             return $this;
         }
 

@@ -2,28 +2,25 @@
 /**
  * This file is part of the "Tidy" Project.
  *
- * Created by avanzu on 06.05.18
+ * Created by avanzu on 07.05.18
  *
  */
 
-namespace Tidy\Domain\Events;
+namespace Tidy\Domain\Events\User;
 
-use Tidy\Components\Events\Event;
+use Tidy\Components\Events\Event as DomainEvent;
 
-class UserRegistered extends Event
+abstract class Event extends DomainEvent
 {
-
-    private $id;
+    protected $id;
 
     /**
-     * UserRegistered constructor.
+     * Event constructor.
      *
-     * @param string $id ;
-     *
+     * @param $id
      */
     public function __construct($id)
     {
-
         $this->id = $id;
     }
 
@@ -31,5 +28,4 @@ class UserRegistered extends Event
     {
         return $this->id;
     }
-
 }

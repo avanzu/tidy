@@ -8,7 +8,7 @@
 
 namespace Tidy\Tests\Unit\Domain\Events;
 
-use Tidy\Domain\Events\UserRegistered;
+use Tidy\Domain\Events\User\Registered;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Fixtures\Entities\TimmyUser;
 
@@ -16,7 +16,7 @@ class UserRegisteredTest extends MockeryTestCase
 {
     public function testUserDecomposition()
     {
-        $event = new UserRegistered(TimmyUser::ID);
+        $event = new Registered(TimmyUser::ID);
         $this->assertEquals(TimmyUser::ID, $event->id());
 
     }
