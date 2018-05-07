@@ -9,7 +9,7 @@ namespace Tidy\Domain\Responders\Translation\Message;
 
 use Tidy\Domain\Responders\ICollectionResponse as BaseCollectionResponse;
 
-interface ICollectionResponse extends BaseCollectionResponse, \Countable
+interface ICollectionResponse extends BaseCollectionResponse
 {
     /**
      * Count elements of an object

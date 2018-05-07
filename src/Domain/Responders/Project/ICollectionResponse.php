@@ -5,8 +5,9 @@
  * Date: 22.04.18
  */
 namespace Tidy\Domain\Responders\Project;
+use Tidy\Domain\Responders\ICollectionResponse as Response;
 
-interface ICollectionResponse
+interface ICollectionResponse extends Response
 {
     /**
      * @return IResponse[]|iterable

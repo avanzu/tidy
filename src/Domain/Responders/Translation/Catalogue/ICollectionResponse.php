@@ -9,7 +9,7 @@ namespace Tidy\Domain\Responders\Translation\Catalogue;
 
 use Tidy\Domain\Responders\ICollectionResponse as IResponse;
 
-interface ICollectionResponse extends IResponse, \Countable
+interface ICollectionResponse extends IResponse
 {
     /**
      * @return ICatalogueResponse[]

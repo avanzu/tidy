@@ -9,7 +9,7 @@ namespace Tidy\Domain\Responders;
 
 use Tidy\Components\Collection\IPagedCollection;
 
-interface ICollectionResponse
+interface ICollectionResponse extends \Countable
 {
     /**
      * @return int
