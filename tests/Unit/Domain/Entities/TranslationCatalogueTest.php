@@ -13,14 +13,22 @@ use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Domain\Collections\TranslationCatalogues;
 use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationDomain;
+use Tidy\Domain\Events\Translation\Created;
+use Tidy\Domain\Events\Translation\Described;
+use Tidy\Domain\Events\Translation\DomainChanged;
+use Tidy\Domain\Events\Translation\Removed;
+use Tidy\Domain\Events\Translation\SetUp;
+use Tidy\Domain\Events\Translation\Translated;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Catalogue\IAddTranslationRequest;
 use Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest;
+use Tidy\Domain\Requestors\Translation\Message\IRemoveTranslationRequest;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueEnglishToGerman as Catalogue;
 use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueImpl;
 use Tidy\Tests\Unit\Fixtures\Entities\TranslationTranslated;
 use Tidy\Tests\Unit\Fixtures\Entities\TranslationUntranslated;
+use Tidy\UseCases\Translation\Message\DTO\DescribeRequestBuilder;
 use Tidy\UseCases\Translation\Message\DTO\TranslateRequestBuilder;
 
 class TranslationCatalogueTest extends MockeryTestCase
@@ -103,13 +111,14 @@ class TranslationCatalogueTest extends MockeryTestCase
         $errorCount
     ) {
         $catalogue = new TranslationCatalogueImpl();
-        $request   = mock(ICreateCatalogueRequest::class);
-        $request->allows('name')->andReturn($name);
-        $request->allows('canonical')->andReturn($canonical);
-        $request->allows('sourceLanguage')->andReturn($sourceLanguage);
-        $request->allows('sourceCulture')->andReturn($sourceCulture);
-        $request->allows('targetLanguage')->andReturn($targetLanguage);
-        $request->allows('targetCulture')->andReturn($targetCulture);
+        $request   = $this->makeSetUpRequest(
+            $name,
+            $canonical,
+            $sourceLanguage,
+            $sourceCulture,
+            $targetLanguage,
+            $targetCulture
+        );
         try {
             $catalogue->setUp($request, new TranslationCatalogues(mock(ITranslationGateway::class)));
             $this->fail('Failed to fail.');
@@ -123,23 +132,9 @@ class TranslationCatalogueTest extends MockeryTestCase
     public function test_setup_verifies_uniqueDomain()
     {
         $catalogue = new TranslationCatalogueImpl();
-        $request   = mock(ICreateCatalogueRequest::class);
-        $request->allows('name')->andReturn(Catalogue::NAME);
-        $request->allows('canonical')->andReturn(Catalogue::CANONICAL);
-        $request->allows('sourceLanguage')->andReturn(Catalogue::SOURCE_LANG);
-        $request->allows('sourceCulture')->andReturn(Catalogue::SOURCE_CULTURE);
-        $request->allows('targetLanguage')->andReturn(Catalogue::TARGET_LANG);
-        $request->allows('targetCulture')->andReturn(Catalogue::TARGET_CULTURE);
-
-        $domain  = new TranslationDomain(
-            Catalogue::CANONICAL,
-            Catalogue::SOURCE_LANG,
-            Catalogue::SOURCE_CULTURE,
-            Catalogue::TARGET_LANG,
-            Catalogue::TARGET_CULTURE
-        );
-        $gateway = mock(ITranslationGateway::class);
-        $gateway->expects('findByDomain')->with(equalTo($domain))->andReturn(new Catalogue());
+        $request   = $this->makeCreateRequest();
+        $gateway   = mock(ITranslationGateway::class);
+        $this->expectCatalogueLookUp($gateway, $this->makeDomain(), new Catalogue());
 
         try {
             $catalogue->setUp($request, new TranslationCatalogues($gateway));
@@ -153,20 +148,36 @@ class TranslationCatalogueTest extends MockeryTestCase
         }
     }
 
+    public function testSetUp()
+    {
+        $catalogue = new TranslationCatalogueImpl();
+        $request   = $this->makeCreateRequest();
+
+        $gateway = mock(ITranslationGateway::class);
+        $this->expectCatalogueLookUp($gateway, $this->makeDomain(), null);
+
+        $catalogue->setUp($request, new TranslationCatalogues($gateway));
+
+        $this->assertCount(1, $catalogue->events());
+        $event = $catalogue->events()->dequeue();
+        $this->assertInstanceOf(SetUp::class, $event);
+        $this->assertEquals($catalogue->getId(), $event->id());
+    }
+
     public function test_addTranslation()
     {
-        $catalogue = new Catalogue();
-        $request   = mock(IAddTranslationRequest::class);
-        $request->allows('catalogueId')->andReturn(Catalogue::ID);
-        $request->allows('token')->andReturn('message.token.add_translation');
-        $request->allows('sourceString')->andReturn('The add translation source string');
-        $request->allows('localeString')->andReturn('Übersetzung hinzufügen');
-        $request->allows('meaning')->andReturn('Give some meaning');
-        $request->allows('notes')->andReturn('Give some additional notes');
-        $request->allows('state')->andReturn('translated');
+        $catalogue     = new Catalogue();
+        $expectedToken = 'message.token.add_translation';
+        $request       = $this->makeAddTranslationRequest($expectedToken);
 
         $catalogue->appendTranslation($request);
-        assertThat($catalogue->find('message.token.add_translation'), is(anInstanceOf(Translation::class)));
+        assertThat($catalogue->find($expectedToken), is(anInstanceOf(Translation::class)));
+
+        $this->assertCount(1, $catalogue->events());
+        $event = $catalogue->events()->dequeue();
+        $this->assertInstanceOf(Created::class, $event);
+        $this->assertEquals($catalogue->getId(), $event->id());
+        $this->assertEquals($expectedToken, $event->translation()->getToken());
     }
 
     public function test_addTranslation_verifies_token_presence()
@@ -202,36 +213,107 @@ class TranslationCatalogueTest extends MockeryTestCase
         }
     }
 
+    public function testRemoveTranslation()
+    {
+        $catalogue = new Catalogue();
+        $request   = mock(IRemoveTranslationRequest::class);
+        $request->shouldReceive('catalogueId')->andReturn(Catalogue::ID);
+        $request->shouldReceive('token')->andReturn(TranslationTranslated::MSG_ID);
+
+        $catalogue->removeTranslation($request);
+
+        $this->assertNull($catalogue->find(TranslationTranslated::MSG_ID));
+        $this->assertCount(1, $catalogue->events());
+        $event = $catalogue->events()->dequeue();
+        $this->assertInstanceOf(Removed::class, $event);
+        $this->assertEquals($catalogue->getId(), $event->id());
+        $this->assertInstanceOf(Translation::class, $event->translation());
+        $this->assertEquals(TranslationTranslated::MSG_ID, $event->translation()->getToken());
+
+    }
+
+    public function testDefineSourceLocale()
+    {
+        $catalogue = new Catalogue();
+        $catalogue->defineSourceLocale('pt');
+
+        $this->assertEquals('pt', $catalogue->sourceLocale());
+        $event = $catalogue->events()->dequeue();
+        $this->assertInstanceOf(DomainChanged::class, $event);
+
+        $this->assertEquals('messages.pt.de-DE', (string)$event->domain());
+    }
+
+    public function testDefineTargetLocale()
+    {
+        $catalogue = new Catalogue();
+        $catalogue->defineTargetLocale('en', 'in');
+
+        $this->assertEquals('en-IN', $catalogue->targetLocale());
+        $event = $catalogue->events()->dequeue();
+        $this->assertInstanceOf(DomainChanged::class, $event);
+
+        $this->assertEquals('messages.en-US.en-IN', (string)$event->domain());
+    }
+
     /**
      * @param $expected
-     * @param $currentState
-     * @param $newState
+     * @param $state
      * @param $expectedState
+     *
      * @dataProvider provideTranslations
      */
     public function test_translate($expected, $state, $expectedState)
     {
         $catalogue = new Catalogue();
-        $request = (new TranslateRequestBuilder())
+        $request   = (new TranslateRequestBuilder())
             ->withCatalogueId(Catalogue::ID)
             ->withToken(TranslationUntranslated::MSG_ID)
             ->translateAs($expected)
             ->commitStateTo($state)
             ->build()
-            ;
+        ;
 
         $catalogue->translate($request);
         $this->assertEquals($expected, $catalogue->find(TranslationUntranslated::MSG_ID)->getLocaleString());
         $this->assertEquals($expectedState, $catalogue->find(TranslationUntranslated::MSG_ID)->getState());
+
+        $this->assertCount(1, $catalogue->events());
+        $event = $catalogue->events()->dequeue();
+        $this->assertInstanceOf(Translated::class, $event);
+        $this->assertEquals($catalogue->getId(), $event->id());
+        $this->assertEquals(TranslationUntranslated::MSG_ID, $event->translation()->getToken());
     }
 
 
-    public function provideTranslations() {
+    public function testDescribe()
+    {
+        $catalogue = new Catalogue();
+        $expected  = 'my new description';
+        $request   = (new DescribeRequestBuilder())
+            ->withCatalogueId(Catalogue::ID)
+            ->withToken(TranslationUntranslated::MSG_ID)
+            ->describeAs($expected)
+            ->build()
+        ;
+
+        $catalogue->describe($request);
+
+        $this->assertEquals($expected, $catalogue->find(TranslationUntranslated::MSG_ID)->getSourceString());
+        $this->assertCount(1, $catalogue->events());
+        $event = $catalogue->events()->dequeue();
+        $this->assertInstanceOf(Described::class, $event);
+        $this->assertEquals($catalogue->getId(), $event->id());
+        $this->assertEquals(TranslationUntranslated::MSG_ID, $event->translation()->getToken());
+    }
+
+    public function provideTranslations()
+    {
         return [
             'translation only' => ['translation only', null, 'translated'],
             'state only'       => ['', 'requires-translation', 'requires-translation'],
             'trans & state'    => ['translation and state', 'new', 'new'],
-            'same translation' => [TranslationUntranslated::MSG_SOURCE, null, 'new']
+            'same translation' => [TranslationUntranslated::MSG_SOURCE, null, 'new'],
         ];
     }
 
@@ -281,6 +363,95 @@ class TranslationCatalogueTest extends MockeryTestCase
             ];
     }
 
+    /**
+     * @return mixed|\Mockery\MockInterface
+     */
+    private function makeCreateRequest()
+    {
+        $request = mock(ICreateCatalogueRequest::class);
+        $request->allows('name')->andReturn(Catalogue::NAME);
+        $request->allows('canonical')->andReturn(Catalogue::CANONICAL);
+        $request->allows('sourceLanguage')->andReturn(Catalogue::SOURCE_LANG);
+        $request->allows('sourceCulture')->andReturn(Catalogue::SOURCE_CULTURE);
+        $request->allows('targetLanguage')->andReturn(Catalogue::TARGET_LANG);
+        $request->allows('targetCulture')->andReturn(Catalogue::TARGET_CULTURE);
+
+        return $request;
+    }
+
+    /**
+     * @return TranslationDomain
+     */
+    private function makeDomain(): TranslationDomain
+    {
+        $domain = new TranslationDomain(
+            Catalogue::CANONICAL,
+            Catalogue::SOURCE_LANG,
+            Catalogue::SOURCE_CULTURE,
+            Catalogue::TARGET_LANG,
+            Catalogue::TARGET_CULTURE
+        );
+
+        return $domain;
+    }
+
+    /**
+     * @param $gateway
+     * @param $domain
+     * @param $catalogueToFind
+     */
+    private function expectCatalogueLookUp($gateway, $domain, $catalogueToFind): void
+    {
+        $gateway->expects('findByDomain')->with(equalTo($domain))->andReturn($catalogueToFind);
+    }
+
+    /**
+     * @param $expectedToken
+     *
+     * @return mixed|\Mockery\MockInterface
+     */
+    private function makeAddTranslationRequest($expectedToken)
+    {
+        $request = mock(IAddTranslationRequest::class);
+        $request->allows('catalogueId')->andReturn(Catalogue::ID);
+        $request->allows('token')->andReturn($expectedToken);
+        $request->allows('sourceString')->andReturn('The add translation source string');
+        $request->allows('localeString')->andReturn('Übersetzung hinzufügen');
+        $request->allows('meaning')->andReturn('Give some meaning');
+        $request->allows('notes')->andReturn('Give some additional notes');
+        $request->allows('state')->andReturn('translated');
+
+        return $request;
+    }
+
+    /**
+     * @param $name
+     * @param $canonical
+     * @param $sourceLanguage
+     * @param $sourceCulture
+     * @param $targetLanguage
+     * @param $targetCulture
+     *
+     * @return mixed|\Mockery\MockInterface
+     */
+    private function makeSetUpRequest(
+        $name,
+        $canonical,
+        $sourceLanguage,
+        $sourceCulture,
+        $targetLanguage,
+        $targetCulture
+    ) {
+        $request = mock(ICreateCatalogueRequest::class);
+        $request->allows('name')->andReturn($name);
+        $request->allows('canonical')->andReturn($canonical);
+        $request->allows('sourceLanguage')->andReturn($sourceLanguage);
+        $request->allows('sourceCulture')->andReturn($sourceCulture);
+        $request->allows('targetLanguage')->andReturn($targetLanguage);
+        $request->allows('targetCulture')->andReturn($targetCulture);
+
+        return $request;
+    }
 
 
 }

@@ -10,10 +10,18 @@ namespace Tidy\Domain\Entities;
 
 use ArrayObject;
 use Tidy\Components\Collection\HashMap;
+use Tidy\Components\Events\IMessenger;
+use Tidy\Components\Events\TMessenger;
 use Tidy\Components\Exceptions\InvalidArgument;
 use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Components\Validation\ErrorList;
 use Tidy\Domain\Collections\TranslationCatalogues;
+use Tidy\Domain\Events\Translation\Created;
+use Tidy\Domain\Events\Translation\Described;
+use Tidy\Domain\Events\Translation\DomainChanged;
+use Tidy\Domain\Events\Translation\Removed;
+use Tidy\Domain\Events\Translation\SetUp;
+use Tidy\Domain\Events\Translation\Translated;
 use Tidy\Domain\Requestors\Translation\Catalogue\IAddTranslationRequest;
 use Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest;
 use Tidy\Domain\Requestors\Translation\Message\ICatalogueIdentifier;
@@ -25,8 +33,10 @@ use Tidy\UseCases\Translation\Message\DTO\DescribeRequestDTO;
 /**
  * Class TranslationCatalogue
  */
-abstract class TranslationCatalogue
+abstract class TranslationCatalogue implements IMessenger
 {
+    use TMessenger;
+
     /**
      * @var string
      */
@@ -180,7 +190,7 @@ abstract class TranslationCatalogue
     {
         $this->verifyAppend($request);
 
-        return $this->deposit(
+        $translation = $this->deposit(
             $this->makeTranslation(
                 $request->token(),
                 $request->sourceString(),
@@ -191,14 +201,18 @@ abstract class TranslationCatalogue
             )
         );
 
+        $this->queueEvent(new Created($this->id, $translation));
+        return $translation;
+
     }
 
     public function removeTranslation(IRemoveTranslationRequest $request)
     {
         $this->verifyCatalogueId($request);
-        $match  = $this->verifyTokenExists($request);
+        $match = $this->verifyTokenExists($request);
 
         $this->translations()->offsetUnset($request->token());
+        $this->queueEvent(new Removed($this->id, $match));
 
         return $match;
 
@@ -237,6 +251,8 @@ abstract class TranslationCatalogue
         $this->sourceLanguage = strtolower($language);
         $this->sourceCulture  = strtoupper((string)$culture);
 
+        $this->queueEvent(new DomainChanged($this->id, $this->identifyDomain()));
+
         return $this;
     }
 
@@ -252,6 +268,7 @@ abstract class TranslationCatalogue
 
         $this->targetLanguage = strtolower($language);
         $this->targetCulture  = strtoupper($culture);
+        $this->queueEvent(new DomainChanged($this->id, $this->identifyDomain()));
 
         return $this;
     }
@@ -259,24 +276,26 @@ abstract class TranslationCatalogue
     public function identifyDomain()
     {
         return $this->makeDomain(
-            $this->canonical,
-            $this->sourceLanguage,
-            $this->sourceCulture,
-            $this->targetLanguage,
-            $this->targetCulture
+            (string)$this->canonical,
+            (string)$this->sourceLanguage,
+            (string)$this->sourceCulture,
+            (string)$this->targetLanguage,
+            (string)$this->targetCulture
         );
     }
 
     public function setUp(ICreateCatalogueRequest $request, TranslationCatalogues $catalogues)
     {
         $this->verifySetup($request, $catalogues);
-        $this->id             = uuid();
+        $this->id             = coalesce($this->id, uuid());
         $this->name           = $request->name();
         $this->canonical      = $request->canonical();
         $this->sourceLanguage = $request->sourceLanguage();
         $this->sourceCulture  = $request->sourceCulture();
         $this->targetLanguage = $request->targetLanguage();
         $this->targetCulture  = $request->targetCulture();
+
+        $this->queueEvent(new SetUp($this->id));
     }
 
 
@@ -287,7 +306,7 @@ abstract class TranslationCatalogue
             ->verifyTokenExists($request)
         ;
 
-        return $this->deposit(
+        $translation = $this->deposit(
             $this->makeTranslation(
                 $request->token(),
                 $match->getSourceString(),
@@ -297,15 +316,20 @@ abstract class TranslationCatalogue
                 $this->identifyState($request, $match)
             )
         );
+
+        $this->queueEvent(new Translated($this->id, $translation));
+
+        return $translation;
     }
 
     public function describe(DescribeRequestDTO $request)
     {
         $match = $this
             ->verifyCatalogueId($request)
-             ->verifyTokenExists($request);
+            ->verifyTokenExists($request)
+        ;
 
-        return $this->deposit(
+        $translation = $this->deposit(
             $this->makeTranslation(
                 $request->token(),
                 coalesce($request->sourceString(), $match->getSourceString()),
@@ -316,6 +340,9 @@ abstract class TranslationCatalogue
             )
         );
 
+        $this->queueEvent(new Described($this->id, $translation));
+
+        return $translation;
     }
 
     /**
@@ -558,6 +585,7 @@ abstract class TranslationCatalogue
         }
 
         $this->failOnErrors($errors);
+
         return $this;
     }
 

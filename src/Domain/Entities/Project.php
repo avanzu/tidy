@@ -16,7 +16,6 @@ use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Domain\Collections\Projects;
 use Tidy\Domain\Events\Project\Renamed;
 use Tidy\Domain\Events\Project\SetUp;
-use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\ICreateRequest;
 use Tidy\Domain\Requestors\Project\IRenameRequest;
 
@@ -106,7 +105,7 @@ abstract class Project implements IClaimable, IMessenger
 
     public function isIdentical($project)
     {
-        return ($project instanceof  Project) ? $project->getId() === $this->getId() : false;
+        return ($project instanceof Project) ? $project->getId() === $this->getId() : false;
     }
 
     /**
@@ -120,7 +119,7 @@ abstract class Project implements IClaimable, IMessenger
 
         $this->verifySetUp($request, $projects);
 
-        $this->id          = uuid();
+        $this->id          = coalesce($this->id, uuid());
         $this->name        = $request->name();
         $this->description = $request->description();
         $this->canonical   = $request->canonical();
@@ -142,6 +141,37 @@ abstract class Project implements IClaimable, IMessenger
 
         $this->queueEvent(new Renamed($this->id));
 
+    }
+
+    /**
+     * @param ICreateRequest $request
+     * @param Projects       $projects
+     * @param                $errors
+     *
+     * @return mixed
+     */
+    protected function verifyCanonical(ICreateRequest $request, Projects $projects, $errors)
+    {
+        if (strlen($request->canonical()) < 3) {
+            $errors['canonical'] = sprintf(
+                'Invalid canonical "%s". Canonical must contain at least 3 characters.',
+                $request->canonical()
+            );
+
+            return $errors;
+        }
+
+        if ($match = $projects->findByCanonical($request->canonical())) {
+            if (!$this->isIdentical($match)) {
+                $errors['canonical'] = sprintf(
+                    'Invalid canonical "%s". Already in use by "%s".',
+                    $request->canonical(),
+                    $match->getName()
+                );
+            }
+        }
+
+        return $errors;
     }
 
     private function verifySetUp(ICreateRequest $request, Projects $projects)
@@ -171,37 +201,6 @@ abstract class Project implements IClaimable, IMessenger
     {
         if (strlen($value) < 3) {
             $errors['name'] = sprintf('Invalid name "%s". Name must contain at least 3 characters.', $value);
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @param ICreateRequest $request
-     * @param Projects       $projects
-     * @param                $errors
-     *
-     * @return mixed
-     */
-    protected function verifyCanonical(ICreateRequest $request, Projects $projects, $errors)
-    {
-        if (strlen($request->canonical()) < 3) {
-            $errors['canonical'] = sprintf(
-                'Invalid canonical "%s". Canonical must contain at least 3 characters.',
-                $request->canonical()
-            );
-
-            return $errors;
-        }
-
-        if ($match = $projects->findByCanonical($request->canonical())) {
-            if (!$this->isIdentical($match)) {
-                $errors['canonical'] = sprintf(
-                    'Invalid canonical "%s". Already in use by "%s".',
-                    $request->canonical(),
-                    $match->getName()
-                );
-            }
         }
 
         return $errors;
