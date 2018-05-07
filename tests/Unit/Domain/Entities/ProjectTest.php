@@ -50,7 +50,7 @@ class ProjectTest extends MockeryTestCase
             }
         };
 
-        $gateway  = mock(IProjectGateway::class);
+        $gateway = mock(IProjectGateway::class);
         $gateway->expects('findByCanonical')->with('demo-1')->andReturn(null);
 
         $project->setUp($request, new Projects($gateway));
@@ -99,20 +99,26 @@ class ProjectTest extends MockeryTestCase
         $request->allows('description')->andReturn(ProjectSilverTongue::DESCRIPTION);
         $request->allows('canonical')->andReturn(ProjectSilverTongue::CANONICAL);
         $gateway = mock(IProjectGateway::class);
-        $gateway->expects('findByCanonical')->with(ProjectSilverTongue::CANONICAL)->andReturn(new ProjectSilverTongue());
+        $gateway->expects('findByCanonical')->with(ProjectSilverTongue::CANONICAL)->andReturn(
+            new ProjectSilverTongue()
+        )
+        ;
         try {
             $project->setUp($request, new Projects($gateway));
             $this->fail('Failed to fail.');
         } catch (PreconditionFailed $exception) {
             assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
-            $this->assertStringMatchesFormat('Invalid canonical "%s". Already in use by "%s".', current($exception->getErrors()));
+            $this->assertStringMatchesFormat(
+                'Invalid canonical "%s". Already in use by "%s".',
+                current($exception->getErrors())
+            );
         }
     }
 
     public function testRename()
     {
-        $request = mock(IRenameRequest::class);
-        $expectedName    = 'Lorem ipsum Project';
+        $request      = mock(IRenameRequest::class);
+        $expectedName = 'Lorem ipsum Project';
         $request->shouldReceive('name')->andReturn($expectedName);
         $request->shouldReceive('description')->andReturn(null);
         $project = new ProjectSilverTongue();
