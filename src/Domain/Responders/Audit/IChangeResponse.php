@@ -7,7 +7,7 @@
  */
 namespace Tidy\Domain\Responders\Audit;
 
-interface IChangeResponse
+interface IChangeResponse extends \Countable
 {
     public function changes();
 }

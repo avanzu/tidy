@@ -22,7 +22,7 @@ class CollectionResponseTransformerTest extends MockeryTestCase
 {
     public function test_instantiation()
     {
-        $transformer = new \Tidy\UseCases\Translation\Catalogue\DTO\CollectionResponseTransformer();
+        $transformer = new CollectionResponseTransformer();
         assertThat($transformer, is(anInstanceOf(ICollectionResponseTransformer::class)));
     }
 
@@ -30,7 +30,7 @@ class CollectionResponseTransformerTest extends MockeryTestCase
     {
         $itemTransformer    = mock(ICatalogueResponseTransformer::class);
         $initialTransformer = mock(ICatalogueResponseTransformer::class);
-        $transformer        = new \Tidy\UseCases\Translation\Catalogue\DTO\CollectionResponseTransformer(
+        $transformer        = new CollectionResponseTransformer(
             $initialTransformer
         );
         $return             = $transformer->swapItemTransformer($itemTransformer);

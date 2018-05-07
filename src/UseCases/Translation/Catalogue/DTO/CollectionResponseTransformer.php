@@ -11,6 +11,7 @@ namespace Tidy\UseCases\Translation\Catalogue\DTO;
 use Tidy\Components\Collection\IPagedCollection;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
+use Tidy\Domain\Responders\Translation\Catalogue\ICollectionResponse;
 use Tidy\Domain\Responders\Translation\Catalogue\ICollectionResponseTransformer;
 
 class CollectionResponseTransformer implements ICollectionResponseTransformer
@@ -44,7 +45,7 @@ class CollectionResponseTransformer implements ICollectionResponseTransformer
     /**
      * @param IPagedCollection $collection
      *
-     * @return \Tidy\Domain\Responders\Translation\Catalogue\ICollectionResponse
+     * @return ICollectionResponse
      */
     public function transform(IPagedCollection $collection)
     {

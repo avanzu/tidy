@@ -7,10 +7,10 @@
  */
 namespace Tidy\Domain\Responders\Translation\Catalogue;
 
+use Tidy\Domain\Responders\Project\IExcerpt;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
-use Tidy\UseCases\Translation\DTO\Excerpt;
 
-interface ICatalogueResponse
+interface ICatalogueResponse extends \Countable
 {
     /**
      * @return mixed
@@ -48,7 +48,7 @@ interface ICatalogueResponse
     public function getTargetCulture();
 
     /**
-     * @return Excerpt
+     * @return IExcerpt
      */
     public function getProject();
 
@@ -65,7 +65,7 @@ interface ICatalogueResponse
     public function count();
 
     /**
-     * @return ITranslationResponse[]
+     * @return ITranslationResponse[]|iterable
      */
     public function translations();
 }

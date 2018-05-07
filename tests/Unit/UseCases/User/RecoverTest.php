@@ -10,11 +10,9 @@ use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Util\StringUtilFactory;
 use Tidy\Domain\BusinessRules\UserRules;
-use Tidy\Domain\Collections\Users;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Responders\User\IResponse;
 use Tidy\Domain\Responders\User\IResponseTransformer;
-use Tidy\Domain\Responders\User\ItemResponder;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Fixtures\Entities\TimmyUser;
 use Tidy\UseCases\User\DTO\RecoverRequestBuilder;
@@ -73,7 +71,7 @@ class RecoverTest extends MockeryTestCase
     protected function setUp()
     {
         $this->gateway = mock(IUserGateway::class);
-        $this->useCase = new Recover($this->gateway, new UserRules(new StringUtilFactory(), new Users($this->gateway)));
+        $this->useCase = new Recover($this->gateway, new UserRules(new StringUtilFactory(), $this->gateway));
     }
 
 

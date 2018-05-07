@@ -10,7 +10,6 @@ namespace Tidy\UseCases\User;
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\ICollectionRequest;
-use Tidy\Domain\Requestors\User\IGetCollectionRequest;
 use Tidy\Domain\Responders\User\ICollectionResponse;
 use Tidy\Domain\Responders\User\ICollectionResponseTransformer;
 use Tidy\UseCases\User\DTO\CollectionResponseTransformer;

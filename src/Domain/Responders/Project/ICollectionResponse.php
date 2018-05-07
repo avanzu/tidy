@@ -9,7 +9,7 @@ namespace Tidy\Domain\Responders\Project;
 interface ICollectionResponse
 {
     /**
-     * @return IResponse[]
+     * @return IResponse[]|iterable
      */
     public function getItems();
 

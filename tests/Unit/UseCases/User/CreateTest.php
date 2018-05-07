@@ -16,7 +16,6 @@ use Tidy\Components\Validation\IPasswordStrengthValidator;
 use Tidy\Components\Validation\Validators\EMailValidator;
 use Tidy\Components\Validation\Validators\PasswordStrengthValidator;
 use Tidy\Domain\BusinessRules\UserRules;
-use Tidy\Domain\Collections\Users;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Entities\UserProfile;
 use Tidy\Domain\Gateways\IUserGateway;
@@ -189,7 +188,7 @@ class CreateTest extends MockeryTestCase
         $this->factory    = mock(IStringUtilFactory::class);
         $this->useCase    = new Create(
             $this->gateway,
-            new UserRules($this->factory, new Users($this->gateway)),
+            new UserRules($this->factory, $this->gateway),
             $this->factory
         );
 

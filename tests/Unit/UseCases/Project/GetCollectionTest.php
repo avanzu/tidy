@@ -15,7 +15,6 @@ use Tidy\Tests\Unit\Fixtures\Entities\ProjectSilverTongue;
 use Tidy\UseCases\Project\DTO\CollectionResponseDTO;
 use Tidy\UseCases\Project\DTO\CollectionResponseTransformer;
 use Tidy\UseCases\Project\DTO\GetCollectionRequestBuilder;
-use Tidy\UseCases\Project\DTO\GetCollectionRequestDTO;
 use Tidy\UseCases\Project\DTO\ResponseDTO;
 use Tidy\UseCases\Project\GetCollection;
 

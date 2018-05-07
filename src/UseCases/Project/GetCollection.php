@@ -9,9 +9,8 @@ namespace Tidy\UseCases\Project;
 
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Gateways\IProjectGateway;
-use Tidy\Domain\Requestors\CollectionRequest;
 use Tidy\Domain\Requestors\ICollectionRequest;
-use Tidy\Domain\Requestors\Project\IGetCollectionRequest;
+use Tidy\Domain\Responders\Project\ICollectionResponse;
 use Tidy\Domain\Responders\Project\ICollectionResponseTransformer;
 use Tidy\UseCases\Project\DTO\CollectionResponseTransformer;
 
@@ -39,6 +38,11 @@ class GetCollection
         $this->transformer = $transformer;
     }
 
+    /**
+     * @param ICollectionRequest $request
+     *
+     * @return ICollectionResponse
+     */
     public function execute(ICollectionRequest $request)
     {
 

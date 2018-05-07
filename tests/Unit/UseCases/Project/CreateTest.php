@@ -12,7 +12,6 @@ use Tidy\Components\AccessControl\IClaimable;
 use Tidy\Components\Events\Dispatcher;
 use Tidy\Components\Normalisation\ITextNormaliser;
 use Tidy\Domain\BusinessRules\ProjectRules;
-use Tidy\Domain\Collections\Projects;
 use Tidy\Domain\Entities\Project;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Gateways\IProjectGateway;
@@ -101,7 +100,7 @@ class CreateTest extends MockeryTestCase
 
         $this->broker->expects('lookUp')->with($owner->getId())->andReturn($owner);
 
-        $this->expectIdentifyingSave($name, $description, $id, $canonical, $owner);
+        $this->expectIdentifyingSave($name, $description, $canonical, $owner);
 
         $response = $this->useCase->execute($request);
 
@@ -145,7 +144,7 @@ class CreateTest extends MockeryTestCase
     {
 
         $this->gateway = mock(IProjectGateway::class);
-        $rules         = new ProjectRules(new Projects($this->gateway));
+        $rules         = new ProjectRules($this->gateway);
         $this->useCase = new Create(
             mock(IProjectGateway::class), $rules, mock(AccessControlBroker::class), mock(IResponseTransformer::class)
         );
@@ -168,9 +167,10 @@ class CreateTest extends MockeryTestCase
     /**
      * @param $name
      * @param $description
-     * @param $id
+     * @param $canonical
+     * @param $owner
      */
-    private function expectIdentifyingSave($name, $description, $id, $canonical, $owner)
+    private function expectIdentifyingSave($name, $description, $canonical, $owner)
     {
         $matchesAssertion = function (Project $project) use ($name, $description, $canonical, $owner) {
             if (!$project->getName() === $name) {

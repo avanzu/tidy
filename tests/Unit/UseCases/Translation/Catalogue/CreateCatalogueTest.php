@@ -11,7 +11,6 @@ namespace Tidy\Tests\Unit\UseCases\Translation\Catalogue;
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Domain\BusinessRules\TranslationRules;
-use Tidy\Domain\Collections\TranslationCatalogues;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Entities\TranslationDomain;
 use Tidy\Domain\Gateways\ITranslationGateway;
@@ -101,7 +100,7 @@ class CreateCatalogueTest extends MockeryTestCase
         $this->gateway = mock(ITranslationGateway::class);
         $this->useCase = new CreateCatalogue(
             $this->gateway,
-            new TranslationRules(new TranslationCatalogues($this->gateway))
+            new TranslationRules($this->gateway)
         );
 
     }

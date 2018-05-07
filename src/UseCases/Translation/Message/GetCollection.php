@@ -11,6 +11,7 @@ namespace Tidy\UseCases\Translation\Message;
 use Tidy\Components\Collection\PagedCollection;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Message\IGetSubSetRequest;
+use Tidy\Domain\Responders\Translation\Message\ICollectionResponse;
 use Tidy\Domain\Responders\Translation\Message\ICollectionResponseTransformer;
 use Tidy\UseCases\Translation\Message\DTO\CollectionResponseTransformer;
 
@@ -38,6 +39,11 @@ class GetCollection
         $this->transformer = $transformer;
     }
 
+    /**
+     * @param IGetSubSetRequest $request
+     *
+     * @return ICollectionResponse
+     */
     public function execute(IGetSubSetRequest $request)
     {
 

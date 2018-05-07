@@ -9,13 +9,10 @@ namespace Tidy\Tests\Unit\UseCases\Project;
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Domain\BusinessRules\ProjectRules;
-use Tidy\Domain\Collections\Projects;
 use Tidy\Domain\Entities\Project;
 use Tidy\Domain\Gateways\IProjectGateway;
-use Tidy\Domain\Responders\Project\ChangeResponder;
 use Tidy\Domain\Responders\Project\IResponse;
 use Tidy\Domain\Responders\Project\IResponseTransformer;
-use Tidy\Domain\Responders\Project\ItemResponder;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Fixtures\Entities\ProjectSilverTongue;
 use Tidy\UseCases\Project\DTO\RenameRequestBuilder;
@@ -77,7 +74,7 @@ class RenameTest extends MockeryTestCase
     {
         parent::setUp();
         $this->gateway = mock(IProjectGateway::class);
-        $rules = new ProjectRules(new Projects($this->gateway));
+        $rules = new ProjectRules($this->gateway);
         $this->useCase = new Rename($this->gateway, $rules);
     }
 

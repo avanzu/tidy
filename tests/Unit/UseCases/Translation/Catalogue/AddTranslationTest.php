@@ -9,17 +9,14 @@
 namespace Tidy\Tests\Unit\UseCases\Translation\Catalogue;
 
 use Mockery\MockInterface;
-use Tidy\Components\Exceptions\Duplicate;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Domain\BusinessRules\TranslationRules;
-use Tidy\Domain\Collections\TranslationCatalogues;
 use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
-use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 use Tidy\Tests\MockeryTestCase;
 use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueEnglishToGerman;
@@ -135,7 +132,7 @@ class AddTranslationTest extends MockeryTestCase
         parent::setUp();
 
         $this->gateway = mock(ITranslationGateway::class);
-        $rules = new TranslationRules(new TranslationCatalogues($this->gateway));
+        $rules         = new TranslationRules($this->gateway);
         $this->useCase = new AddTranslation($this->gateway, $rules);
     }
 
@@ -149,7 +146,7 @@ class AddTranslationTest extends MockeryTestCase
     }
 
     /**
-     * @return TranslationImpl
+     * @param $token
      */
     protected function expectSave($token)
     {

@@ -21,7 +21,6 @@ use Tidy\Tests\Unit\Fixtures\Entities\UserStub1;
 use Tidy\Tests\Unit\Fixtures\Entities\UserStub2;
 use Tidy\UseCases\User\DTO\CollectionResponseDTO;
 use Tidy\UseCases\User\DTO\CollectionResponseTransformer;
-use Tidy\UseCases\User\DTO\GetCollectionRequestDTO;
 use Tidy\UseCases\User\GetCollection;
 
 /**

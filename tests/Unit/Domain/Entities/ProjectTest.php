@@ -10,7 +10,6 @@ namespace Tidy\Tests\Unit\Domain\Entities;
 
 use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Domain\BusinessRules\ProjectRules;
-use Tidy\Domain\Collections\Projects;
 use Tidy\Domain\Events\Project\Renamed;
 use Tidy\Domain\Events\Project\SetUp;
 use Tidy\Domain\Gateways\IProjectGateway;
@@ -84,7 +83,7 @@ class ProjectTest extends MockeryTestCase
         $request->allows('canonical')->andReturn($canonical);
 
         try {
-            $project->setUp($request, new ProjectRules(new Projects(mock(IProjectGateway::class))));
+            $project->setUp($request, new ProjectRules(mock(IProjectGateway::class)));
             $this->fail('Failed to fail.');
         } catch (\Exception $exception) {
             assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
@@ -105,7 +104,7 @@ class ProjectTest extends MockeryTestCase
         )
         ;
         try {
-            $project->setUp($request, new ProjectRules(new Projects($gateway)));
+            $project->setUp($request, new ProjectRules($gateway));
             $this->fail('Failed to fail.');
         } catch (PreconditionFailed $exception) {
             assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));

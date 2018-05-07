@@ -12,11 +12,11 @@ use Tidy\Components\AccessControl\IClaimant;
 use Tidy\Components\Events\IMessenger;
 use Tidy\Components\Util\StringUtilFactory;
 use Tidy\Domain\BusinessRules\UserRules;
-use Tidy\Domain\Collections\Users;
 use Tidy\Domain\Events\User\PasswordReset;
 use Tidy\Domain\Events\User\Activated;
 use Tidy\Domain\Events\User\Recovering;
 use Tidy\Domain\Events\User\Registered;
+use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\IActivateRequest;
 use Tidy\Domain\Requestors\User\ICreateRequest;
 use Tidy\Domain\Requestors\User\IRecoverRequest;
@@ -46,7 +46,7 @@ class UserTest extends MockeryTestCase
         $user    = new UserImpl();
         $request = $this->makeRegisterRequestWithoutImmediateAccess();
 
-        $users   = mock(Users::class);
+        $users   = mock(IUserGateway::class);
         $users->expects('findByUserName')->andReturn(null);
         $stringUtilFactory = new StringUtilFactory();
         $user->register($request, new UserRules($stringUtilFactory, $users) , $stringUtilFactory);
@@ -63,7 +63,7 @@ class UserTest extends MockeryTestCase
         $user    = new UserImpl();
         $request = $this->makeRegisterRequestWithImmediateAccess();
 
-        $users   = mock(Users::class);
+        $users   = mock(IUserGateway::class);
         $users->expects('findByUserName')->andReturn(null);
         $stringUtilFactory = new StringUtilFactory();
         $user->register($request, new UserRules($stringUtilFactory, $users) , $stringUtilFactory);

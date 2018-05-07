@@ -11,7 +11,6 @@ use Tidy\Components\Collection\Boundary;
 use Tidy\Components\Collection\IPagedCollection;
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Entities\Project;
-use Tidy\Tests\Unit\Fixtures\Entities\ProjectSilverTongue;
 
 interface IProjectGateway
 {

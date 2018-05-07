@@ -57,7 +57,7 @@ class LookUpTest extends MockeryTestCase
     public function test_execute_notfound()
     {
         $request = (new LookUpRequestBuilder())->withId(99999)->build();
-        $this->gateway->expects('findCatalogue')->andReturns(null);
+        $this->gateway->expects('findCatalogue')->andReturn(null);
         try {
             $this->useCase->execute($request);
             $this->fail('Failed to fail...');

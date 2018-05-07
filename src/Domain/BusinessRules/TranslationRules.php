@@ -8,37 +8,35 @@
 
 namespace Tidy\Domain\BusinessRules;
 
-use Tidy\Components\Exceptions\InvalidArgument;
 use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Components\Validation\ErrorList;
-use Tidy\Domain\Collections\TranslationCatalogues;
 use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
+use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Catalogue\IAddTranslationRequest;
 use Tidy\Domain\Requestors\Translation\Catalogue\ICreateCatalogueRequest;
 use Tidy\Domain\Requestors\Translation\Message\ICatalogueIdentifier;
 use Tidy\Domain\Requestors\Translation\Message\IRemoveTranslationRequest;
 use Tidy\Domain\Requestors\Translation\Message\IToken;
 use Tidy\Domain\Requestors\Translation\Message\ITranslateRequest;
-use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
 use Tidy\UseCases\Translation\Message\DTO\DescribeRequestDTO;
 
 class TranslationRules
 {
 
     /**
-     * @var TranslationCatalogues
+     * @var ITranslationGateway
      */
-    protected $catalogues;
+    protected $gateway;
 
     /**
      * TranslationRules constructor.
      *
-     * @param TranslationCatalogues $catalogues
+     * @param ITranslationGateway $gateway
      */
-    public function __construct(TranslationCatalogues $catalogues)
+    public function __construct(ITranslationGateway $gateway)
     {
-        $this->catalogues = $catalogues;
+        $this->gateway = $gateway;
     }
 
     public function verifyAppend(IAddTranslationRequest $request, TranslationCatalogue $catalogue)
@@ -101,7 +99,7 @@ class TranslationRules
             $request->targetCulture()
         );
 
-        if ($match = $this->catalogues->findByDomain($domain)) {
+        if ($match = $this->gateway->findByDomain($domain)) {
             if (!$catalogue->isIdenticalTo($match)) {
                 $errors['domain'] = sprintf(
                     'Invalid domain "%s". Already in use by "%s".',

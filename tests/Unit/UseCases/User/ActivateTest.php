@@ -11,7 +11,6 @@ use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Components\Util\StringUtilFactory;
 use Tidy\Domain\BusinessRules\UserRules;
-use Tidy\Domain\Collections\Users;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Responders\User\IResponse;
@@ -103,7 +102,7 @@ class ActivateTest extends MockeryTestCase
     protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */
     {
         $this->gateway   = mock(IUserGateway::class);
-        $this->userRules = new UserRules(new StringUtilFactory(), new Users($this->gateway));
+        $this->userRules = new UserRules(new StringUtilFactory(), $this->gateway);
 
         $this->useCase = new Activate($this->gateway, $this->userRules);
         $this->useCase->setUserGateway($this->gateway);

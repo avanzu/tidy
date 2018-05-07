@@ -9,7 +9,6 @@ namespace Tidy\UseCases\Project;
 
 use Tidy\Components\AccessControl\AccessControlBroker;
 use Tidy\Domain\BusinessRules\ProjectRules;
-use Tidy\Domain\Collections\Projects;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\ICreateRequest;
 use Tidy\Domain\Responders\Project\IResponse;

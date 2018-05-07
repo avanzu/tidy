@@ -15,7 +15,6 @@ use Tidy\Components\Util\IStringUtilFactory;
 use Tidy\Components\Validation\IPasswordStrengthValidator;
 use Tidy\Components\Validation\Validators\PasswordStrengthValidator;
 use Tidy\Domain\BusinessRules\UserRules;
-use Tidy\Domain\Collections\Users;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Responders\User\IResponse;
@@ -136,7 +135,7 @@ class ResetPasswordTest extends MockeryTestCase
         $this->gateway = mock(IUserGateway::class);
         $this->encoder = mock(IPasswordEncoder::class);
         $this->factory = mock(IStringUtilFactory::class);
-        $rules = new UserRules($this->factory, new Users($this->gateway));
+        $rules = new UserRules($this->factory, $this->gateway);
         $this->useCase = new ResetPassword($this->factory, $rules, $this->gateway);
 
     }

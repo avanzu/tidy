@@ -8,9 +8,7 @@
 namespace Tidy\UseCases\User;
 
 use Tidy\Components\Util\IStringUtilFactory;
-use Tidy\Components\Util\StringConverter;
 use Tidy\Domain\BusinessRules\UserRules;
-use Tidy\Domain\Collections\Users;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\ICreateRequest;
 use Tidy\Domain\Responders\User\IResponseTransformer;

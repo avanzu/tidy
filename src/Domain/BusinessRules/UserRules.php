@@ -12,8 +12,8 @@ use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Components\Util\IStringUtilFactory;
 use Tidy\Components\Validation\ErrorList;
 use Tidy\Components\Validation\IPasswordStrengthValidator;
-use Tidy\Domain\Collections\Users;
 use Tidy\Domain\Entities\User;
+use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\IActivateRequest;
 use Tidy\Domain\Requestors\User\ICreateRequest;
 use Tidy\Domain\Requestors\User\IPlainPassword;
@@ -33,20 +33,20 @@ class UserRules
     protected $factory;
 
     /**
-     * @var Users
+     * @var IUserGateway
      */
-    protected $users;
+    protected $gateway;
 
     /**
      * UserRules constructor.
      *
      * @param IStringUtilFactory $factory
-     * @param Users              $users
+     * @param IUserGateway       $gateway
      */
-    public function __construct(IStringUtilFactory $factory, Users $users)
+    public function __construct(IStringUtilFactory $factory, IUserGateway $gateway)
     {
         $this->factory = $factory;
-        $this->users   = $users;
+        $this->gateway = $gateway;
     }
 
 
@@ -153,7 +153,7 @@ class UserRules
      */
     protected function verifyUniqueUserName(ICreateRequest $request, $errors)
     {
-        if ($user = $this->users->findByUserName($request->getUserName())) {
+        if ($user = $this->gateway->findByUserName($request->getUserName())) {
             $errors['username'] = sprintf('Username "%s" is already taken.', $request->getUserName());
         }
 

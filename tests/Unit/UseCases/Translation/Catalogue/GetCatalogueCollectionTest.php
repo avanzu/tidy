@@ -17,7 +17,6 @@ use Tidy\Tests\Unit\Fixtures\Entities\TranslationCatalogueEnglishToGerman;
 use Tidy\UseCases\Translation\Catalogue\DTO\CollectionResponseDTO;
 use Tidy\UseCases\Translation\Catalogue\DTO\CollectionResponseTransformer;
 use Tidy\UseCases\Translation\Catalogue\DTO\GetCollectionRequestBuilder;
-use Tidy\UseCases\Translation\Catalogue\DTO\GetCollectionRequestDTO;
 use Tidy\UseCases\Translation\Catalogue\GetCatalogueCollection;
 
 class GetCatalogueCollectionTest extends MockeryTestCase

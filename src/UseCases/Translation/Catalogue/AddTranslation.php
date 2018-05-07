@@ -8,14 +8,12 @@
 
 namespace Tidy\UseCases\Translation\Catalogue;
 
-use Tidy\Components\Exceptions\Duplicate;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Domain\BusinessRules\TranslationRules;
-use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Catalogue\IAddTranslationRequest;
+use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponse;
 use Tidy\Domain\Responders\Translation\Catalogue\ICatalogueResponseTransformer;
-use Tidy\Domain\Responders\Translation\Catalogue\ItemResponder;
 use Tidy\UseCases\Translation\Catalogue\Traits\TNestedItemResponder;
 
 class AddTranslation
@@ -32,16 +30,25 @@ class AddTranslation
      * CreateCatalogue constructor.
      *
      * @param ITranslationGateway           $gateway
+     * @param TranslationRules              $rules
      * @param ICatalogueResponseTransformer $transformer
      */
-    public function __construct(ITranslationGateway $gateway, TranslationRules $rules, ICatalogueResponseTransformer $transformer = null)
-    {
+    public function __construct(
+        ITranslationGateway $gateway,
+        TranslationRules $rules,
+        ICatalogueResponseTransformer $transformer = null
+    ) {
         $this->gateway     = $gateway;
         $this->transformer = $transformer;
-        $this->rules = $rules;
+        $this->rules       = $rules;
     }
 
 
+    /**
+     * @param IAddTranslationRequest $request
+     *
+     * @return ICatalogueResponse
+     */
     public function execute(IAddTranslationRequest $request)
     {
         $catalogue = $this->lookUpCatalogue($request);

@@ -12,7 +12,6 @@ use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Domain\BusinessRules\TranslationRules;
-use Tidy\Domain\Collections\TranslationCatalogues;
 use Tidy\Domain\Gateways\ITranslationGateway;
 use Tidy\Domain\Requestors\Translation\Message\ITranslateRequest;
 use Tidy\Domain\Responders\Translation\Message\ITranslationResponse;
@@ -58,7 +57,7 @@ class TranslateTest extends MockeryTestCase
         $translation = new TranslationUntranslated();
 
         $this->expect_findCatalogue_on_gateway($catalogue);
-        $this->expect_translate_on_catalogue($catalogue, $translation);
+        $this->expect_translate_on_catalogue($catalogue);
         $this->expect_save_on_gateway($catalogue);
 
         $response = $this->useCase->execute($request);
@@ -71,7 +70,7 @@ class TranslateTest extends MockeryTestCase
 
     public function test_execute_with_unknown_catalogue_throws_NotFound()
     {
-        $this->gateway->expects('findCatalogue')->andReturns(null);
+        $this->gateway->expects('findCatalogue')->andReturn(null);
 
         try {
 
@@ -90,7 +89,7 @@ class TranslateTest extends MockeryTestCase
     {
 
         $catalogue = new TranslationCatalogueEnglishToGerman();
-        $this->gateway->expects('findCatalogue')->andReturns($catalogue);
+        $this->gateway->expects('findCatalogue')->andReturn($catalogue);
 
         try {
 
@@ -116,7 +115,7 @@ class TranslateTest extends MockeryTestCase
     {
         parent::setUp();
         $this->gateway = mock(ITranslationGateway::class);
-        $this->useCase = new Translate($this->gateway, new TranslationRules(new TranslationCatalogues($this->gateway)));
+        $this->useCase = new Translate($this->gateway, new TranslationRules($this->gateway));
     }
 
     /**
@@ -133,9 +132,8 @@ class TranslateTest extends MockeryTestCase
 
     /**
      * @param $catalogue
-     * @param $translation
      */
-    protected function expect_translate_on_catalogue($catalogue, $translation): void
+    protected function expect_translate_on_catalogue($catalogue): void
     {
         $catalogue->expects('translate')
                   ->with(anInstanceOf(ITranslateRequest::class), anInstanceOf(TranslationRules::class))

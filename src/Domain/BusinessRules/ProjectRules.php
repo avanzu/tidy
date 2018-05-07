@@ -10,24 +10,24 @@ namespace Tidy\Domain\BusinessRules;
 
 use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Components\Validation\ErrorList;
-use Tidy\Domain\Collections\Projects;
 use Tidy\Domain\Entities\Project;
+use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\ICreateRequest;
 use Tidy\Domain\Requestors\Project\IRenameRequest;
 
 class ProjectRules
 {
     /**
-     * @var Projects
+     * @var IProjectGateway
      */
-    protected $projects;
+    protected $gateway;
 
     /**
      * ProjectRules constructor.
      *
-     * @param Projects $projects
+     * @param IProjectGateway $gateway
      */
-    public function __construct(Projects $projects) { $this->projects = $projects; }
+    public function __construct(IProjectGateway $gateway) { $this->gateway = $gateway; }
 
     public function verifySetUp(ICreateRequest $request, Project $project)
     {
@@ -64,7 +64,7 @@ class ProjectRules
             return $errors;
         }
 
-        if ($match = $this->projects->findByCanonical($request->canonical())) {
+        if ($match = $this->gateway->findByCanonical($request->canonical())) {
             if (!$project->isIdentical($match)) {
                 $errors['canonical'] = sprintf(
                     'Invalid canonical "%s". Already in use by "%s".',
