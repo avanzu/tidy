@@ -9,6 +9,9 @@ namespace Tidy\Tests\Unit\UseCases\User;
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
 use Tidy\Components\Exceptions\PreconditionFailed;
+use Tidy\Components\Util\StringUtilFactory;
+use Tidy\Domain\BusinessRules\UserRules;
+use Tidy\Domain\Collections\Users;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Responders\User\IResponse;
@@ -32,9 +35,14 @@ class ActivateTest extends MockeryTestCase
      */
     protected $gateway;
 
+    /**
+     * @var  UserRules|MockInterface
+     */
+    private   $userRules;
+
     public function test_instantiation()
     {
-        $useCase = new Activate($this->gateway, mock(IResponseTransformer::class));
+        $useCase = new Activate($this->gateway, mock(UserRules::class), mock(IResponseTransformer::class));
         $this->assertInstanceOf(Activate::class, $useCase);
         $useCase->setTransformer(new ResponseTransformer());
     }
@@ -79,14 +87,14 @@ class ActivateTest extends MockeryTestCase
     public function test_activate_with_token_mismatch()
     {
         $token = uniqid();
-        $user = new TimmyUser();
+        $user  = new TimmyUser();
         $user->assignToken(uniqid());
         $this->expectFindReturning($token, $user);
 
         try {
             $this->useCase->execute((new ActivateRequestBuilder())->withToken($token)->build());
             $this->fail('Failed to fail.');
-        } catch(PreconditionFailed $exception) {
+        } catch (PreconditionFailed $exception) {
             $this->assertStringMatchesFormat('Token "%s" does not match expected "%s".', $exception->atIndex('token'));
         }
     }
@@ -94,8 +102,10 @@ class ActivateTest extends MockeryTestCase
 
     protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */
     {
-        $this->gateway = mock(IUserGateway::class);
-        $this->useCase = new Activate($this->gateway);
+        $this->gateway   = mock(IUserGateway::class);
+        $this->userRules = new UserRules(new StringUtilFactory(), new Users($this->gateway));
+
+        $this->useCase = new Activate($this->gateway, $this->userRules);
         $this->useCase->setUserGateway($this->gateway);
 
     }

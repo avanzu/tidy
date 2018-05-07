@@ -8,6 +8,9 @@ namespace Tidy\Tests\Unit\UseCases\User;
 
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\NotFound;
+use Tidy\Components\Util\StringUtilFactory;
+use Tidy\Domain\BusinessRules\UserRules;
+use Tidy\Domain\Collections\Users;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Responders\User\IResponse;
 use Tidy\Domain\Responders\User\IResponseTransformer;
@@ -32,7 +35,7 @@ class RecoverTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $useCase = new Recover(mock(IUserGateway::class), mock(IResponseTransformer::class));
+        $useCase = new Recover(mock(IUserGateway::class), mock(UserRules::class), mock(IResponseTransformer::class));
         assertThat($useCase, is(notNullValue()));
     }
 
@@ -70,7 +73,7 @@ class RecoverTest extends MockeryTestCase
     protected function setUp()
     {
         $this->gateway = mock(IUserGateway::class);
-        $this->useCase = new Recover($this->gateway);
+        $this->useCase = new Recover($this->gateway, new UserRules(new StringUtilFactory(), new Users($this->gateway)));
     }
 
 

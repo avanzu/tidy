@@ -15,6 +15,8 @@ use Tidy\Components\Util\StringUtilFactory;
 use Tidy\Components\Validation\IPasswordStrengthValidator;
 use Tidy\Components\Validation\Validators\EMailValidator;
 use Tidy\Components\Validation\Validators\PasswordStrengthValidator;
+use Tidy\Domain\BusinessRules\UserRules;
+use Tidy\Domain\Collections\Users;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Entities\UserProfile;
 use Tidy\Domain\Gateways\IUserGateway;
@@ -62,7 +64,7 @@ class CreateTest extends MockeryTestCase
 
     public function testInstantiation()
     {
-        $useCase = new Create(mock(IUserGateway::class), mock(IStringUtilFactory::class));
+        $useCase = new Create(mock(IUserGateway::class), mock(UserRules::class), mock(IStringUtilFactory::class));
         assertThat($useCase, is(notNullValue()));
 
         $this->assertInstanceOf(Create::class, $this->useCase);
@@ -185,7 +187,11 @@ class CreateTest extends MockeryTestCase
         $this->gateway    = mock(IUserGateway::class);
         $this->normaliser = mock(ITextNormaliser::class);
         $this->factory    = mock(IStringUtilFactory::class);
-        $this->useCase    = new Create($this->gateway, $this->factory);
+        $this->useCase    = new Create(
+            $this->gateway,
+            new UserRules($this->factory, new Users($this->gateway)),
+            $this->factory
+        );
 
         $this->gateway->allows('makeUser')->andReturn(new UserImpl());
 

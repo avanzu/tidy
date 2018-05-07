@@ -9,6 +9,7 @@ namespace Tidy\UseCases\User;
 
 use Tidy\Components\Util\IStringUtilFactory;
 use Tidy\Components\Util\StringConverter;
+use Tidy\Domain\BusinessRules\UserRules;
 use Tidy\Domain\Collections\Users;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\ICreateRequest;
@@ -25,14 +26,21 @@ class Create
      */
     private $factory;
 
+    /**
+     * @var UserRules
+     */
+    private $rules;
+
     public function __construct(
         IUserGateway $userGateway,
+        UserRules $rules,
         IStringUtilFactory $factory,
         IResponseTransformer $responseTransformer = null
     ) {
         $this->userGateway = $userGateway;
         $this->transformer = $responseTransformer;
-        $this->factory     = $factory;
+        $this->rules = $rules;
+        $this->factory = $factory;
     }
 
 
@@ -40,7 +48,7 @@ class Create
     {
 
         $user = $this->userGateway->makeUser();
-        $user->register($request, $this->factory, new Users($this->userGateway));
+        $user->register($request, $this->rules, $this->factory);
         $this->userGateway->save($user);
 
         return $this->transformer()->transform($user);

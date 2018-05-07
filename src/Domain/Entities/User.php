@@ -10,21 +10,16 @@ namespace Tidy\Domain\Entities;
 use Tidy\Components\AccessControl\IClaimant;
 use Tidy\Components\Events\IMessenger;
 use Tidy\Components\Events\TMessenger;
-use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Components\Util\IStringUtilFactory;
-use Tidy\Components\Validation\ErrorList;
-use Tidy\Components\Validation\IPasswordStrengthValidator;
-use Tidy\Domain\Collections\Users;
+use Tidy\Domain\BusinessRules\UserRules;
 use Tidy\Domain\Events\User\Activated;
 use Tidy\Domain\Events\User\PasswordReset;
 use Tidy\Domain\Events\User\Recovering;
 use Tidy\Domain\Events\User\Registered;
 use Tidy\Domain\Requestors\User\IActivateRequest;
 use Tidy\Domain\Requestors\User\ICreateRequest;
-use Tidy\Domain\Requestors\User\IPlainPassword;
 use Tidy\Domain\Requestors\User\IRecoverRequest;
 use Tidy\Domain\Requestors\User\IResetPasswordRequest;
-use Tidy\Domain\Requestors\User\IToken;
 
 /**
  * Class User
@@ -169,15 +164,14 @@ abstract class User implements IClaimant, IMessenger
      * Attempts to create a new User entity using the given request.
      *
      * @param ICreateRequest     $request
+     * @param UserRules          $rules
      * @param IStringUtilFactory $factory
-     * @param Users              $users
      *
-     * @see User::verifyRegister()
      */
-    public function register(ICreateRequest $request, IStringUtilFactory $factory, Users $users)
+    public function register(ICreateRequest $request, UserRules $rules, IStringUtilFactory $factory)
     {
 
-        $this->verifyRegister($request, $factory, $users);
+        $rules->verifyRegister($request);
 
         $this->id        = coalesce($this->id, uuid());
         $this->userName  = $request->getUserName();
@@ -199,13 +193,13 @@ abstract class User implements IClaimant, IMessenger
      * Attempts to activate this user and removes the token on success.
      *
      * @param IActivateRequest $request
+     * @param UserRules        $rules
      *
-     * @see User::verifyActivate()
      */
-    public function activate(IActivateRequest $request)
+    public function activate(IActivateRequest $request, UserRules $rules)
     {
 
-        $this->verifyActivate($request);
+        $rules->verifyActivate($this, $request);
 
         $this->enabled = true;
         $this->token   = null;
@@ -213,63 +207,26 @@ abstract class User implements IClaimant, IMessenger
         $this->queueEvent(new Activated($this->id));
     }
 
-    public function recover(IRecoverRequest $request)
+    public function recover(IRecoverRequest $request, UserRules $rules)
     {
-        $this->verifyRecover($request);
+        $rules->verifyRecover($request);
         $this->token = uniqid();
         $this->queueEvent(new Recovering($this->id));
     }
 
-    public function verifyRecover(IRecoverRequest $request) { }
 
     /**
      * @param IResetPasswordRequest $request
+     * @param UserRules             $rules
      * @param IStringUtilFactory    $factory
      */
-    public function resetPassword(IResetPasswordRequest $request, IStringUtilFactory $factory)
+    public function resetPassword(IResetPasswordRequest $request, UserRules $rules, IStringUtilFactory $factory)
     {
-        $this->verifyResetPassword($request, $factory);
+        $rules->verifyResetPassword($this, $request);
         $this->password = $this->encodePlainPassword($factory, $request->plainPassword());
         $this->token    = null;
 
         $this->queueEvent(new PasswordReset($this->id));
-    }
-
-    public function verifyResetPassword(IResetPasswordRequest $request, IStringUtilFactory $factory)
-    {
-        $errors = new ErrorList();
-        $errors = $this->verifyToken($request, $errors);
-        $errors = $this->verifyPlainPassword($request, $factory, $errors);
-
-        $this->failOnErrors($errors);
-    }
-
-    /**
-     * @param IActivateRequest $request
-     */
-    public function verifyActivate(IActivateRequest $request)
-    {
-        $errors = new ErrorList();
-        $errors = $this->verifyToken($request, $errors);
-        $this->failOnErrors($errors);
-    }
-
-    /**
-     * @param ICreateRequest     $request
-     * @param IStringUtilFactory $factory
-     * @param Users              $users
-     */
-    public function verifyRegister(ICreateRequest $request, IStringUtilFactory $factory, Users $users)
-    {
-        $errors = new ErrorList();
-        $errors = $this->verifyUserName($request, $errors);
-        $errors = $this->verifyEMailAddress($request, $factory, $errors);
-        $errors = $this->verifyPlainPassword($request, $factory, $errors);
-        $this->failOnErrors($errors);
-
-        $errors = $this->verifyUniqueUserName($request, $users, $errors);
-        $this->failOnErrors($errors);
-
     }
 
     abstract protected function makeProfile($firstName, $lastName);
@@ -294,97 +251,6 @@ abstract class User implements IClaimant, IMessenger
         return $this;
     }
 
-    /**
-     * @param ICreateRequest $request
-     * @param                $errors
-     *
-     * @return mixed
-     */
-    protected function verifyUserName(ICreateRequest $request, $errors)
-    {
-        if (strlen($request->getUserName()) < 3) {
-            $errors['username'] = sprintf(
-                'Username "%s" is not allowed. Must be at least 3 characters long.',
-                $request->getUserName()
-            );
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @param ICreateRequest     $request
-     * @param IStringUtilFactory $factory
-     * @param                    $errors
-     *
-     * @return mixed
-     */
-    protected function verifyEMailAddress(ICreateRequest $request, IStringUtilFactory $factory, $errors)
-    {
-        if (!$factory->createEMailValidator()->validate($request->eMail())) {
-            $errors['email'] = sprintf('EMail address "%s" is not valid.', $request->eMail());
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @param IPlainPassword     $request
-     * @param IStringUtilFactory $factory
-     * @param                    $errors
-     *
-     * @return mixed
-     */
-    protected function verifyPlainPassword(IPlainPassword $request, IStringUtilFactory $factory, $errors)
-    {
-        $validator = $factory->createPasswordStrengthValidator(IPasswordStrengthValidator::STRENGTH_STRONG);
-        if (false === $validator->validate($request->plainPassword())) {
-            $errors['plainPassword'] = sprintf(
-                "Password is too weak. Please make sure to meet the following requirements:\n%s",
-                $validator->violations()->list()
-            );
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @param ICreateRequest $request
-     * @param Users          $users
-     * @param                $errors
-     *
-     * @return mixed
-     */
-    protected function verifyUniqueUserName(ICreateRequest $request, Users $users, $errors)
-    {
-        if ($user = $users->findByUserName($request->getUserName())) {
-            $errors['username'] = sprintf('Username "%s" is already taken.', $request->getUserName());
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @param IToken           $request
-     * @param                  $errors
-     *
-     * @return mixed
-     */
-    protected function verifyToken(IToken $request, $errors)
-    {
-        if ($request->token() !== $this->token) {
-            $errors['token'] = sprintf('Token "%s" does not match expected "%s".', $request->token(), $this->token);
-        }
-
-        return $errors;
-    }
-
-    private function failOnErrors(ErrorList $errors)
-    {
-        if ($errors->count() > 0) {
-            throw new PreconditionFailed($errors->getArrayCopy());
-        }
-    }
 
     /**
      * @param IStringUtilFactory $factory

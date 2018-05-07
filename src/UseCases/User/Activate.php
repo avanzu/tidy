@@ -8,6 +8,7 @@
 namespace Tidy\UseCases\User;
 
 use Tidy\Components\Exceptions\NotFound;
+use Tidy\Domain\BusinessRules\UserRules;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\IActivateRequest;
 use Tidy\Domain\Responders\User\IResponseTransformer;
@@ -19,15 +20,25 @@ class Activate
     use TItemResponder;
 
     /**
+     * @var UserRules
+     */
+    private $userRules;
+
+    /**
      * ItemResponder constructor.
      *
-     * @param IUserGateway         $userGateway
+     * @param IUserGateway $userGateway
+     * @param UserRules $userRules
      * @param IResponseTransformer $responseTransformer
      */
-    public function __construct(IUserGateway $userGateway, IResponseTransformer $responseTransformer = null)
-    {
+    public function __construct(
+        IUserGateway $userGateway,
+        UserRules $userRules,
+        IResponseTransformer $responseTransformer = null
+    ) {
         $this->userGateway = $userGateway;
         $this->transformer = $responseTransformer;
+        $this->userRules   = $userRules;
     }
 
 
@@ -45,7 +56,7 @@ class Activate
             throw new NotFound(sprintf('Unable to find user by token "%s".', $request->token()));
         }
 
-        $user->activate($request);
+        $user->activate($request, $this->userRules);
 
         $this->userGateway->save($user);
 

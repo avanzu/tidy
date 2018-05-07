@@ -11,6 +11,7 @@ namespace Tidy\Tests\Unit\Domain\Entities;
 use Tidy\Components\AccessControl\IClaimant;
 use Tidy\Components\Events\IMessenger;
 use Tidy\Components\Util\StringUtilFactory;
+use Tidy\Domain\BusinessRules\UserRules;
 use Tidy\Domain\Collections\Users;
 use Tidy\Domain\Events\User\PasswordReset;
 use Tidy\Domain\Events\User\Activated;
@@ -47,7 +48,8 @@ class UserTest extends MockeryTestCase
 
         $users   = mock(Users::class);
         $users->expects('findByUserName')->andReturn(null);
-        $user->register($request, new StringUtilFactory(), $users);
+        $stringUtilFactory = new StringUtilFactory();
+        $user->register($request, new UserRules($stringUtilFactory, $users) , $stringUtilFactory);
 
         $this->assertCount(1, $user->events());
         $event = $user->events()->dequeue();
@@ -63,7 +65,8 @@ class UserTest extends MockeryTestCase
 
         $users   = mock(Users::class);
         $users->expects('findByUserName')->andReturn(null);
-        $user->register($request, new StringUtilFactory(), $users);
+        $stringUtilFactory = new StringUtilFactory();
+        $user->register($request, new UserRules($stringUtilFactory, $users) , $stringUtilFactory);
 
         $this->assertCount(2, $user->events());
         $user->events()->dequeue();
@@ -75,9 +78,10 @@ class UserTest extends MockeryTestCase
     public function testActivate()
     {
         $mock = mock(IActivateRequest::class);
-        $mock->expects('token')->andReturn('the-token');
         $user = new UserStub2('the-token');
-        $user->activate($mock);
+        $rules = mock(UserRules::class);
+        $rules->expects('verifyActivate')->andReturn(true);
+        $user->activate($mock, $rules);
 
         $this->assertCount(1, $user->events());
         $event = $user->events()->dequeue();
@@ -89,7 +93,9 @@ class UserTest extends MockeryTestCase
     {
         $mock = mock(IRecoverRequest::class);
         $user = new TimmyUser();
-        $user->recover($mock);
+        $rules = mock(UserRules::class);
+        $rules->expects('verifyRecover');
+        $user->recover($mock, $rules);
 
         $this->assertCount(1, $user->events());
         $event = $user->events()->dequeue();
@@ -101,9 +107,10 @@ class UserTest extends MockeryTestCase
     {
         $user = new UserStub2('the-token');
         $request = mock(IResetPasswordRequest::class);
-        $request->expects('token')->andReturn('the-token');
         $request->shouldReceive('plainPassword')->andReturn(self::PLAIN_PASS)->atLeast()->once();
-        $user->resetPassword($request, new StringUtilFactory());
+        $rules = mock(UserRules::class);
+        $rules->expects('verifyResetPassword');
+        $user->resetPassword($request, $rules, new StringUtilFactory());
 
         $this->assertCount(1, $user->events());
         $event = $user->events()->dequeue();
