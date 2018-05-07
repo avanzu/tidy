@@ -17,4 +17,11 @@ class ChangeResponse implements IChangeResponse
     {
         return $this->changes;
     }
+
+    public function count()
+    {
+        return count($this->changes);
+    }
+
+
 }
