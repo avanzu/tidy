@@ -11,6 +11,8 @@ use Tidy\Components\AccessControl\AccessControlBroker;
 use Tidy\Components\AccessControl\IClaimable;
 use Tidy\Components\Events\Dispatcher;
 use Tidy\Components\Normalisation\ITextNormaliser;
+use Tidy\Domain\BusinessRules\ProjectRules;
+use Tidy\Domain\Collections\Projects;
 use Tidy\Domain\Entities\Project;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Gateways\IProjectGateway;
@@ -59,6 +61,7 @@ class CreateTest extends MockeryTestCase
     {
         $useCase = new Create(
             mock(IProjectGateway::class),
+            mock(ProjectRules::class),
             mock(AccessControlBroker::class),
             mock(IResponseTransformer::class)
         );
@@ -99,7 +102,6 @@ class CreateTest extends MockeryTestCase
         $this->broker->expects('lookUp')->with($owner->getId())->andReturn($owner);
 
         $this->expectIdentifyingSave($name, $description, $id, $canonical, $owner);
-
 
         $response = $this->useCase->execute($request);
 
@@ -142,11 +144,11 @@ class CreateTest extends MockeryTestCase
     protected function setUp()
     {
 
+        $this->gateway = mock(IProjectGateway::class);
+        $rules         = new ProjectRules(new Projects($this->gateway));
         $this->useCase = new Create(
-            mock(IProjectGateway::class), mock(AccessControlBroker::class), mock(IResponseTransformer::class)
+            mock(IProjectGateway::class), $rules, mock(AccessControlBroker::class), mock(IResponseTransformer::class)
         );
-
-        $this->gateway    = mock(IProjectGateway::class);
         $this->normaliser = mock(ITextNormaliser::class);
         $this->broker     = mock(AccessControlBroker::class);
         $this->messenger  = new Dispatcher();
@@ -155,7 +157,6 @@ class CreateTest extends MockeryTestCase
         $this->useCase->setProjectGateway($this->gateway);
         $this->useCase->setResponseTransformer($transformer);
         $this->useCase->setAccessControlBroker($this->broker);
-
 
     }
 
@@ -203,7 +204,8 @@ class CreateTest extends MockeryTestCase
         $this->normaliser->expects('transform')->with($name)->andReturn($canonical);
     }
 
-    private function expectUniqueCanonicalCheck($expectedCanonical, $returnValue) {
+    private function expectUniqueCanonicalCheck($expectedCanonical, $returnValue)
+    {
         $this->gateway->expects('findByCanonical')->with($expectedCanonical)->andReturn($returnValue);
     }
 

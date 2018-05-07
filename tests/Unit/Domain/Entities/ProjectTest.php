@@ -9,6 +9,7 @@
 namespace Tidy\Tests\Unit\Domain\Entities;
 
 use Tidy\Components\Exceptions\PreconditionFailed;
+use Tidy\Domain\BusinessRules\ProjectRules;
 use Tidy\Domain\Collections\Projects;
 use Tidy\Domain\Events\Project\Renamed;
 use Tidy\Domain\Events\Project\SetUp;
@@ -50,10 +51,10 @@ class ProjectTest extends MockeryTestCase
             }
         };
 
-        $gateway = mock(IProjectGateway::class);
-        $gateway->expects('findByCanonical')->with('demo-1')->andReturn(null);
+        $rules = mock(ProjectRules::class);
+        $rules->expects('verifySetUp');
 
-        $project->setUp($request, new Projects($gateway));
+        $project->setUp($request, $rules);
 
         assertThat($project->getName(), is(equalTo('Demo')));
         assertThat($project->getDescription(), is(equalTo('This is a demo.')));
@@ -83,7 +84,7 @@ class ProjectTest extends MockeryTestCase
         $request->allows('canonical')->andReturn($canonical);
 
         try {
-            $project->setUp($request, new Projects(mock(IProjectGateway::class)));
+            $project->setUp($request, new ProjectRules(new Projects(mock(IProjectGateway::class))));
             $this->fail('Failed to fail.');
         } catch (\Exception $exception) {
             assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
@@ -104,7 +105,7 @@ class ProjectTest extends MockeryTestCase
         )
         ;
         try {
-            $project->setUp($request, new Projects($gateway));
+            $project->setUp($request, new ProjectRules(new Projects($gateway)));
             $this->fail('Failed to fail.');
         } catch (PreconditionFailed $exception) {
             assertThat($exception, is(anInstanceOf(PreconditionFailed::class)));
@@ -122,7 +123,9 @@ class ProjectTest extends MockeryTestCase
         $request->shouldReceive('name')->andReturn($expectedName);
         $request->shouldReceive('description')->andReturn(null);
         $project = new ProjectSilverTongue();
-        $project->rename($request);
+        $rules = mock(ProjectRules::class);
+        $rules->expects('verifyRename');
+        $project->rename($request, $rules);
         $this->assertEquals($expectedName, $project->getName());
         $event = $project->events()->dequeue();
         $this->assertInstanceOf(Renamed::class, $event);

@@ -7,13 +7,11 @@
 
 namespace Tidy\Domain\Entities;
 
-use ArrayObject;
 use Tidy\Components\AccessControl\IClaimable;
 use Tidy\Components\AccessControl\IClaimant;
 use Tidy\Components\Events\IMessenger;
 use Tidy\Components\Events\TMessenger;
-use Tidy\Components\Exceptions\PreconditionFailed;
-use Tidy\Domain\Collections\Projects;
+use Tidy\Domain\BusinessRules\ProjectRules;
 use Tidy\Domain\Events\Project\Renamed;
 use Tidy\Domain\Events\Project\SetUp;
 use Tidy\Domain\Requestors\Project\ICreateRequest;
@@ -110,14 +108,14 @@ abstract class Project implements IClaimable, IMessenger
 
     /**
      * @param ICreateRequest $request
-     * @param Projects       $projects
+     * @param ProjectRules   $rules
      *
      * @return $this
      */
-    public function setUp(ICreateRequest $request, Projects $projects)
+    public function setUp(ICreateRequest $request, ProjectRules $rules)
     {
 
-        $this->verifySetUp($request, $projects);
+        $rules->verifySetUp($request, $this);
 
         $this->id          = coalesce($this->id, uuid());
         $this->name        = $request->name();
@@ -132,10 +130,11 @@ abstract class Project implements IClaimable, IMessenger
 
     /**
      * @param IRenameRequest $request
+     * @param ProjectRules   $rules
      */
-    public function rename(IRenameRequest $request)
+    public function rename(IRenameRequest $request, ProjectRules $rules)
     {
-        $this->verifyRename($request);
+        $rules->verifyRename($request);
         $this->name        = $request->name();
         $this->description = coalesce($request->description(), $this->description);
 
@@ -143,77 +142,5 @@ abstract class Project implements IClaimable, IMessenger
 
     }
 
-    /**
-     * @param ICreateRequest $request
-     * @param Projects       $projects
-     * @param                $errors
-     *
-     * @return mixed
-     */
-    protected function verifyCanonical(ICreateRequest $request, Projects $projects, $errors)
-    {
-        if (strlen($request->canonical()) < 3) {
-            $errors['canonical'] = sprintf(
-                'Invalid canonical "%s". Canonical must contain at least 3 characters.',
-                $request->canonical()
-            );
-
-            return $errors;
-        }
-
-        if ($match = $projects->findByCanonical($request->canonical())) {
-            if (!$this->isIdentical($match)) {
-                $errors['canonical'] = sprintf(
-                    'Invalid canonical "%s". Already in use by "%s".',
-                    $request->canonical(),
-                    $match->getName()
-                );
-            }
-        }
-
-        return $errors;
-    }
-
-    private function verifySetUp(ICreateRequest $request, Projects $projects)
-    {
-        $errors = new ArrayObject();
-        $errors = $this->verifyName($request->name(), $errors);
-        $errors = $this->verifyCanonical($request, $projects, $errors);
-
-        $this->failOnErrors($errors);
-    }
-
-    private function verifyRename(IRenameRequest $request)
-    {
-        $errors = new ArrayObject();
-        $this->verifyName($request->name(), $errors);
-
-        $this->failOnErrors($errors);
-    }
-
-    /**
-     * @param                $value
-     * @param                $errors
-     *
-     * @return mixed
-     */
-    private function verifyName($value, $errors)
-    {
-        if (strlen($value) < 3) {
-            $errors['name'] = sprintf('Invalid name "%s". Name must contain at least 3 characters.', $value);
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @param $errors
-     */
-    private function failOnErrors($errors): void
-    {
-        if (0 < $errors->count()) {
-            throw new PreconditionFailed($errors->getArrayCopy());
-        }
-    }
 
 }

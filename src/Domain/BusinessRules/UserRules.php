@@ -10,7 +10,6 @@ namespace Tidy\Domain\BusinessRules;
 
 use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Components\Util\IStringUtilFactory;
-use Tidy\Components\Util\StringUtilFactory;
 use Tidy\Components\Validation\ErrorList;
 use Tidy\Components\Validation\IPasswordStrengthValidator;
 use Tidy\Domain\Collections\Users;
@@ -118,7 +117,7 @@ class UserRules
      *
      * @return mixed
      */
-    protected function verifyEMailAddress(ICreateRequest $request,  $errors)
+    protected function verifyEMailAddress(ICreateRequest $request, $errors)
     {
         if (!$this->factory->createEMailValidator()->validate($request->eMail())) {
             $errors['email'] = sprintf('EMail address "%s" is not valid.', $request->eMail());
@@ -171,7 +170,11 @@ class UserRules
     protected function verifyToken(User $user, IToken $request, $errors)
     {
         if ($request->token() !== $user->getToken()) {
-            $errors['token'] = sprintf('Token "%s" does not match expected "%s".', $request->token(), $user->getToken());
+            $errors['token'] = sprintf(
+                'Token "%s" does not match expected "%s".',
+                $request->token(),
+                $user->getToken()
+            );
         }
 
         return $errors;

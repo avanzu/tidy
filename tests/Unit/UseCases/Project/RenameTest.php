@@ -8,6 +8,8 @@ namespace Tidy\Tests\Unit\UseCases\Project;
 
 use Mockery\MockInterface;
 use Tidy\Components\Exceptions\PreconditionFailed;
+use Tidy\Domain\BusinessRules\ProjectRules;
+use Tidy\Domain\Collections\Projects;
 use Tidy\Domain\Entities\Project;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Responders\Project\ChangeResponder;
@@ -34,7 +36,7 @@ class RenameTest extends MockeryTestCase
 
     public function test_instantiation()
     {
-        $useCase = new Rename(mock(IProjectGateway::class), mock(IResponseTransformer::class));
+        $useCase = new Rename(mock(IProjectGateway::class), mock(ProjectRules::class), mock(IResponseTransformer::class));
         assertThat($useCase, is(notNullValue()));
     }
 
@@ -75,7 +77,8 @@ class RenameTest extends MockeryTestCase
     {
         parent::setUp();
         $this->gateway = mock(IProjectGateway::class);
-        $this->useCase = new Rename($this->gateway);
+        $rules = new ProjectRules(new Projects($this->gateway));
+        $this->useCase = new Rename($this->gateway, $rules);
     }
 
     protected function expectProjectLookUp($projectId, $returnValue)

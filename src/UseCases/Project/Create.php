@@ -8,6 +8,7 @@
 namespace Tidy\UseCases\Project;
 
 use Tidy\Components\AccessControl\AccessControlBroker;
+use Tidy\Domain\BusinessRules\ProjectRules;
 use Tidy\Domain\Collections\Projects;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\ICreateRequest;
@@ -24,22 +25,30 @@ class Create
      */
     private $broker;
 
+    /**
+     * @var ProjectRules
+     */
+    private $rules;
+
 
     /**
      * Create constructor.
      *
      * @param IProjectGateway      $projectGateway
+     * @param ProjectRules         $rules
      * @param AccessControlBroker  $broker
      * @param IResponseTransformer $transformer
      */
     public function __construct(
         IProjectGateway $projectGateway,
+        ProjectRules $rules,
         AccessControlBroker $broker,
         IResponseTransformer $transformer = null
     ) {
         $this->gateway     = $projectGateway;
         $this->transformer = $transformer;
         $this->broker      = $broker;
+        $this->rules       = $rules;
     }
 
     /**
@@ -52,7 +61,7 @@ class Create
         $project = $this->gateway->make();
         $owner   = $this->broker->lookUp($request->ownerId());
 
-        $project->setUp($request, new Projects($this->gateway));
+        $project->setUp($request, $this->rules);
         $project->grantOwnershipTo($owner);
 
         $this->gateway->save($project);
@@ -60,7 +69,8 @@ class Create
         return $this->transformer()->transform($project);
     }
 
-    public function setAccessControlBroker(AccessControlBroker $broker) {
+    public function setAccessControlBroker(AccessControlBroker $broker)
+    {
         $this->broker = $broker;
     }
 
