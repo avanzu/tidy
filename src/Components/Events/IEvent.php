@@ -10,5 +10,5 @@ namespace Tidy\Components\Events;
 
 interface IEvent
 {
-    public static function handledBy();
+    const NAME = null;
 }

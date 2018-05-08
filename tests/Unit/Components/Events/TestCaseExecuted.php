@@ -12,6 +12,8 @@ use Tidy\Components\Events\Event;
 
 class TestCaseExecuted extends Event
 {
+    const NAME = 'testcase_executed';
+
     public $info;
 
 }

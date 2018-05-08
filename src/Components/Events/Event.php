@@ -10,6 +10,12 @@ namespace Tidy\Components\Events;
 
 abstract class Event implements IEvent
 {
+    public function name()
+    {
+        $fqn  = static::class;
+        return substr($fqn, strrpos($fqn, '\\')+1);
+    }
+
     public static function handledBy()
     {
         $fqn  = static::class;

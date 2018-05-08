@@ -12,41 +12,89 @@ class Dispatcher implements IDispatcher
 {
     protected $handlers = [];
 
+    /**
+     * @param $eventName
+     * @param $handler
+     */
     public function addHandler($eventName, $handler)
     {
-        $this->ensureKey($eventName)
-            ->handlers[$eventName][spl_object_hash($handler)] = $handler;
+        $this->ensureKey($eventName)->handlers[$eventName][spl_object_hash($handler)] = $handler;
     }
 
+    /**
+     * @param $eventName
+     * @param $handler
+     */
     public function removeHandler($eventName, $handler)
     {
-        $this->handlers[$eventName] = array_filter($this->handlers[$eventName], function($candidate) use ($handler){
-            return ! ($candidate === $handler);
-        });
+        $this->handlers[$eventName] = array_filter(
+            $this->handlers[$eventName],
+            function ($candidate) use ($handler) {
+                return !($candidate === $handler);
+            }
+        );
     }
 
 
-    public function clear($eventName) {
-        if( $this->hasHandlersFor($eventName))
-            $this->handlers[$eventName] = [];
-    }
-
-    protected function getEventHandlerNameFor(IEvent $event)
+    /**
+     * @param $eventName
+     */
+    public function clear($eventName)
     {
-        $fqn  = get_class($event);
-        $name = substr($fqn, strrpos($fqn, '\\')+1);
-        return sprintf('on%s', $name);
+        if ($this->hasHandlersFor($eventName)) {
+            $this->handlers[$eventName] = [];
+        }
     }
 
-    public function broadcast(IEvent $event) {
-
+    /**
+     * @param IEvent $event
+     *
+     * @return IEvent
+     */
+    public function broadcast(IEvent $event)
+    {
         $handlerName = $this->getEventHandlerNameFor($event);
         foreach ($this->handlersFor($handlerName) as $handler) {
-            if(method_exists($handler, $handlerName)) $handler->$handlerName($event);
+            if (method_exists($handler, $handlerName)) {
+                $handler->$handlerName($event);
+            }
         }
 
         return $event;
 
+    }
+
+    /**
+     * @param $eventName
+     *
+     * @return array|mixed
+     */
+    public function handlersFor($eventName)
+    {
+        return isset($this->handlers[$eventName]) ? $this->handlers[$eventName] : [];
+    }
+
+    /**
+     * @param $eventName
+     *
+     * @return bool
+     */
+    public function hasHandlersFor($eventName)
+    {
+        return (isset($this->handlers[$eventName]) && count($this->handlers[$eventName]) > 0);
+    }
+
+    /**
+     * @param IEvent $event
+     *
+     * @return string
+     */
+    protected function getEventHandlerNameFor(IEvent $event)
+    {
+        $fqn  = get_class($event);
+        $name = substr($fqn, strrpos($fqn, '\\') + 1);
+
+        return sprintf('on%s', $name);
     }
 
     /**
@@ -57,15 +105,7 @@ class Dispatcher implements IDispatcher
     protected function ensureKey($eventName)
     {
         isset($this->handlers[$eventName]) or $this->handlers[$eventName] = [];
+
         return $this;
-    }
-
-    public function handlersFor($eventName) {
-        return isset($this->handlers[$eventName]) ? $this->handlers[$eventName] : [];
-    }
-
-    public function hasHandlersFor($eventName)
-    {
-        return (isset($this->handlers[$eventName]) && count($this->handlers[$eventName]) > 0);
     }
 }
