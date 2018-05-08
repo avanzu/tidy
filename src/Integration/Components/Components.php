@@ -42,6 +42,9 @@ class Components extends Container
 
     }
 
+    /**
+     * @return IStringUtilFactory
+     */
     public function stringUtilFactory()
     {
         if (!$this->contains(self::STRING_UTILS)) {
@@ -51,6 +54,9 @@ class Components extends Container
         return $this->reveal(self::STRING_UTILS);
     }
 
+    /**
+     * @return IDispatcher
+     */
     public function eventDispatcher()
     {
         if (!$this->contains(self::EVENT_DISPATCHER)) {

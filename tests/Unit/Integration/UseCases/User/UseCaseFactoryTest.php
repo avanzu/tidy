@@ -21,6 +21,10 @@ use Tidy\Tests\MockeryTestCase;
 use Tidy\UseCases\User\Activate;
 use Tidy\UseCases\User\Create;
 use Tidy\UseCases\User\DTO\ActivateRequestBuilder;
+use Tidy\UseCases\User\GetCollection;
+use Tidy\UseCases\User\LookUp;
+use Tidy\UseCases\User\Recover;
+use Tidy\UseCases\User\ResetPassword;
 
 class UseCaseFactoryTest extends MockeryTestCase
 {
@@ -53,9 +57,9 @@ class UseCaseFactoryTest extends MockeryTestCase
 
     public function testMakeCreate()
     {
-        $this->gateways->expects('users')->andReturn(mock(IUserGateway::class));
-        $this->rules->expects('userRules')->andReturn(mock(UserRules::class));
-        $this->components->expects('stringUtilFactory')->andReturn(mock(IStringUtilFactory::class));
+        $this->expectGatewayCall();
+        $this->expectRulesCall();
+        $this->expectStringUtilCall();
 
         $this->assertInstanceOf(Create::class, $this->factory->makeCreate());
 
@@ -63,10 +67,37 @@ class UseCaseFactoryTest extends MockeryTestCase
 
     public function testMakeActivate()
     {
-
-        $this->gateways->expects('users')->andReturn(mock(IUserGateway::class));
-        $this->rules->expects('userRules')->andReturn(mock(UserRules::class));
+        $this->expectGatewayCall();
+        $this->expectRulesCall();
         $this->assertInstanceOf(Activate::class, $this->factory->makeActivate());
+    }
+
+    public function testMakeRecover()
+    {
+        $this->expectGatewayCall();
+        $this->expectRulesCall();
+        $this->assertInstanceOf(Recover::class, $this->factory->makeRecover());
+    }
+
+    public function testMakeResetPassword()
+    {
+        $this->expectGatewayCall();
+        $this->expectRulesCall();
+        $this->expectStringUtilCall();
+
+        $this->assertInstanceOf(ResetPassword::class, $this->factory->makeResetPassword());
+    }
+
+    public function testMakeLookUp()
+    {
+        $this->expectGatewayCall();
+        $this->assertInstanceOf(LookUp::class, $this->factory->makeLookUp());
+    }
+
+    public function makeGetCollection()
+    {
+        $this->expectGatewayCall();
+        $this->assertInstanceOf(GetCollection::class, $this->factory->makeGetCollection());
     }
 
     protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */
@@ -75,5 +106,20 @@ class UseCaseFactoryTest extends MockeryTestCase
         $this->rules      = mock(BusinessRules::class);
         $this->components = mock(Components::class);
         $this->factory    = new UseCaseFactory($this->gateways, $this->rules, $this->components);
+    }
+
+    private function expectGatewayCall(): void
+    {
+        $this->gateways->expects('users')->andReturn(mock(IUserGateway::class));
+    }
+
+    private function expectRulesCall(): void
+    {
+        $this->rules->expects('userRules')->andReturn(mock(UserRules::class));
+    }
+
+    private function expectStringUtilCall(): void
+    {
+        $this->components->expects('stringUtilFactory')->andReturn(mock(IStringUtilFactory::class));
     }
 }
