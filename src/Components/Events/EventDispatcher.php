@@ -8,125 +8,95 @@
 
 namespace Tidy\Components\Events;
 
+use SplObjectStorage;
 use SplPriorityQueue;
-use Tidy\Components\Exceptions\InvalidArgument;
 
 /**
  * Class EventDispatcher
  */
-class EventDispatcher implements IDispatcher
+class EventDispatcher implements IDispatcher, \Countable
 {
 
     /**
-     * @var
+     * @var SplObjectStorage|IEventHandler[]
      */
-    protected $listeners;
+    protected $handlers;
+
+    /**
+     * EventDispatcher constructor.
+     */
+    public function __construct()
+    {
+        $this->handlers = new SplObjectStorage();
+    }
+
 
     /**
      * @param IEvent $event
      */
     public function broadcast(IEvent $event)
     {
-        $queue = clone $this->queue($event::NAME);
-        $queue->setExtractFlags(SplPriorityQueue::EXTR_DATA);
-        $queue->top();
-        while($queue->valid()) {
-            call_user_func($queue->current(), $event);
-            $queue->next();
-        }
+        $this->execute($event, $this->enqueue($event));
     }
 
     /**
-     * @param ISubscriber $subscriber
+     * @param IEventHandler $handler
      */
-    public function addSubscriber(ISubscriber $subscriber)
+    public function attach(IEventHandler $handler)
     {
-        foreach ($subscriber->subscribeTo() as $eventName => $methodPriority) {
-            list($methodName, $priority) = array_pad($methodPriority, 2, 0);
-            $this->listenTo($eventName, $this->makeCallable($subscriber, $methodName), $priority);
-        }
+        $this->handlers->attach($handler);
     }
 
     /**
-     * @param     $eventName
-     * @param     $listener
-     * @param int $priority
+     * @param IEventHandler $handler
+     *
+     * @return bool
      */
-    public function listenTo($eventName, $listener, $priority = 0)
+    public function contains(IEventHandler $handler)
     {
-        if (!is_callable($listener)) {
-            throw new InvalidArgument(
-                sprintf(
-                    'Failed to add event listener for "%s". Expected callable got "%s".',
-                    $eventName,
-                    gettype($listener)
-                )
-            );
-        }
-
-        $this->queue($eventName)->insert($listener, $priority);
+        return $this->handlers->contains($handler);
     }
 
     /**
-     * @param $eventName
+     * @param $handler
+     */
+    public function detach($handler)
+    {
+        $this->handlers->detach($handler);
+    }
+
+    /** @inheritdoc */
+    public function count()
+    {
+        return count($this->handlers);
+    }
+
+    /**
+     * @param IEvent           $event
+     * @param SplPriorityQueue $queue
+     */
+    private function execute(IEvent $event, SplPriorityQueue $queue)
+    {
+        while ($queue->valid()) {
+            $queue->extract()->handle($event);
+        }
+    }
+
+    /**
+     * @param IEvent $event
      *
      * @return SplPriorityQueue
      */
-    public function listenersFor($eventName)
+    private function enqueue(IEvent $event)
     {
-        return $this->queue($eventName);
-    }
+        $queue = new SplPriorityQueue();
 
-    /**
-     * @param $eventName
-     * @param $listener
-     */
-    public function stopListening($eventName, $listener)
-    {
-        $newQueue = new SplPriorityQueue();
-        $queue    = $this->queue($eventName);
-        $queue->setExtractFlags(SplPriorityQueue::EXTR_BOTH);
-        while ($queue->valid()) {
-            $entry = (object)$queue->extract();
-            if (!($entry->data === $listener)) {
-                $newQueue->insert($entry->data, $entry->priority);
+        foreach ($this->handlers as $handler) {
+            if ($handler->supports($event)) {
+                $queue->insert($handler, $handler->priority());
             }
         }
 
-        $this->listeners[$eventName] = $newQueue;
-    }
-
-    /**
-     * @param ISubscriber $subscriber
-     */
-    public function removeSubscriber(ISubscriber $subscriber)
-    {
-        foreach ($subscriber->subscribeTo() as $eventName => $methodPriority) {
-            list($methodName) = $methodPriority;
-            $this->stopListening($eventName, $this->makeCallable($subscriber, $methodName));
-        }
-    }
-
-    /**
-     * @param $eventName
-     *
-     * @return SplPriorityQueue
-     */
-    protected function queue($eventName)
-    {
-        isset($this->listeners[$eventName]) or $this->listeners[$eventName] = new SplPriorityQueue();
-
-        return $this->listeners[$eventName];
-    }
-
-    /**
-     * @param ISubscriber $subscriber
-     * @param             $methodName
-     *
-     * @return callable
-     */
-    private function makeCallable(ISubscriber $subscriber, $methodName)
-    {
-        return [$subscriber, $methodName];
+        return $queue;
     }
 }
