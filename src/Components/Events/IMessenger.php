@@ -8,17 +8,18 @@
 
 namespace Tidy\Components\Events;
 
+use SplQueue;
+
 interface IMessenger
 {
     /**
-     * @return IEvent[]
+     * @return IEvent[]|SplQueue
      */
     public function events();
 
     /**
-     * @param IEvent $event
-     *
      * @return void
      */
-    public function queueEvent(IEvent $event);
+    public function clearEvents();
+
 }

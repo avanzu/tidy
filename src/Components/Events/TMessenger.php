@@ -26,9 +26,16 @@ trait TMessenger
     }
 
     /**
+     *
+     */
+    public function clearEvents() {
+        $this->eventQueue = null;
+    }
+
+    /**
      * @param IEvent $event
      */
-    public function queueEvent(IEvent $event)
+    protected function queueEvent(IEvent $event)
     {
         $this->eventQueue()->enqueue($event);
     }

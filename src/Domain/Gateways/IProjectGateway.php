@@ -24,7 +24,7 @@ interface IProjectGateway
      *
      * @return mixed
      */
-    public function save($project);
+    public function save(Project $project);
 
     /**
      * @param $ownerId

@@ -41,7 +41,7 @@ interface ITranslationGateway
      *
      * @return mixed
      */
-    public function save($catalogue);
+    public function save(TranslationCatalogue $catalogue);
 
     /**
      * @param Boundary     $boundary
