@@ -15,12 +15,12 @@ trait TBroadcast
      */
     protected $dispatcher;
 
+    /**
+     * @param IMessenger $messenger
+     */
     protected function broadcast(IMessenger $messenger)
     {
-        $queue = $messenger->events();
-        foreach ($queue as $event) {
-            $this->dispatcher->broadcast($event);
-        }
+        foreach ($messenger->events() as $event) $this->dispatcher->broadcast($event);
 
         $messenger->clearEvents();
     }

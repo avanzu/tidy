@@ -29,6 +29,11 @@ if (!function_exists('coalesce')) {
 }
 
 if( ! function_exists('uuid')) {
+    /**
+     * generates a UUID V4 string
+     *
+     * @return string
+     */
     function uuid () {
         return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 

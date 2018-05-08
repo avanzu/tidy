@@ -24,10 +24,14 @@ class EventDispatcher implements IDispatcher, \Countable
 
     /**
      * EventDispatcher constructor.
+     *
+     * @param array $handlers
      */
-    public function __construct()
+    public function __construct(... $handlers)
     {
         $this->handlers = new SplObjectStorage();
+        foreach ($handlers as $handler) $this->attach($handler);
+
     }
 
 

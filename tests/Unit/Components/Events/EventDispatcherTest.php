@@ -14,27 +14,31 @@ use Tidy\Components\Events\IEvent;
 use Tidy\Components\Events\IEventHandler;
 use Tidy\Tests\MockeryTestCase;
 
-class NormalPriorityHandlerImpl implements IEventHandler {
+class NormalPriorityHandlerImpl implements IEventHandler
+{
     const MESSAGE = 'normal priority handled';
-
-    public function supports(IEvent $event)
-    {
-        return $event instanceof TestCaseExecuted;
-    }
 
     /** @param TestCaseExecuted $event */
     public function handle(IEvent $event)
     {
         $event->info[] = self::MESSAGE;
+    }    public function supports(IEvent $event)
+    {
+        return $event instanceof TestCaseExecuted;
     }
+
+
 
     public function priority()
     {
         return 0;
     }
-};
+}
 
-class HighPriorityHandlerImpl implements IEventHandler {
+;
+
+class HighPriorityHandlerImpl implements IEventHandler
+{
     const MESSAGE = 'high priority handled';
 
     public function supports(IEvent $event)
@@ -65,9 +69,11 @@ class EventDispatcherTest extends MockeryTestCase
 
     public function testInstantiation()
     {
-        $dispatcher = new EventDispatcher();
+        $dispatcher = new EventDispatcher(new NormalPriorityHandlerImpl(), new HighPriorityHandlerImpl());
         $this->assertInstanceOf(IDispatcher::class, $dispatcher);
         $this->assertInstanceOf(\Countable::class, $dispatcher);
+
+        $this->assertCount(2, $dispatcher);
     }
 
     public function testAttachDetach()
@@ -95,7 +101,8 @@ class EventDispatcherTest extends MockeryTestCase
 
         $this->assertEquals([NormalPriorityHandlerImpl::MESSAGE], $event->info);
 
-        $event = new class implements IEvent {
+        $event = new class implements IEvent
+        {
             public $info = false;
         };
 
