@@ -10,6 +10,7 @@ namespace Tidy\Domain\BusinessRules;
 
 use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Components\Validation\ErrorList;
+use Tidy\Components\Validation\Violation;
 use Tidy\Domain\Entities\Translation;
 use Tidy\Domain\Entities\TranslationCatalogue;
 use Tidy\Domain\Gateways\ITranslationGateway;
@@ -101,10 +102,9 @@ class TranslationRules
 
         if ($match = $this->gateway->findByDomain($domain)) {
             if (!$catalogue->isIdenticalTo($match)) {
-                $errors['domain'] = sprintf(
-                    'Invalid domain "%s". Already in use by "%s".',
-                    (string)$domain,
-                    (string)$match
+                $errors['domain'] = new Violation(
+                    'Invalid domain "{{ domain }}". Already in use by "{{ catalogue }}".',
+                    ['{{ domain }}' => (string)$domain, '{{ catalogue }}' => (string)$match]
                 );
             }
         }
@@ -121,7 +121,10 @@ class TranslationRules
     protected function verifyName(ICreateCatalogueRequest $request, $errors)
     {
         if (strlen($request->name()) < 3) {
-            $errors['name'] = sprintf('Invalid name "%s". Name must contain at least 3 characters.', $request->name());
+            $errors['name'] = new Violation(
+                'Invalid name "{{ name }}". Name must contain at least 3 characters.',
+                ['{{ name }}' => $request->name()]
+            );
         }
 
         return $errors;
@@ -136,9 +139,9 @@ class TranslationRules
     protected function verifyCanonical(ICreateCatalogueRequest $request, $errors)
     {
         if (strlen($request->canonical()) < 3) {
-            $errors['canonical'] = sprintf(
-                'Invalid canonical "%s". Canonical must contain at least 3 characters.',
-                $request->canonical()
+            $errors['canonical'] = new Violation(
+                'Invalid canonical "{{ canonical }}". Canonical must contain at least 3 characters.',
+                ['{{ canonical }}' => $request->canonical()]
             );
         }
 
@@ -154,9 +157,9 @@ class TranslationRules
     protected function verifySourceLanguage(ICreateCatalogueRequest $request, $errors)
     {
         if (strlen((string)$request->sourceLanguage()) !== 2) {
-            $errors['sourceLanguage'] = sprintf(
-                'Invalid source language. Expected 2 character string, got "%s".',
-                (string)$request->sourceLanguage()
+            $errors['sourceLanguage'] = new Violation(
+                'Invalid source language. Expected 2 character string, got "{{ source }}".',
+                ['{{ source }}' => (string)$request->sourceLanguage()]
             );
         }
 
@@ -172,9 +175,9 @@ class TranslationRules
     protected function verifyTargetLanguage(ICreateCatalogueRequest $request, $errors)
     {
         if (strlen((string)$request->targetLanguage()) !== 2) {
-            $errors['targetLanguage'] = sprintf(
-                'Invalid target language. Expected 2 character string, got "%s".',
-                (string)$request->targetLanguage()
+            $errors['targetLanguage'] = new Violation(
+                'Invalid target language. Expected 2 character string, got "{{ target }}".',
+                ['{{ target }}' => (string)$request->targetLanguage()]
             );
         }
 
@@ -192,7 +195,10 @@ class TranslationRules
     {
         /** @var Translation|null $match */
         if ($match = $catalogue->find($value)) {
-            $errors['token'] = sprintf('Token %s already exists translated as "%s".', $value, (string)$match);
+            $errors['token'] = new Violation(
+                'Token {{ token }} already exists translated as "{{ match }}".',
+                ['{{ token }}' => $value, '{{ match }}' => (string)$match]
+            );
         }
 
         return $errors;
@@ -207,7 +213,7 @@ class TranslationRules
     protected function verifyToken($value, $errors)
     {
         if (empty($value)) {
-            $errors['token'] = 'Token cannot be empty.';
+            $errors['token'] = new Violation('Token cannot be empty.');
         }
 
         return $errors;
@@ -224,10 +230,9 @@ class TranslationRules
     {
         $errors = new ErrorList();
         if ($catalogue->getId() !== $request->catalogueId()) {
-            $errors['catalogue'] = sprintf(
-                'Wrong catalogue. Request addresses catalogue #%d. This is catalogue #%d.',
-                $request->catalogueId(),
-                $catalogue->getId()
+            $errors['catalogue'] = new Violation(
+                'Wrong catalogue. Request addresses catalogue #{{ expected }}. This is catalogue #{{ actual }}.',
+                ['{{ expected }}' => $request->catalogueId(), '{{ actual }}' => $catalogue->getId(),]
             );
         }
 
@@ -245,10 +250,9 @@ class TranslationRules
     {
         $errors = new ErrorList();
         if (!$match = $catalogue->find($request->token())) {
-            $errors['token'] = sprintf(
-                'Unable to find translation identified by "%s" in catalogue "%s".',
-                $request->token(),
-                $catalogue->getName()
+            $errors['token'] = new Violation(
+                'Unable to find translation identified by "{{ token }}" in catalogue "{{ catalogue }}".',
+                ['{{ token }}' => $request->token(), '{{ catalogue }}' => $catalogue->getName()]
             );
         }
 

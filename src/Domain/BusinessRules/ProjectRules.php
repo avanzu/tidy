@@ -10,6 +10,7 @@ namespace Tidy\Domain\BusinessRules;
 
 use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Components\Validation\ErrorList;
+use Tidy\Components\Validation\Violation;
 use Tidy\Domain\Entities\Project;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Domain\Requestors\Project\ICreateRequest;
@@ -56,9 +57,9 @@ class ProjectRules
     protected function verifyCanonical(ICreateRequest $request, Project $project, $errors)
     {
         if (strlen($request->canonical()) < 3) {
-            $errors['canonical'] = sprintf(
-                'Invalid canonical "%s". Canonical must contain at least 3 characters.',
-                $request->canonical()
+            $errors['canonical'] = new Violation(
+                'Invalid canonical "{{ canonical }}". Canonical must contain at least 3 characters.',
+                ['{{ canonical }}' => $request->canonical()]
             );
 
             return $errors;
@@ -66,10 +67,9 @@ class ProjectRules
 
         if ($match = $this->gateway->findByCanonical($request->canonical())) {
             if (!$project->isIdentical($match)) {
-                $errors['canonical'] = sprintf(
-                    'Invalid canonical "%s". Already in use by "%s".',
-                    $request->canonical(),
-                    $match->getName()
+                $errors['canonical'] = new Violation(
+                    'Invalid canonical "{{ canonical }}". Already in use by "{{ catalogue }}".',
+                    ['{{ canonical }}' => $request->canonical(), '{{ catalogue }}' => $match->getName()]
                 );
             }
         }
@@ -86,7 +86,10 @@ class ProjectRules
     private function verifyName($value, $errors)
     {
         if (strlen($value) < 3) {
-            $errors['name'] = sprintf('Invalid name "%s". Name must contain at least 3 characters.', $value);
+            $errors['name'] = new Violation(
+                'Invalid name "{{ name }}". Name must contain at least 3 characters.',
+                ['{{ name }}' => $value]
+            );
         }
 
         return $errors;

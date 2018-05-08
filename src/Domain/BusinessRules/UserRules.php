@@ -12,6 +12,7 @@ use Tidy\Components\Exceptions\PreconditionFailed;
 use Tidy\Components\Util\IStringUtilFactory;
 use Tidy\Components\Validation\ErrorList;
 use Tidy\Components\Validation\IPasswordStrengthValidator;
+use Tidy\Components\Validation\Violation;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Gateways\IUserGateway;
 use Tidy\Domain\Requestors\User\IActivateRequest;
@@ -102,9 +103,9 @@ class UserRules
     protected function verifyUserName(ICreateRequest $request, $errors)
     {
         if (strlen($request->getUserName()) < 3) {
-            $errors['username'] = sprintf(
-                'Username "%s" is not allowed. Must be at least 3 characters long.',
-                $request->getUserName()
+            $errors['username'] = new Violation(
+                'Username "{{ username }}" is not allowed. Must be at least 3 characters long.',
+                ['{{ username }}' => $request->getUserName()]
             );
         }
 
@@ -120,7 +121,10 @@ class UserRules
     protected function verifyEMailAddress(ICreateRequest $request, $errors)
     {
         if (!$this->factory->createEMailValidator()->validate($request->eMail())) {
-            $errors['email'] = sprintf('EMail address "%s" is not valid.', $request->eMail());
+            $errors['email'] = new Violation(
+                'EMail address "{{ email }}" is not valid.',
+                ['{{ email }}' => $request->eMail()]
+            );
         }
 
         return $errors;
@@ -136,9 +140,9 @@ class UserRules
     {
         $validator = $this->factory->createPasswordStrengthValidator(IPasswordStrengthValidator::STRENGTH_STRONG);
         if (false === $validator->validate($request->plainPassword())) {
-            $errors['plainPassword'] = sprintf(
-                "Password is too weak. Please make sure to meet the following requirements:\n%s",
-                $validator->violations()->list()
+            $errors['plainPassword'] = new Violation(
+                "Password is too weak. Please make sure to meet the following requirements:\n%{{ list }}",
+                ['{{ list }}' => $validator->violations()->list()]
             );
         }
 
@@ -154,7 +158,10 @@ class UserRules
     protected function verifyUniqueUserName(ICreateRequest $request, $errors)
     {
         if ($user = $this->gateway->findByUserName($request->getUserName())) {
-            $errors['username'] = sprintf('Username "%s" is already taken.', $request->getUserName());
+            $errors['username'] = new Violation(
+                'Username "{{ username }}" is already taken.',
+                ['{{ username }}' => $request->getUserName()]
+            );
         }
 
         return $errors;
@@ -170,10 +177,9 @@ class UserRules
     protected function verifyToken(User $user, IToken $request, $errors)
     {
         if ($request->token() !== $user->getToken()) {
-            $errors['token'] = sprintf(
-                'Token "%s" does not match expected "%s".',
-                $request->token(),
-                $user->getToken()
+            $errors['token'] = new Violation(
+                'Token "{{ token }}" does not match expected "{{ expected }}".',
+                ['{{ token }}' => $request->token(), '{{ expected }}' => $user->getToken()]
             );
         }
 
