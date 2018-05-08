@@ -8,7 +8,7 @@
 
 namespace Tidy\Components\Collection;
 
-class ObjectMap implements \Countable
+class ObjectMap
 {
     /**
      * @var \ArrayObject
@@ -19,15 +19,17 @@ class ObjectMap implements \Countable
     /**
      * ObjectMap constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->items = new \ArrayObject();
     }
 
     public function contains($key)
     {
-        if( $this->items->offsetExists($key) ){
+        if ($this->items->offsetExists($key)) {
             return !is_null($this->items->offsetGet($key));
         }
+
         return false;
     }
 
@@ -40,11 +42,5 @@ class ObjectMap implements \Countable
     {
         return $this->items->offsetGet($key);
     }
-
-    public function count()
-    {
-        return count($this->items);
-    }
-
 
 }

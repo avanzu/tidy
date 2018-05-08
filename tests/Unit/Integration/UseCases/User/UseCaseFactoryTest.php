@@ -94,7 +94,7 @@ class UseCaseFactoryTest extends MockeryTestCase
         $this->assertInstanceOf(LookUp::class, $this->factory->makeLookUp());
     }
 
-    public function makeGetCollection()
+    public function testMakeGetCollection()
     {
         $this->expectGatewayCall();
         $this->assertInstanceOf(GetCollection::class, $this->factory->makeGetCollection());
