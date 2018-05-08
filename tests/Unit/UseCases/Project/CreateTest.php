@@ -10,6 +10,7 @@ use Mockery\MockInterface;
 use Tidy\Components\AccessControl\AccessControlBroker;
 use Tidy\Components\AccessControl\IClaimable;
 use Tidy\Components\Events\Dispatcher;
+use Tidy\Components\Events\EventDispatcher;
 use Tidy\Components\Normalisation\ITextNormaliser;
 use Tidy\Domain\BusinessRules\ProjectRules;
 use Tidy\Domain\Entities\Project;
@@ -147,7 +148,7 @@ class CreateTest extends MockeryTestCase
         );
         $this->normaliser = mock(ITextNormaliser::class);
         $this->broker     = mock(AccessControlBroker::class);
-        $this->messenger  = new Dispatcher();
+        $this->messenger  = new EventDispatcher();
         $transformer      = new ResponseTransformer(new OwnerExcerptTransformer());
 
         $this->useCase->setProjectGateway($this->gateway);

@@ -10,5 +10,5 @@ namespace Tidy\Components\Events;
 
 interface IEvent
 {
-    const NAME = null;
+
 }
