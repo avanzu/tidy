@@ -8,7 +8,8 @@
 
 namespace Tidy\Integration\Components;
 
-use Tidy\Components\Collection\ObjectMap;
+use Tidy\Components\AccessControl\AccessControlBroker;
+use Tidy\Components\AccessControl\IClaimantProvider;
 use Tidy\Components\DependencyInjection\Container;
 use Tidy\Components\Events\EventDispatcher;
 use Tidy\Components\Events\IDispatcher;
@@ -35,10 +36,22 @@ class Components extends Container
 
     protected $instances;
 
-    public function __construct(IStringUtilFactory $stringUtilFactory = null, IDispatcher $dispatcher = null)
-    {
-        if( $stringUtilFactory) $this->attach(self::STRING_UTILS, $stringUtilFactory);
-        if( $dispatcher) $this->attach(self::EVENT_DISPATCHER, $dispatcher);
+    const ACL_BROKER = 'acl_broker';
+
+    public function __construct(
+        IStringUtilFactory $stringUtilFactory = null,
+        IDispatcher $dispatcher = null,
+        AccessControlBroker $broker = null
+    ) {
+        if ($stringUtilFactory) {
+            $this->attach(self::STRING_UTILS, $stringUtilFactory);
+        }
+        if ($dispatcher) {
+            $this->attach(self::EVENT_DISPATCHER, $dispatcher);
+        }
+        if ($broker) {
+            $this->attach(self::ACL_BROKER, $broker);
+        }
 
     }
 
@@ -64,5 +77,14 @@ class Components extends Container
         }
 
         return $this->reveal(self::EVENT_DISPATCHER);
+    }
+
+    public function accessControlBroker(IClaimantProvider $provider)
+    {
+        if (!$this->contains(self::ACL_BROKER)) {
+            $this->attach(self::ACL_BROKER, new AccessControlBroker($provider));
+        }
+
+        return $this->reveal(self::ACL_BROKER);
     }
 }
