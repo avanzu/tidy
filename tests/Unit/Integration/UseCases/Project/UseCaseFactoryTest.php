@@ -10,7 +10,6 @@ namespace Tidy\Tests\Unit\Integration\UseCases\Project;
 
 use Mockery\MockInterface;
 use Tidy\Components\AccessControl\AccessControlBroker;
-use Tidy\Components\AccessControl\IClaimantProvider;
 use Tidy\Domain\BusinessRules\ProjectRules;
 use Tidy\Domain\Gateways\IProjectGateway;
 use Tidy\Integration\Components\Components;
