@@ -7,12 +7,13 @@
 
 namespace Tidy\Domain\Gateways;
 
+use Tidy\Components\AccessControl\IClaimantProvider;
 use Tidy\Components\Collection\Boundary;
 use Tidy\Components\DataAccess\Comparison;
 use Tidy\Domain\Entities\User;
 use Tidy\Domain\Entities\UserProfile;
 
-interface IUserGateway
+interface IUserGateway extends IClaimantProvider
 {
 
     /**

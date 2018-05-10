@@ -45,6 +45,12 @@ class ComponentsTest extends MockeryTestCase {
         $dispatcher = $components->eventDispatcher();
         $this->assertInstanceOf(IDispatcher::class, $dispatcher);
         $this->assertSame($dispatcher, $components->eventDispatcher());
+    }
+
+    public function testAccessControlBroker()
+    {
+        $components = new Components();
+        $this->assertInstanceOf(AccessControlBroker::class, $components->accessControlBroker(mock(IClaimantProvider::class)));
 
     }
 

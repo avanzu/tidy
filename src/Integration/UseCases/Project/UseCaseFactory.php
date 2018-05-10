@@ -9,6 +9,7 @@
 namespace Tidy\Integration\UseCases\Project;
 
 use Tidy\Integration\Components\Components;
+use Tidy\Integration\Domain\AccessControl;
 use Tidy\Integration\Domain\BusinessRules;
 use Tidy\Integration\Domain\Gateways;
 use Tidy\UseCases\Project\Create;
@@ -31,17 +32,22 @@ class UseCaseFactory implements IUseCaseFactory
      */
     private $components;
 
-    public function __construct(Gateways $gateways, BusinessRules $rules, Components $components)
+    /**
+     * @var AccessControl
+     */
+    private $accessControl;
+
+    public function __construct(Gateways $gateways, BusinessRules $rules, AccessControl $accessControl)
     {
 
         $this->gateways   = $gateways;
         $this->rules      = $rules;
-        $this->components = $components;
+        $this->accessControl = $accessControl;
     }
 
     public function makeCreate()
     {
-        return new Create($this->projects(), $this->rules(), $this->components->accessControlBroker($this->gateways->users()));
+        return new Create($this->projects(), $this->rules(), $this->broker());
     }
 
     private function projects()
@@ -52,6 +58,14 @@ class UseCaseFactory implements IUseCaseFactory
     private function rules()
     {
         return $this->rules->projectRules();
+    }
+
+    /**
+     * @return mixed
+     */
+    private function broker()
+    {
+        return $this->accessControl->broker();
     }
 
 }

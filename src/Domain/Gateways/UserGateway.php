@@ -8,6 +8,7 @@
 
 namespace Tidy\Domain\Gateways;
 
+use Tidy\Components\AccessControl\IClaimant;
 use Tidy\Components\Events\IDispatcher;
 use Tidy\Components\Events\TBroadcast;
 use Tidy\Domain\Entities\User;
@@ -42,6 +43,16 @@ abstract class UserGateway implements IUserGateway
 
 
     abstract protected function doSave(User $user);
+
+    /**
+     * @param $id
+     *
+     * @return IClaimant|User
+     */
+    public function lookUp($id)
+    {
+        return $this->find($id);
+    }
 
 
 }

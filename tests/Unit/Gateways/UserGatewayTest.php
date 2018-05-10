@@ -9,6 +9,7 @@
 namespace Tidy\Tests\Unit\Gateways;
 
 use Mockery\MockInterface;
+use Tidy\Components\AccessControl\IClaimantProvider;
 use Tidy\Components\Events\IDispatcher;
 use Tidy\Components\Util\StringUtilFactory;
 use Tidy\Domain\BusinessRules\UserRules;
@@ -39,6 +40,17 @@ class UserGatewayTest extends MockeryTestCase
      */
     private $repository;
 
+    public function testInstantiation()
+    {
+        $this->assertInstanceOf(IClaimantProvider::class, $this->gateway);
+    }
+
+    public function testLookUp()
+    {
+        $this->repository->expects('find')->with(TimmyUser::ID)->andReturns(new TimmyUser());
+        $this->assertInstanceOf(TimmyUser::class, $this->gateway->lookUp(TimmyUser::ID));
+
+    }
     public function testSave()
     {
         $user    = $this->gateway->makeUser();
