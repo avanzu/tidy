@@ -35,5 +35,9 @@ class Boundary
         $this->pageSize = $pageSize;
     }
 
+    public function offset() {
+        return (max(0, $this->page -1)  * $this->pageSize);
+    }
+
 
 }

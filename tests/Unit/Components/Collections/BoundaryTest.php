@@ -25,6 +25,13 @@ class BoundaryTest extends MockeryTestCase
         $boundary = new Boundary();
         assertThat($boundary->page, is(equalTo(Boundary::DEFAULT_PAGE)));
         assertThat($boundary->pageSize, is(equalTo(Boundary::DEFAULT_PAGE_SIZE)));
+    }
 
+    public function test_offset()
+    {
+        $boundary = new Boundary(1, 30);
+        assertThat($boundary->offset(), is(equalTo(0)));
+        $boundary->page = 5;
+        assertThat($boundary->offset(), is(equalTo(120)));
     }
 }

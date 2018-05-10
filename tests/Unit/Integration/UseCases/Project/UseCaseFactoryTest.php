@@ -64,6 +64,7 @@ class UseCaseFactoryTest extends MockeryTestCase
         $this->assertInstanceOf(Create::class, $this->factory->makeCreate());
     }
 
+
     protected function setUp()/* The :void return type declaration that should be here would cause a BC issue */
     {
         parent::setUp();
